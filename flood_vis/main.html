@@ -12,8 +12,23 @@
     <div id="map" style="height:250px;"></div>
     <div id="elevation_chart"></div>
 </div>
-<div id="chart-area">
-
+<div id="flood-vis-area">
+    <div class="user-control" align="center">
+        <select id="select-area" class="form-control" onchange="updateWater()">
+            <option value="AVERAGE">Average Height</option>
+            <option value="FLOOD">Flood Simulation</option>
+        </select>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div id="flood-timer-area"></div>
+            </div>
+            <div class="col-md-9">
+                <div id="chart-area"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/jquery.min.js"></script>
@@ -27,6 +42,7 @@
 <!--</script>-->
 
 <script src="js/main.js"></script>
+<script src="js/progressBar.js"></script>
 
 </body>
 </html>
