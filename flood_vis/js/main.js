@@ -2,74 +2,85 @@
  * Created by jackiemartinez on 11/13/16.
  */
 // Global Variables
+jFlood = {};
 
-var river_start = [42.820274, -73.945933];
-var river_end = [42.821580, -73.947104];
-var avg_gage = 213;
-var min_elev = 200;
-var floodStartIndex = 128;
-var normalIndex = 110;
-var stopInterval = false;
-var interpolate_value = "linear";
+jFlood.river_start = [42.820274, -73.945933];
+jFlood.river_end = [42.821580, -73.947104];
+jFlood.avg_gage = 213;
+jFlood.min_elev = 200;
+jFlood.cutoff_elev = 210;
+jFlood.floodStartIndex = 34;
+// http://www.cityofschenectady.com/DocumentCenter/Home/View/247 p.19
+jFlood.minFloodElev = 223;
+jFlood.elevTroughIndex = 72;
+jFlood.floodEndIndex = 160;
+jFlood.normalIndex = 33;
+jFlood.stopInterval = false;
+jFlood.interpolate_value = "linear";
 
 // SVG drawing area
 
-var margin = {top: 20, right: 20, bottom: 20, left: 60};
+jFlood.margin = {top: 20, right: 20, bottom: 20, left: 60};
 
-var width = 800 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+jFlood.width = 800 - jFlood.margin.left - jFlood.margin.right;
+jFlood.height = 300 - jFlood.margin.top - jFlood.margin.bottom;
 
-var svg = d3.select("#chart-area").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+jFlood.svg = d3.select("#chart-area").append("svg")
+    .attr("width", jFlood.width + jFlood.margin.left + jFlood.margin.right)
+    .attr("height", jFlood.height + jFlood.margin.top + jFlood.margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + jFlood.margin.left + "," + jFlood.margin.top + ")");
 
 // Create Scales
-var x = d3.scale.linear()
-    .range([0,width]);
-var y = d3.scale.linear()
-    .range([height, 0]);
+jFlood.x = d3.scale.linear()
+    .range([0,jFlood.width]);
+jFlood.y = d3.scale.linear()
+    .range([jFlood.height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
+jFlood.xAxis = d3.svg.axis()
+    .scale(jFlood.x)
     .orient("bottom");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
+jFlood.yAxis = d3.svg.axis()
+    .scale(jFlood.y)
     .orient("left");
 
-svg.append("g")
+jFlood.svg.append("g")
     .attr("class", "x-axis-group")
-    .attr("transform", "translate(0," + (height) + ")");
+    .attr("transform", "translate(0," + (jFlood.height) + ")");
 
-svg.append("g")
+jFlood.svg.append("g")
     .attr("class", "y-axis-group");
 
 // Initialize data
 loadData();
 
-// Initialize Line
-svg.append("path")
+// Initialize Land Line
+jFlood.svg.append("path")
     .attr("class", "elev-line");
 
 // Initialize Water Level
-svg.append("path")
+jFlood.svg.append("path")
     .attr("class","water-line");
 
-svg.append("path")
+// Initialize Water Area
+jFlood.svg.append("path")
     .attr("class","water-area");
+
+// Initialize Land Area
+jFlood.svg.append("path")
+    .attr("class","elev-area");
+
 
 // Initialize Tooltip
 
-var tip = d3.tip()
+jFlood.tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .direction('e');
-var data;
-var gageHeight;
-var formatDate = d3.time.format("%Y-%m-%d");
-var waterArea, waterLine;
+
+jFlood.formatDate = d3.time.format("%Y-%m-%d");
+
 
 // Load CSV file
 function loadData() {
@@ -84,10 +95,15 @@ function loadData() {
             d.long = +latlong[1];
             d.index = counter;
             counter = counter + 1;
+
+            if (d.index >= jFlood.elevTroughIndex & d.elevation >= jFlood.minFloodElev){
+                d.elevation = jFlood.minFloodElev;
+            }
+            d.elevation = d.elevation <= jFlood.cutoff_elev ? jFlood.cutoff_elev : d.elevation;
         });
 
         // Store csv data in global variable
-        data = csv;
+        jFlood.data = csv;
 
         // Import Gage Height Data
         d3.csv("data/flood_gage_height.csv", function(error,gh){
@@ -97,96 +113,102 @@ function loadData() {
                 d.minute = +d.minute;
                 d.month = +d.month;
                 d.year = +d.year;
-                d.date = formatDate.parse(d.date)
-            })
-            gageHeight = gh;
-            renderVisualization();
-        })
+                d.date = jFlood.formatDate.parse(d.date)
+            });
+            jFlood.gageHeight = gh;
 
-        // Draw the visualization for the first time
+            d3.csv("data/image_link.csv", function(error,file){
+                file.forEach(function(d){
+                    d.index = +d.index;
+                });
+                jFlood.imageLinks = file;
+                renderVisualization();
+            })
+        })
     });
 }
 
 // Render visualization
 function renderVisualization() {
     // Get User Values
-    var numSamples = data.length;
+    var numSamples = jFlood.data.length;
     var xVals = [0,numSamples];
     var select_value = $("#select-area").val();
 
 
-    x.domain([xVals[0],xVals[1]]);
+    jFlood.x.domain([xVals[0],xVals[1]]);
 
-    svg.select(".x-axis-group")
-        .call(xAxis);
+    jFlood.svg.select(".x-axis-group")
+        .call(jFlood.xAxis);
 
-    var elevExtent = d3.extent(data, function(d){return d.elevation;});
-    var gageExtent = d3.extent(gageHeight,function(d){return d.height});
+    var elevExtent = d3.extent(jFlood.data, function(d){return d.elevation;});
+    console.log(elevExtent);
+    var gageExtent = d3.extent(jFlood.gageHeight,function(d){return d.height});
 
     var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
 
-    y.domain([min_elev,upperBound]);
+    jFlood.y.domain([jFlood.cutoff_elev,upperBound]);
 
-    svg.select(".y-axis-group")
-        .call(yAxis);
+    jFlood.svg.select(".y-axis-group")
+        .call(jFlood.yAxis);
 
     // Build LAND area
-    var land_area = d3.svg.area()
-        .x(function(d) { return x(d.index); })
-        .y0(height)
-        .y1(function(d) { return y(d.elevation); });
+    jFlood.elevArea = d3.svg.area()
+        .x(function(d) { return jFlood.x(d.index); })
+        .y0(jFlood.height)
+        .y1(function(d) { return jFlood.y(d.elevation); });
 
-    svg.append("path")
-        .datum(data)
+    jFlood.svg.append("path")
+        .datum(jFlood.data)
         .attr("class", "land-area")
-        .attr("d", land_area);
+        .attr("d", jFlood.elevArea(jFlood.data));
 
     // Build LAND line
-    var line = d3.svg.line()
-        .x(function(d) { return x(d.index); })
-        .y(function(d) { return y(d.elevation); })
-        .interpolate(interpolate_value);
+    jFlood.line = d3.svg.line()
+        .x(function(d) { return jFlood.x(d.index); })
+        .y(function(d) { return jFlood.y(d.elevation); })
+        .interpolate(jFlood.interpolate_value);
 
     // Build Line Chart
-    svg.selectAll(".elev-line")
+    jFlood.svg.selectAll(".elev-line")
         .transition().duration(800)
-        .attr("d", line(data));
+        .attr("d", jFlood.line(jFlood.data));
 
 
     // Build WATER Area
-    waterArea = d3.svg.area()
-        .x(function(d) { return x(d.index); })
-        .y0(height)
-        .y1(function(d) { return y(200+gageHeight[normalIndex].height); });
+    jFlood.waterArea = d3.svg.area()
+        .x(function(d) { return jFlood.x(d.index); })
+        .y0(jFlood.height)
+        .y1(function(d) { return jFlood.y(jFlood.avg_gage); });
 
-    svg.selectAll(".water-area")
+    jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
-        .attr("d", waterArea(data));
+        .attr("d", jFlood.waterArea(jFlood.data));
 
     // Build WATER Line
-    waterLine = d3.svg.line()
-        .x(function(d) { return x(d.index); })
-        .y(function(d) { return y(200+gageHeight[normalIndex].height); })
-        .interpolate(interpolate_value);
+    jFlood.waterLine = d3.svg.line()
+        .x(function(d) { return jFlood.x(d.index); })
+        .y(function(d) { return jFlood.y(jFlood.avg_gage); })
+        .interpolate(jFlood.interpolate_value);
 
-    svg.selectAll(".water-line")
+    jFlood.svg.selectAll(".water-line")
         .transition().duration(800)
-        .attr("d", waterLine(data));
+        .attr("d", jFlood.waterLine(jFlood.data));
 
 
     // Initialize DataPoints
     //Create Circle
-    var circle = svg.selectAll("circle")
-        .data(data);
+    var circle = jFlood.svg.selectAll("circle")
+        .data(jFlood.data);
 
     // Call Tip
-    tip.html(function(d){
-        var html_l1 = d.elevation;
-        var html_l2 = "Elevation" + ": " + d.elevation;
-        return html_l2;
+    jFlood.tip.html(function(d){
+        // var html_l1 = d.elevation;
+        // var html_l2 = "Elevation" + ": " + d.elevation + " @ " + d.index;
+        return "Elevation" + ": " + d.elevation + " @ " + d.index;
         //return (html_l1 + "<br/>" + html_l2);
     });
-    svg.call(tip);
+    jFlood.svg.call(jFlood.tip);
 
     circle.enter().append("circle")
         .attr("class", "dot")
@@ -196,12 +218,12 @@ function renderVisualization() {
         .transition()
         .duration(800)
         .attr("r", function(d) { return 2; })
-        .attr("cx", function(d, index) { return x(index) })
-        .attr("cy",function(d){return y(d.elevation);});
+        .attr("cx", function(d, index) { return jFlood.x(index) })
+        .attr("cy",function(d){return jFlood.y(d.elevation);});
 
     circle
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+        .on('mouseover', jFlood.tip.show)
+        .on('mouseout', jFlood.tip.hide);
     //     .on('click',function(d){
     //         d3.selectAll(".dot")
     //             .attr("r",5);
@@ -210,6 +232,18 @@ function renderVisualization() {
     //         showEdition(d);
     //     });
     //
+
+    var icons = jFlood.svg.selectAll(".icons")
+        .data(jFlood.imageLinks);
+
+    icons.enter().append("image")
+        .attr("xlink:href",function(d){
+            return d.title;
+        })
+        .attr("x",function(d){return jFlood.x(d.index-5)})
+        .attr("y",jFlood.y(jFlood.minFloodElev + 10))
+        .attr("width",100)
+        .attr("height",100);
     // Exit
     circle.exit().remove();
 
@@ -227,38 +261,47 @@ function renderVisualization() {
 
 function updateWater(){
 
-    var timeIndex = floodStartIndex;
-    var renderUpdateWater = function(){
+    var timeIndex = jFlood.floodStartIndex;
 
-        if(stopInterval==true){
+    var renderUpdateWater = function(){
+        if(jFlood.stopInterval==true || $("#select-area").val() == "AVERAGE"){
             console.log("STOPPING INTERVAL!");
             clearInterval(interval);
+            resetWater();
         }
-        console.log("TIME INDEX, HEIGHT:");
-        console.log(timeIndex,gageHeight[timeIndex].height);
-        waterArea.y1(function(d) { return y(200 + gageHeight[timeIndex].height);});
-        svg.selectAll(".water-area")
-            .transition().duration(800)
-            .attr("d", waterArea(data));
-        // Build WATER Line
-        waterLine = d3.svg.line()
-            .x(function(d) { return x(d.index); })
-            .y(function(d) { return y(200+gageHeight[timeIndex].height); })
-            .interpolate(interpolate_value);
+        else{
+            // Update WATER Area
+            jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[timeIndex].height);});
+            jFlood.svg.selectAll(".water-area")
+                .transition().duration(400)
+                .attr("d", jFlood.waterArea(jFlood.data));
+            // Update WATER Line
+            jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });
+            jFlood.svg.selectAll(".water-line")
+                .transition().duration(400)
+                .attr("d", jFlood.waterLine(jFlood.data));
 
-        svg.selectAll(".water-line")
-            .transition().duration(800)
-            .attr("d", waterLine(data));
-
-        timeIndex++;
-        if (timeIndex >= 160){
-            timeIndex = floodStartIndex;
-            clearInterval(interval)
+            timeIndex = timeIndex+4;
+            if (timeIndex >= jFlood.floodEndIndex){
+                timeIndex = jFlood.floodStartIndex;
+                clearInterval(interval)
+            }
         }
+
     };
-    var interval = setInterval(renderUpdateWater,1000);
+    var interval = setInterval(renderUpdateWater,500);
+
 
 }
 
-
+function resetWater(){
+    jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[jFlood.normalIndex].height);});
+    jFlood.svg.selectAll(".water-area")
+        .transition().duration(800)
+        .attr("d", jFlood.waterArea(jFlood.data));
+    jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[jFlood.normalIndex].height); });
+    jFlood.svg.selectAll(".water-line")
+        .transition().duration(800)
+        .attr("d", jFlood.waterLine(jFlood.data));
+}
 
