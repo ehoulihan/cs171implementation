@@ -19,7 +19,7 @@ var margin = {top: 20, right: 20, bottom: 20, left: 60};
 var width = 800 - margin.left - margin.right,
     height = 300 - margin.top - margin.bottom;
 
-var svg = d3.select("#speed-chart").append("svg")
+var svg = d3.select("#chart-area").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -70,7 +70,7 @@ var data;
 
 // Load CSV file
 function loadData() {
-    d3.csv("../data/terrain.csv", function(error, csv) {
+    d3.csv("../data/terrain2.csv", function(error, csv) {
         var counter = 0;
         csv.forEach(function(d){
             // Convert numeric values to 'numbers'
@@ -98,21 +98,28 @@ function updateVisualization() {
     console.log("DATA IN VIS");
     console.log(data);
     var interpolate_value = "linear";
-    var numSamples = data.length;
-    var xVals = [0,numSamples];
+    // var numSamples = data.length;
+    // var xVals = [0,numSamples];
 
-    x.domain([xVals[0],xVals[1]]);
+    //x.domain([xVals[0],xVals[1]]);
 
     console.log(x.domain());
     console.log(x.range());
     svg.select(".x-axis-group")
         .call(xAxis);
 
-    var yExtent = d3.extent(data, function(d){
-        return d.Y;
-    });
+    // var yExtent = d3.extent(data, function(d){
+    //     return d.Y;
+    // });
 
-    y.domain([min_elev,yExtent[1]]);
+    //y.domain([min_elev,yExtent[1]]);
+
+    x.domain(d3.extent(data, function(d) { return d.X; }));
+    y.domain(d3.extent(data, function(d) { return d.Y; }));
+
+    console.log(data);
+
+
 
     svg.select(".y-axis-group")
         .call(yAxis);
@@ -149,15 +156,15 @@ function updateVisualization() {
         .attr("d", water_line(water));
 
     // Build Areas
-    var water_area = d3.svg.area()
-        .x(function(d) { return x(d.X); })
-        .y0(height)
-        .y1(function(d) { return y(avg_gage); });
+    // var water_area = d3.svg.area()
+    //     .x(function(d) { return x(d.X); })
+    //     .y0(height)
+    //     .y1(function(d) { return y(avg_gage); });
 
-    svg.append("path")
-        .datum(data)
-        .attr("class", "water-area")
-        .attr("d", water_area);
+    // svg.append("path")
+    //     .datum(data)
+    //     .attr("class", "water-area")
+    //     .attr("d", water_area);
 
     var land_area = d3.svg.area()
         .x(function(d) { return x(d.X); })
