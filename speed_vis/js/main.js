@@ -211,7 +211,7 @@ function updateVisualization() {
         timer_ret_val = true;
     });
 
-    var duration = 1000, targetX = 700,last = 0, t=0;
+    var duration = 5000, targetX = 700,last = 0, t=0;
     d3.timer(function(elapsed) {
         t = (t + (elapsed - last) / duration) % 1;
         last = elapsed;
@@ -221,6 +221,7 @@ function updateVisualization() {
 
     function update(elapsed){
         var t_x = circledata.get('x');
+        console.log (t);
         t_x = targetX * t;
 
         svg.selectAll("g.blob")
@@ -250,17 +251,17 @@ function updateVisualization() {
     circledata.set('x', 0);
     circledata.set('y', C1_HEIGHT/2);
 
-    var circleg1 = svg.selectAll("g.blob")
+    var circleg1 = svg.selectAll("g.blob1")
         .data([circledata])
         .enter()
         .append("svg:g")
-        .attr("class", "blob")
-        .attr("transform", function(d) {return "translate(" + C_WIDTH/2 + "," + C_HEIGHT/2 + ")";});
+        .attr("class", "blob1")
+        .attr("transform", function(d) {return "translate(" + C1_WIDTH/2 + "," + C1_HEIGHT/2 + ")";});
 
-    var t_circle_object1 = circleg
+    var t_circle_object1 = circleg1
         .append("circle")
         .attr("cx", function(d) { return 0; })
-        .attr("cy", function(d) { return 0; })
+        .attr("cy", function(d) { return 60; })
         .attr("r", function(d) {return 30; })
         .attr("class", "object_circle")
         .style("fill", "#0000dd")
@@ -271,22 +272,24 @@ function updateVisualization() {
     //     timer_ret_val = true;
     // });
 
-    var duration = 1000, targetX = 700,last = 0, t=0;
-    d3.timer(function(elapsed) {
-        t = (t + (elapsed - last) / duration) % 1;
-        last = elapsed;
-        update();
+    var duration1 = 2000, targetX1 = 700,last1 = 0, t1=0;
+    d3.timer(function(elapsed1) {
+        console.log(duration1);
+        t1 = (t1 + (elapsed1 - last1) / duration1) % 1;
+        last1 = elapsed1;
+        update1();
         return timer_ret_val;
     });
 
-    function update(elapsed){
-        var t_x = circledata.get('x');
-        t_x = targetX * t;
+    function update1(elapsed1){
+        var t_x1 = circledata.get('x');
+        console.log (t1);
+        t_x1 = targetX1 * t1;
 
-        svg.selectAll("g.blob")
-            .attr("transform", function(d) {return "translate(" + t_x + "," + d.get('y') + ")";});
+        svg.selectAll("g.blob1")
+            .attr("transform", function(d) {return "translate(" + t_x1 + "," + d.get('y') + ")";});
 
-        circledata.set('x', t_x);
+        circledata.set('x', t_x1);
     }
 
 
