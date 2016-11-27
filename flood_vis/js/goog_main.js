@@ -5,21 +5,22 @@ var numSamples = 300;
 google.load('visualization', '1', {packages: ['columnchart']});
 
 function initMap() {
-  // The following path marks a path from Mt. Whitney, the highest point in the
-  // continental United States to Badwater, Death Valley, the lowest point.
-    var coord0 = [42.818364, -73.945887];
-    var coord1 = [42.819622, -73.947064];
-    var coord2 = [42.821213, -73.948245];
+    // N Ferry St
+    // var coord0 = [42.818364, -73.945887];
+    // var coord1 = [42.819622, -73.947064];
+    // var coord2 = [42.821213, -73.948245];
 
-  // coord0 = [42.820006, -73.948477]
-  // coord1 = [42.827309, -73.933972]
-  // coord2 = [42.844428, -73.915862]
+    // Ingersoll St
+    var coord0 = [42.819438, -73.943042];
+    var coord1 = [42.820695, -73.944622];
+    var coord2 = [42.822506, -73.946651];
+
   var path = [
       {lat: coord0[0], lng: coord0[1]},  // S of River
       {lat: coord1[0], lng: coord1[1]},  // S-edge of River 
       {lat: coord2[0], lng: coord2[1]}]; // N-edge of River
-  console.log(path[1]);
-  var map = new google.maps.Map(document.getElementById('map'), {
+
+    var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 8,
     center: path[0],
     mapTypeId: 'terrain'
@@ -83,4 +84,23 @@ function plotElevation(elevations, status) {
     legend: 'none',
     titleY: 'Elevation (m)'
   });
+}
+
+function CSV(array) {
+    // Use first element to choose the keys and the order
+    var keys = Object.keys(array[0]);
+
+    // Build header
+    var result = keys.join("\t") + "\n";
+
+    // Add the rows
+    array.forEach(function(obj){
+        keys.forEach(function(k, ix){
+            if (ix) result += "\t";
+            result += obj[k];
+        });
+        result += "\n";
+    });
+
+    return result;
 }

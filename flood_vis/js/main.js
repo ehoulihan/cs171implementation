@@ -7,6 +7,10 @@ var river_start = [42.820274, -73.945933];
 var river_end = [42.821580, -73.947104];
 var avg_gage = 213;
 var min_elev = 200;
+var floodStartIndex = 128;
+var normalIndex = 110;
+var stopInterval = false;
+var interpolate_value = "linear";
 
 // SVG drawing area
 
@@ -42,9 +46,6 @@ svg.append("g")
 svg.append("g")
     .attr("class", "y-axis-group");
 
-// Date parser (https://github.com/mbostock/d3/wiki/Time-Formatting)
-var formatDate = d3.time.format("%Y");
-
 // Initialize data
 loadData();
 
@@ -56,6 +57,9 @@ svg.append("path")
 svg.append("path")
     .attr("class","water-line");
 
+svg.append("path")
+    .attr("class","water-area");
+
 // Initialize Tooltip
 
 var tip = d3.tip()
@@ -63,6 +67,9 @@ var tip = d3.tip()
     .offset([-10, 0])
     .direction('e');
 var data;
+var gageHeight;
+var formatDate = d3.time.format("%Y-%m-%d");
+var waterArea, waterLine;
 
 // Load CSV file
 function loadData() {
@@ -82,78 +89,48 @@ function loadData() {
         // Store csv data in global variable
         data = csv;
 
+        // Import Gage Height Data
+        d3.csv("data/flood_gage_height.csv", function(error,gh){
+            gh.forEach(function(d){
+                d.day = +d.day;
+                d.height = +d.height;
+                d.minute = +d.minute;
+                d.month = +d.month;
+                d.year = +d.year;
+                d.date = formatDate.parse(d.date)
+            })
+            gageHeight = gh;
+            renderVisualization();
+        })
+
         // Draw the visualization for the first time
-        updateVisualization();
     });
 }
 
 // Render visualization
-function updateVisualization() {
+function renderVisualization() {
     // Get User Values
-    console.log("DATA IN VIS");
-    console.log(data);
-    var interpolate_value = "linear";
     var numSamples = data.length;
     var xVals = [0,numSamples];
+    var select_value = $("#select-area").val();
+
 
     x.domain([xVals[0],xVals[1]]);
 
-    console.log(x.domain());
-    console.log(x.range());
     svg.select(".x-axis-group")
         .call(xAxis);
 
-    var yExtent = d3.extent(data, function(d){
-        return d.elevation;
-    });
+    var elevExtent = d3.extent(data, function(d){return d.elevation;});
+    var gageExtent = d3.extent(gageHeight,function(d){return d.height});
 
-    y.domain([min_elev,yExtent[1]]);
+    var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
+
+    y.domain([min_elev,upperBound]);
 
     svg.select(".y-axis-group")
         .call(yAxis);
 
-    // Add Line Function
-    var line = d3.svg.line()
-        .x(function(d) { return x(d.index); })
-        .y(function(d) { return y(d.elevation); })
-        .interpolate(interpolate_value);
-
-
-    // Build Line Chart
-    svg.selectAll(".elev-line")
-        .transition().duration(800)
-        .attr("d", line(data));
-
-    // Get Indeces of Water Start/End
-    var water = data.filter(function(d){
-        console.log(d.elevation);
-        return (d.elevation <= avg_gage);
-    });
-    console.log("WATER");
-    console.log(water);
-
-    var water_line = d3.svg.line()
-        .x(function(d) { return x(d.index); })
-        .y(function(d) { return y(avg_gage); })
-        .interpolate(interpolate_value);
-
-
-    // Build Line Chart
-    svg.selectAll(".water-line")
-        .transition().duration(800)
-        .attr("d", water_line(water));
-
-    // Build Areas
-    var water_area = d3.svg.area()
-        .x(function(d) { return x(d.index); })
-        .y0(height)
-        .y1(function(d) { return y(avg_gage); });
-
-    svg.append("path")
-        .datum(data)
-        .attr("class", "water-area")
-        .attr("d", water_area);
-
+    // Build LAND area
     var land_area = d3.svg.area()
         .x(function(d) { return x(d.index); })
         .y0(height)
@@ -164,6 +141,38 @@ function updateVisualization() {
         .attr("class", "land-area")
         .attr("d", land_area);
 
+    // Build LAND line
+    var line = d3.svg.line()
+        .x(function(d) { return x(d.index); })
+        .y(function(d) { return y(d.elevation); })
+        .interpolate(interpolate_value);
+
+    // Build Line Chart
+    svg.selectAll(".elev-line")
+        .transition().duration(800)
+        .attr("d", line(data));
+
+
+    // Build WATER Area
+    waterArea = d3.svg.area()
+        .x(function(d) { return x(d.index); })
+        .y0(height)
+        .y1(function(d) { return y(200+gageHeight[normalIndex].height); });
+
+    svg.selectAll(".water-area")
+        .transition().duration(800)
+        .attr("d", waterArea(data));
+
+    // Build WATER Line
+    waterLine = d3.svg.line()
+        .x(function(d) { return x(d.index); })
+        .y(function(d) { return y(200+gageHeight[normalIndex].height); })
+        .interpolate(interpolate_value);
+
+    svg.selectAll(".water-line")
+        .transition().duration(800)
+        .attr("d", waterLine(data));
+
 
     // Initialize DataPoints
     //Create Circle
@@ -172,8 +181,8 @@ function updateVisualization() {
 
     // Call Tip
     tip.html(function(d){
-        html_l1 = d.elevation;
-        html_l2 = "Elevation" + ": " + d.elevation;
+        var html_l1 = d.elevation;
+        var html_l2 = "Elevation" + ": " + d.elevation;
         return html_l2;
         //return (html_l1 + "<br/>" + html_l2);
     });
@@ -186,7 +195,7 @@ function updateVisualization() {
     circle
         .transition()
         .duration(800)
-        .attr("r", function(d) { return 1; })
+        .attr("r", function(d) { return 2; })
         .attr("cx", function(d, index) { return x(index) })
         .attr("cy",function(d){return y(d.elevation);});
 
@@ -206,13 +215,50 @@ function updateVisualization() {
 
 }
 
-
-// Show details for a specific FIFA World Cup
-// function showEdition(d){
-//     for (elt in d){
-//         if (elt != "YEAR"){
-//             ($("#"+elt).html(d[elt]));
-//         }
-//     }
+//
+// function waterValue(index,condition,hIndex){
+//     // var wave = index % 2 == 0 ? 1:-1;
+//     // wave = index % 4 == 0 ? 0:wave;
+//     var wave = 0;
+//     var res = condition == "FLOOD" ? 200+gageHeight[hIndex].height : avg_gage;
+//     res = res + wave;
+//     return res;
 // }
+
+function updateWater(){
+
+    var timeIndex = floodStartIndex;
+    var renderUpdateWater = function(){
+
+        if(stopInterval==true){
+            console.log("STOPPING INTERVAL!");
+            clearInterval(interval);
+        }
+        console.log("TIME INDEX, HEIGHT:");
+        console.log(timeIndex,gageHeight[timeIndex].height);
+        waterArea.y1(function(d) { return y(200 + gageHeight[timeIndex].height);});
+        svg.selectAll(".water-area")
+            .transition().duration(800)
+            .attr("d", waterArea(data));
+        // Build WATER Line
+        waterLine = d3.svg.line()
+            .x(function(d) { return x(d.index); })
+            .y(function(d) { return y(200+gageHeight[timeIndex].height); })
+            .interpolate(interpolate_value);
+
+        svg.selectAll(".water-line")
+            .transition().duration(800)
+            .attr("d", waterLine(data));
+
+        timeIndex++;
+        if (timeIndex >= 160){
+            timeIndex = floodStartIndex;
+            clearInterval(interval)
+        }
+    };
+    var interval = setInterval(renderUpdateWater,1000);
+
+}
+
+
 

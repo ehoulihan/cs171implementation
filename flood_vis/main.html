@@ -12,19 +12,25 @@
     <div id="map" style="height:250px;"></div>
     <div id="elevation_chart"></div>
 </div>
-<div id="chart-area">
-
+<div id="flood-vis-area">
+    <div class="user-control" align="center">
+        <select id="select-area" class="form-control" onchange="updateWater()">
+            <option value="AVERAGE">Average Height</option>
+            <option value="FLOOD">Flood Simulation</option>
+        </select>
+    </div>
+    <div id="chart-area"></div>
 </div>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="js/d3.tip.js"></script>
-<!--<script src="https://www.google.com/jsapi"></script>-->
-<!--<script src="js/goog_main.js"></script>-->
-<!--<script async defer-->
-        <!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkorV6bHKKE6j3hLN4xkGjOhWOVl87jNI&callback=initMap">-->
-<!--</script>-->
+<script src="https://www.google.com/jsapi"></script>
+<script src="js/goog_main.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkorV6bHKKE6j3hLN4xkGjOhWOVl87jNI&callback=initMap">
+</script>
 
 <script src="js/main.js"></script>
 
