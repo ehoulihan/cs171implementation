@@ -9,7 +9,7 @@
 
 var river_start = [42.820274, -73.945933];
 var river_end = [42.821580, -73.947104];
-var avg_gage = 213;
+var avg_gage = 200;
 var min_elev = 200;
 
 // SVG drawing area
@@ -98,8 +98,8 @@ function updateVisualization() {
     console.log("DATA IN VIS");
     console.log(data);
     var interpolate_value = "linear";
-    // var numSamples = data.length;
-    // var xVals = [0,numSamples];
+    var numSamples = data.length;
+    var xVals = [0,numSamples];
 
     //x.domain([xVals[0],xVals[1]]);
 
@@ -108,18 +108,14 @@ function updateVisualization() {
     svg.select(".x-axis-group")
         .call(xAxis);
 
-    // var yExtent = d3.extent(data, function(d){
-    //     return d.Y;
-    // });
+    var yExtent = d3.extent(data, function(d){
+        return d.Y;
+    });
 
     //y.domain([min_elev,yExtent[1]]);
 
     x.domain(d3.extent(data, function(d) { return d.X; }));
     y.domain(d3.extent(data, function(d) { return d.Y; }));
-
-    console.log(data);
-
-
 
     svg.select(".y-axis-group")
         .call(yAxis);
@@ -156,15 +152,15 @@ function updateVisualization() {
         .attr("d", water_line(water));
 
     // Build Areas
-    // var water_area = d3.svg.area()
-    //     .x(function(d) { return x(d.X); })
-    //     .y0(height)
-    //     .y1(function(d) { return y(avg_gage); });
+    var water_area = d3.svg.area()
+        .x(function(d) { return x(d.X); })
+        .y0(height)
+        .y1(function(d) { return y(avg_gage); });
 
-    // svg.append("path")
-    //     .datum(data)
-    //     .attr("class", "water-area")
-    //     .attr("d", water_area);
+    svg.append("path")
+        .datum(data)
+        .attr("class", "water-area")
+        .attr("d", water_area);
 
     var land_area = d3.svg.area()
         .x(function(d) { return x(d.X); })
@@ -175,6 +171,125 @@ function updateVisualization() {
         .datum(data)
         .attr("class", "land-area")
         .attr("d", land_area);
+
+
+    var C_WIDTH = 300,
+        C_HEIGHT = 200;
+    //
+    // var width = C_WIDTH;
+    // var height = C_HEIGHT;
+    var timer_ret_val = false;
+    //
+    // var mainsvg = d3.select("#chart-area")
+    //     .append("svg")
+    //     .attr("width", width)
+    //     .attr("height", height)
+    //     .attr("class", "g_mainsvg");
+
+    var circledata = d3.map();
+    circledata.set('x', 0);
+    circledata.set('y', C_HEIGHT/2);
+
+    var circleg = svg.selectAll("g.blob")
+        .data([circledata])
+        .enter()
+        .append("svg:g")
+        .attr("class", "blob")
+        .attr("transform", function(d) {return "translate(" + C_WIDTH/2 + "," + C_HEIGHT/2 + ")";});
+
+    var t_circle_object = circleg
+        .append("circle")
+        .attr("cx", function(d) { return 0; })
+        .attr("cy", function(d) { return 0; })
+        .attr("r", function(d) {return 30; })
+        .attr("class", "object_circle")
+        .style("fill", "#0000dd")
+        .style("fill-opacity", "0.75");
+
+    var stopdiv=d3.select("#stopdiv");
+    stopdiv.on("click", function()	{
+        timer_ret_val = true;
+    });
+
+    var duration = 1000, targetX = 700,last = 0, t=0;
+    d3.timer(function(elapsed) {
+        t = (t + (elapsed - last) / duration) % 1;
+        last = elapsed;
+        update();
+        return timer_ret_val;
+    });
+
+    function update(elapsed){
+        var t_x = circledata.get('x');
+        t_x = targetX * t;
+
+        svg.selectAll("g.blob")
+            .attr("transform", function(d) {return "translate(" + t_x + "," + d.get('y') + ")";});
+
+        circledata.set('x', t_x);
+    }
+
+
+
+
+
+    var C1_WIDTH = 300,
+        C1_HEIGHT = 200;
+    //
+    // var width = C_WIDTH;
+    // var height = C_HEIGHT;
+    //var timer_ret_val = false;
+    //
+    // var mainsvg = d3.select("#chart-area")
+    //     .append("svg")
+    //     .attr("width", width)
+    //     .attr("height", height)
+    //     .attr("class", "g_mainsvg");
+
+    var circle1data = d3.map();
+    circledata.set('x', 0);
+    circledata.set('y', C1_HEIGHT/2);
+
+    var circleg1 = svg.selectAll("g.blob")
+        .data([circledata])
+        .enter()
+        .append("svg:g")
+        .attr("class", "blob")
+        .attr("transform", function(d) {return "translate(" + C_WIDTH/2 + "," + C_HEIGHT/2 + ")";});
+
+    var t_circle_object1 = circleg
+        .append("circle")
+        .attr("cx", function(d) { return 0; })
+        .attr("cy", function(d) { return 0; })
+        .attr("r", function(d) {return 30; })
+        .attr("class", "object_circle")
+        .style("fill", "#0000dd")
+        .style("fill-opacity", "0.75");
+
+    // var stopdiv=d3.select("#stopdiv");
+    // stopdiv.on("click", function()	{
+    //     timer_ret_val = true;
+    // });
+
+    var duration = 1000, targetX = 700,last = 0, t=0;
+    d3.timer(function(elapsed) {
+        t = (t + (elapsed - last) / duration) % 1;
+        last = elapsed;
+        update();
+        return timer_ret_val;
+    });
+
+    function update(elapsed){
+        var t_x = circledata.get('x');
+        t_x = targetX * t;
+
+        svg.selectAll("g.blob")
+            .attr("transform", function(d) {return "translate(" + t_x + "," + d.get('y') + ")";});
+
+        circledata.set('x', t_x);
+    }
+
+
 
 
     // // Initialize DataPoints

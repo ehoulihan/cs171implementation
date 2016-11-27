@@ -196,5 +196,8 @@ select {
 }
 
 
+.g_mainsvg {background: #ddd;border: 1px solid #00f;}
+.object_circle {fill: #2ca02c;stroke:#028;stroke-width:2;}
+
 
 
