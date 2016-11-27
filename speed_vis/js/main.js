@@ -157,10 +157,13 @@ function updateVisualization() {
         .y0(height)
         .y1(function(d) { return y(avg_gage); });
 
+
     svg.append("path")
         .datum(data)
         .attr("class", "water-area")
-        .attr("d", water_area);
+        .attr("d", water_area)
+        .style("opacity", "0.5")
+        .attr("id", "water_area");
 
     var land_area = d3.svg.area()
         .x(function(d) { return x(d.X); })
@@ -203,8 +206,9 @@ function updateVisualization() {
         .attr("cy", function(d) { return 0; })
         .attr("r", function(d) {return 30; })
         .attr("class", "object_circle")
-        .style("fill", "#0000dd")
-        .style("fill-opacity", "0.75");
+        .attr("id", "slow_boat")
+        .style("fill", "brown")
+        .style("opacity", "0.5");
 
     var stopdiv=d3.select("#stopdiv");
     stopdiv.on("click", function()	{
@@ -265,8 +269,8 @@ function updateVisualization() {
         .attr("r", function(d) {return 30; })
         .attr("id", "fast_boat")
         .attr("class", "object_circle")
-        .style("fill", "#0000dd")
-        .style("fill-opacity", "0.75");
+        .style("fill", "brown")
+        .style("opacity", "0.5");
 
     // var stopdiv=d3.select("#stopdiv");
     // stopdiv.on("click", function()	{
@@ -293,13 +297,35 @@ function updateVisualization() {
         circledata.set('x', t_x1);
     }
 
-    $( "a" ).hover(
+    $( "#pool" ).hover(
+        function() {
+            var active   = slow_boat.active ? false : true,
+                newOpacity = active ? 1 : 0.5;
+            // Hide or show the elements
+            d3.select("#slow_boat").style("opacity", newOpacity);
+            d3.select("#slow_boat").style("opacity", newOpacity);
+            d3.select("#slow_boat").style("fill", "red");
+            // Update whether or not the elements are active
+            slow_boat.active = active;
+
+            var active_water   = water_area.active ? false : true,
+                newOpacity = active ? 1 : 0.5;
+            // Hide or show the elements
+            d3.select("#water_area").style("opacity", newOpacity);
+            d3.select("#water_area").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            water_area.active = active_water;
+        }
+    );
+
+    $( "#natural_flow" ).hover(
         function() {
             var active   = fast_boat.active ? false : true,
-                newOpacity = active ? 0 : 1;
+                newOpacity = active ? 1 : 0.5;
             // Hide or show the elements
             d3.select("#fast_boat").style("opacity", newOpacity);
             d3.select("#fast_boat").style("opacity", newOpacity);
+            d3.select("#slow_boat").style("fill", "red");
             // Update whether or not the elements are active
             fast_boat.active = active;
         }
