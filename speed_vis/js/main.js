@@ -261,8 +261,9 @@ function updateVisualization() {
     var t_circle_object1 = circleg1
         .append("circle")
         .attr("cx", function(d) { return 0; })
-        .attr("cy", function(d) { return 60; })
+        .attr("cy", function(d) { return 70; })
         .attr("r", function(d) {return 30; })
+        .attr("id", "fast_boat")
         .attr("class", "object_circle")
         .style("fill", "#0000dd")
         .style("fill-opacity", "0.75");
@@ -292,6 +293,17 @@ function updateVisualization() {
         circledata.set('x', t_x1);
     }
 
+    $( "a" ).hover(
+        function() {
+            var active   = fast_boat.active ? false : true,
+                newOpacity = active ? 0 : 1;
+            // Hide or show the elements
+            d3.select("#fast_boat").style("opacity", newOpacity);
+            d3.select("#fast_boat").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            fast_boat.active = active;
+        }
+    );
 
 
 
