@@ -6,23 +6,22 @@ jFlood = {};
 
 jFlood.river_start = [42.820274, -73.945933];
 jFlood.river_end = [42.821580, -73.947104];
-jFlood.avg_gage = 213;
+jFlood.avg_gage = 216;
 jFlood.min_elev = 200;
 jFlood.cutoff_elev = 210;
-jFlood.floodStartIndex = 34;
+jFlood.floodStartIndex = 1;
 // http://www.cityofschenectady.com/DocumentCenter/Home/View/247 p.19
 jFlood.minFloodElev = 223;
 jFlood.elevTroughIndex = 72;
-jFlood.floodEndIndex = 160;
-jFlood.normalIndex = 33;
+jFlood.floodEndIndex = 95;
 jFlood.stopInterval = false;
 jFlood.interpolate_value = "linear";
 
 // SVG drawing area
 
-jFlood.margin = {top: 20, right: 20, bottom: 20, left: 60};
+jFlood.margin = {top: 20, right: 20, bottom: 60, left: 60};
 
-jFlood.width = 800 - jFlood.margin.left - jFlood.margin.right;
+jFlood.width = 900 - jFlood.margin.left - jFlood.margin.right;
 jFlood.height = 300 - jFlood.margin.top - jFlood.margin.bottom;
 
 jFlood.svg = d3.select("#chart-area").append("svg")
@@ -79,7 +78,7 @@ jFlood.tip = d3.tip()
     .offset([-10, 0])
     .direction('e');
 
-jFlood.formatDate = d3.time.format("%Y-%m-%d");
+jFlood.formatDate = d3.time.format("%Y-%m-%d %H:%M");
 
 
 // Load CSV file
@@ -88,8 +87,7 @@ function loadData() {
         var counter = 0;
         csv.forEach(function(d){
             // Convert numeric values to 'numbers'
-            d.elevation = +d.elevation;
-            d.elevation = d.elevation*3.28084;
+            d.elevation = ((+d.elevation)*3.28084);
             var latlong = d.location.replace(/[\(\)]/g,'').split(',');
             d.lat = +latlong[0];
             d.long = +latlong[1];
@@ -99,7 +97,7 @@ function loadData() {
             if (d.index >= jFlood.elevTroughIndex & d.elevation >= jFlood.minFloodElev){
                 d.elevation = jFlood.minFloodElev;
             }
-            d.elevation = d.elevation <= jFlood.cutoff_elev ? jFlood.cutoff_elev : d.elevation;
+            d.elevation = d.elevation <= jFlood.cutoff_elev ? jFlood.cutoff_elev+.25 : d.elevation;
         });
 
         // Store csv data in global variable
@@ -109,13 +107,16 @@ function loadData() {
         d3.csv("data/flood_gage_height.csv", function(error,gh){
             gh.forEach(function(d){
                 d.day = +d.day;
-                d.height = +d.height;
-                d.minute = +d.minute;
+                d.height = (+d.height)+3;
+                d.hour = Math.floor((+d.minute) / 60);
+                d.minute = (+d.minute) % 60;
                 d.month = +d.month;
                 d.year = +d.year;
-                d.date = jFlood.formatDate.parse(d.date)
+                d.date = jFlood.formatDate.parse(d.date + " " + d.hour + ":" + d.minute)
             });
-            jFlood.gageHeight = gh;
+            jFlood.gageHeight = gh.filter(function(elt){
+                return (elt.minute == 0);
+            });
 
             d3.csv("data/image_link.csv", function(error,file){
                 file.forEach(function(d){
@@ -123,6 +124,7 @@ function loadData() {
                 });
                 jFlood.imageLinks = file;
                 renderVisualization();
+                renderProgressBar();
             })
         })
     });
@@ -135,14 +137,12 @@ function renderVisualization() {
     var xVals = [0,numSamples];
     var select_value = $("#select-area").val();
 
-
     jFlood.x.domain([xVals[0],xVals[1]]);
 
     jFlood.svg.select(".x-axis-group")
         .call(jFlood.xAxis);
 
     var elevExtent = d3.extent(jFlood.data, function(d){return d.elevation;});
-    console.log(elevExtent);
     var gageExtent = d3.extent(jFlood.gageHeight,function(d){return d.height});
 
     var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
@@ -152,10 +152,14 @@ function renderVisualization() {
     jFlood.svg.select(".y-axis-group")
         .call(jFlood.yAxis);
 
+    // jFlood.data = jFlood.data.filter(function(elt){
+    //     return elt.elevation >= jFlood.avg_gage;
+    // });
+
     // Build LAND area
     jFlood.elevArea = d3.svg.area()
         .x(function(d) { return jFlood.x(d.index); })
-        .y0(jFlood.height)
+        .y0(jFlood.height-2)
         .y1(function(d) { return jFlood.y(d.elevation); });
 
     jFlood.svg.append("path")
@@ -178,7 +182,7 @@ function renderVisualization() {
     // Build WATER Area
     jFlood.waterArea = d3.svg.area()
         .x(function(d) { return jFlood.x(d.index); })
-        .y0(jFlood.height)
+        .y0(jFlood.height-2)
         .y1(function(d) { return jFlood.y(jFlood.avg_gage); });
 
     jFlood.svg.selectAll(".water-area")
@@ -217,8 +221,11 @@ function renderVisualization() {
     circle
         .transition()
         .duration(800)
-        .attr("r", function(d) { return 2; })
-        .attr("cx", function(d, index) { return jFlood.x(index) })
+        .attr("r", function(d) {
+            var res = .5;
+            res = d.elevation <= jFlood.avg_gage ? 0 : res;
+            return res; })
+        .attr("cx", function(d, index) { return jFlood.x(d.index) })
         .attr("cy",function(d){return jFlood.y(d.elevation);});
 
     circle
@@ -268,6 +275,7 @@ function updateWater(){
             console.log("STOPPING INTERVAL!");
             clearInterval(interval);
             resetWater();
+            resetProgress();
         }
         else{
             // Update WATER Area
@@ -281,27 +289,162 @@ function updateWater(){
                 .transition().duration(400)
                 .attr("d", jFlood.waterLine(jFlood.data));
 
-            timeIndex = timeIndex+4;
+            timeIndex = timeIndex+1;
             if (timeIndex >= jFlood.floodEndIndex){
-                timeIndex = jFlood.floodStartIndex;
                 clearInterval(interval)
             }
+            jProg.svg.selectAll("circle")
+                .attr("id","blank-dot");
+
+            jProg.svg.selectAll("#small-dot,#inactive-dot,#last-active-dot,#blank-dot")
+                .attr("id",function(d,index){
+                    var res = index==timeIndex ? "small-dot":"inactive-dot";
+                    res = (index>=timeIndex-6 & index <timeIndex) ? "last-active-dot": res;
+                    res = index < timeIndex - 6 ? "inactive-dot" : res;
+                    res = index > timeIndex ? "blank-dot" : res;
+                    res = (index < timeIndex & d.hour == 24) ? "last-active-dot" : res;
+                    return res;
+                })
+            jProg.svg.selectAll("#large-dot")
+                .attr("id",function(d,index){
+                    var res = "inactive-dot";
+                    if(index ==timeIndex){
+                        res = "large-dot";
+                    }
+                    return res;
+                })
+
         }
 
     };
-    var interval = setInterval(renderUpdateWater,500);
+    var interval = setInterval(renderUpdateWater,100);
 
 
 }
 
 function resetWater(){
-    jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[jFlood.normalIndex].height);});
+    jFlood.waterArea.y1(function(d) { return jFlood.y(jFlood.avg_gage);});
     jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
         .attr("d", jFlood.waterArea(jFlood.data));
-    jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[jFlood.normalIndex].height); });
+    jFlood.waterLine.y(function(d) { return jFlood.y(jFlood.avg_gage); });
     jFlood.svg.selectAll(".water-line")
         .transition().duration(800)
         .attr("d", jFlood.waterLine(jFlood.data));
 }
+function resetProgress(){
+    jProg.svg.selectAll("#inactive-dot")
+        .attr("id","small-dot")
+}
+
+// Progress Bar
+
+jProg = {};
+
+jProg.margin = {top: 20, right: 50, bottom: 60, left: 50};
+
+jProg.width = 300 - jProg.margin.left - jProg.margin.right;
+jProg.height = 300 - jProg.margin.top - jProg.margin.bottom;
+
+jProg.svg = d3.select("#flood-time-area").append("svg")
+    .attr("width", jProg.width + jProg.margin.left + jProg.margin.right)
+    .attr("height", jProg.height + jProg.margin.top + jProg.margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
+
+jProg.x = d3.time.scale().range([0,jProg.width]);
+jProg.y = d3.scale.linear().range([jProg.height, 0]);
+
+jProg.xAxis = d3.svg.axis()
+    .scale(jProg.x)
+    .orient("bottom");
+
+jProg.yAxis = d3.svg.axis()
+    .scale(jProg.y)
+    .orient("left");
+
+jProg.svg.append("g")
+    .attr("class", "x-axis-group")
+    .attr("transform", "translate(0," + (jProg.height) + ")");
+
+jProg.svg.append("g")
+    .attr("class", "y-axis-group");
+
+// Initialize Water Level
+jProg.svg.append("path")
+    .attr("class","water-line");
+
+
+jProg.tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-5, 0])
+    .direction('e');
+
+function renderProgressBar(){
+    jProg.data = jFlood.gageHeight;
+
+    var dateExtent = d3.extent(jProg.data, function(d){return d.date;});
+    var heightExtent = d3.extent(jProg.data,function(d){return d.height});
+
+    jProg.x.domain([dateExtent[0],dateExtent[1]]);
+
+    jProg.svg.select(".x-axis-group")
+        .call(jProg.xAxis)
+        .selectAll("text")
+        .attr("y", 0)
+        .attr("x", 9)
+        .attr("dy", ".35em")
+        .attr("transform", "rotate(60)")
+        .style("text-anchor", "start")
+        .text(function(d,index){
+            var res = "";
+            res = d.getHours() == 0 ? d.toLocaleDateString() : res;
+            return res;
+        });
+
+
+    jProg.y.domain(jFlood.y.domain());
+
+    jProg.svg.select(".y-axis-group")
+        .call(jProg.yAxis);
+
+    var circle = jProg.svg.selectAll("circle")
+        .data(jProg.data);
+
+    circle.enter().append("circle")
+        .attr("class", "water-dot")
+        .attr("fill", "#707086");
+
+    circle
+        .transition()
+        .duration(800)
+        .attr("r", function(d,index) {
+            var res = 3;
+            res = d.hour == 24 ? 5 : res;
+            res = index == 0 ? 3 : res;
+            return res;
+        })
+        .attr("cx", function(d, index) {return jProg.x(d.date) })
+        .attr("cy",function(d){
+            return jProg.y(d.height + 200);
+        })
+        .attr("id",function(d,index){
+            var res = "small-dot"
+            res = d.hour == 24 ? "large-dot" : res;
+            res = index == 0 ? "small-dot" : res;
+            return res;
+        });
+
+    jProg.tip.html(function(d){
+        return "Elevation" + ": " + (d.height+200) + " @ " + d.date.toLocaleTimeString();
+    });
+    jProg.svg.call(jProg.tip);
+
+
+    circle
+        .on('mouseover', jProg.tip.show)
+        .on('mouseout', jProg.tip.hide);
+
+}
+
 
