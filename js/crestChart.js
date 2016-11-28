@@ -5,14 +5,16 @@
 *  @param _parentElement   -- HTML element in which to draw the visualization
 *  @param _data            -- Array data about date and height of river at that date
  * @param _stages           -- object that describes the river's height at a given flood stage
-*/
+ * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
+ */
 
-CrestChart = function(_parentElement, _data, _stages) {
+CrestChart = function(_parentElement, _data, _stages, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.stages = _stages;
+    this.toggle = _toggle;
     this.initVis();
-}
+};
 
 
 /*
@@ -21,6 +23,13 @@ CrestChart = function(_parentElement, _data, _stages) {
 
 CrestChart.prototype.initVis = function() {
     var vis = this;
+    $("[name="+vis.toggle+"]").bootstrapSwitch({
+        onSwitchChange : function(event, state){
+            vis.show_years = state;
+            vis.updateVis();
+        }
+    });
+
 
     // * TO-DO *
     vis.margin = { top: 60, right: 40, bottom: 60, left: 40 };
@@ -90,6 +99,12 @@ CrestChart.prototype.wrangleData = function() {
 CrestChart.prototype.updateVis = function() {
     var vis = this;
 
+    if (vis.show_years){
+        vis.x.range([0, vis.width]);
+    } else {
+        vis.x.range([0, 1]);
+    }
+
     vis.y.domain(d3.extent(vis.displayData, function(e){return e.height;}));
     vis.x.domain(d3.extent(vis.displayData, function(e){ return e.date; }));
 
@@ -125,9 +140,18 @@ CrestChart.prototype.updateVis = function() {
         .duration(1000)
         .call(vis.yAxis);
 
-    vis.svg.select(".x-axis")
-        .transition()
-        .duration(1000)
-        .call(vis.xAxis);
+    // if showing the pole, then have no labels on the x axis.
+    if (!vis.show_years){
+        vis.xAxis.ticks(0);
+    } else {
+        vis.xAxis.ticks(5);
+    }
+
+    var result = vis.svg.select(".x-axis")
+            .transition()
+            .duration(1000)
+            .call(vis.xAxis);
+
+
 };
 
