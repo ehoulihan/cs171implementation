@@ -10,7 +10,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:100,400,300,400italic,700' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/bootstrap-switch.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -77,6 +77,9 @@
             the Mohawk river is xxx feet.  Hurricane Irene and the flood of 1913 are classified as "100 year floods."
         </div>
         <div class="col-md-4">
+            <div class="row">
+                <input type="checkbox" name="see-years">
+            </div>
             <div id="flood-history-chart">
 
             </div>
@@ -146,6 +149,15 @@
         <p>This is a visualization explaining why the dam is bad and the problems it causes</p>
     </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            Discharge rates are correlated with flooding.  Let's examine the discharge rates of the Mohawk river at Freeman's Bridge
+            during Hurricane Irene.
+        </div>
+        <div class="col-md-6" id="discharge-chart">
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-md-12">
@@ -198,14 +210,18 @@
 
 <!-- Load JS libraries -->
 <script src="js/jquery.min.js"></script>
-<script src="js/parallax.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-switch.min.js"></script>
 <script src="js/queue.v1.min.js"></script>
 <script src="js/backgroundVideo.js"></script>
 <script src="js/d3.min.js"></script>
+<script src="js/d3.tip.js"></script>
+
 
 <!-- Visualization objects -->
 <script src="js/crestChart.js"></script>
+<script src="js/dischargeChart.js"></script>
+
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>
 </body>

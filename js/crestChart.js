@@ -5,14 +5,17 @@
 *  @param _parentElement   -- HTML element in which to draw the visualization
 *  @param _data            -- Array data about date and height of river at that date
  * @param _stages           -- object that describes the river's height at a given flood stage
-*/
+ * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
+ */
 
-CrestChart = function(_parentElement, _data, _stages) {
+CrestChart = function(_parentElement, _data, _stages, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.stages = _stages;
+    this.toggle = _toggle;
+    this.dateFormatter = d3.time.format("%m/%d/%Y");
     this.initVis();
-}
+};
 
 
 /*
@@ -21,13 +24,19 @@ CrestChart = function(_parentElement, _data, _stages) {
 
 CrestChart.prototype.initVis = function() {
     var vis = this;
+    $("[name="+vis.toggle+"]").bootstrapSwitch({
+        onSwitchChange : function(event, state){
+            vis.show_years = state;
+            vis.updateVis();
+        }
+    });
+
 
     // * TO-DO *
     vis.margin = { top: 60, right: 40, bottom: 60, left: 40 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
-
 
     // SVG drawing area
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -61,7 +70,17 @@ CrestChart.prototype.initVis = function() {
 
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
-    // Initialize brush component
+
+    // Initialize tip component
+    vis.tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>Height:</strong> <span style='color:red'>" + d.height + " ft</span>" +
+                "<br>" +
+                "<strong>Date:</strong> <span>" + dateFormatter(d.date) + "</span>";
+        });
+    vis.svg.call(vis.tip);
 
     vis.wrangleData();
 };
@@ -90,6 +109,12 @@ CrestChart.prototype.wrangleData = function() {
 CrestChart.prototype.updateVis = function() {
     var vis = this;
 
+    if (vis.show_years){
+        vis.x.range([0, vis.width]);
+    } else {
+        vis.x.range([0, 1]);
+    }
+
     vis.y.domain(d3.extent(vis.displayData, function(e){return e.height;}));
     vis.x.domain(d3.extent(vis.displayData, function(e){ return e.date; }));
 
@@ -99,7 +124,9 @@ CrestChart.prototype.updateVis = function() {
 
     // enter
     circle.enter().append("circle")
-        .attr("class", "dot");
+        .attr("class", "dot")
+        .on('mouseover', vis.tip.show)
+        .on('mouseout', vis.tip.hide);
 
     // update
     circle.transition()
@@ -116,6 +143,7 @@ CrestChart.prototype.updateVis = function() {
             return "black";
         });
 
+
     // Exit
     circle.exit().remove();
 
@@ -125,9 +153,18 @@ CrestChart.prototype.updateVis = function() {
         .duration(1000)
         .call(vis.yAxis);
 
-    vis.svg.select(".x-axis")
-        .transition()
-        .duration(1000)
-        .call(vis.xAxis);
+    // if showing the pole, then have no labels on the x axis.
+    if (!vis.show_years){
+        vis.xAxis.ticks(0);
+    } else {
+        vis.xAxis.ticks(5);
+    }
+
+    var result = vis.svg.select(".x-axis")
+            .transition()
+            .duration(1000)
+            .call(vis.xAxis);
+
+
 };
 
