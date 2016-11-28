@@ -215,7 +215,7 @@ function updateVisualization() {
         timer_ret_val = true;
     });
 
-    var duration = 5000, targetX = 700,last = 0, t=0;
+    var duration = 18000, targetX = 700,last = 0, t=0;
     d3.timer(function(elapsed) {
         t = (t + (elapsed - last) / duration) % 1;
         last = elapsed;
