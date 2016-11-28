@@ -11,6 +11,7 @@ jFlood.min_elev = 200;
 jFlood.cutoff_elev = 210;
 jFlood.floodStartIndex = 1;
 // http://www.cityofschenectady.com/DocumentCenter/Home/View/247 p.19
+// https://www.daftlogic.com/sandbox-google-maps-find-altitude.htm
 jFlood.minFloodElev = 223;
 jFlood.elevTroughIndex = 72;
 jFlood.floodEndIndex = 95;
@@ -173,7 +174,6 @@ function renderVisualization() {
         .y(function(d) { return jFlood.y(d.elevation); })
         .interpolate(jFlood.interpolate_value);
 
-    // Build Line Chart
     jFlood.svg.selectAll(".elev-line")
         .transition().duration(800)
         .attr("d", jFlood.line(jFlood.data));
@@ -280,16 +280,20 @@ function updateWater(){
         else{
             // Update WATER Area
             jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[timeIndex].height);});
+
             jFlood.svg.selectAll(".water-area")
                 .transition().duration(400)
                 .attr("d", jFlood.waterArea(jFlood.data));
+
             // Update WATER Line
             jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });
+
             jFlood.svg.selectAll(".water-line")
                 .transition().duration(400)
                 .attr("d", jFlood.waterLine(jFlood.data));
 
             timeIndex = timeIndex+1;
+
             if (timeIndex >= jFlood.floodEndIndex){
                 clearInterval(interval)
             }
