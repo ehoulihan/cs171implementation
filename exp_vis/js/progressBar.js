@@ -1,40 +1,40 @@
 /**
  * Created by jackiemartinez on 11/27/16.
  */
-jProg = {};
+kProg = {};
 
-jProg.data = jFlood.data;
+kProg.data = kExp.data;
 
-jProg.margin = {top: 20, right: 20, bottom: 20, left: 60};
+kProg.margin = {top: 20, right: 20, bottom: 20, left: 60};
 
-jProg.width = 800 - jProg.margin.left - jProg.margin.right;
-jProg.height = 200 - jProg.margin.top - jProg.margin.bottom;
+kProg.width = 800 - kProg.margin.left - kProg.margin.right;
+kProg.height = 200 - kProg.margin.top - kProg.margin.bottom;
 
-jProg.svg = d3.select("#chart-area").append("svg")
-    .attr("width", jProg.width + jProg.margin.left + jProg.margin.right)
-    .attr("height", jProg.height + jProg.margin.top + jProg.margin.bottom)
+kProg.svg = d3.select("#chart-area").append("svg")
+    .attr("width", kProg.width + kProg.margin.left + kProg.margin.right)
+    .attr("height", kProg.height + kProg.margin.top + kProg.margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
+    .attr("transform", "translate(" + kProg.margin.left + "," + kProg.margin.top + ")");
 
 // Create Scales
-jFlood.x = d3.scale.linear()
-    .range([0,jFlood.width]);
-jFlood.y = d3.scale.linear()
-    .range([jFlood.height, 0]);
+kExp.x = d3.scale.linear()
+    .range([0,kExp.width]);
+kExp.y = d3.scale.linear()
+    .range([kExp.height, 0]);
 
-jFlood.xAxis = d3.svg.axis()
-    .scale(jFlood.x)
+kExp.xAxis = d3.svg.axis()
+    .scale(kExp.x)
     .orient("bottom");
 
-jFlood.yAxis = d3.svg.axis()
-    .scale(jFlood.y)
+kExp.yAxis = d3.svg.axis()
+    .scale(kExp.y)
     .orient("left");
 
-jFlood.svg.append("g")
+kExp.svg.append("g")
     .attr("class", "x-axis-group")
-    .attr("transform", "translate(0," + (jFlood.height) + ")");
+    .attr("transform", "translate(0," + (kExp.height) + ")");
 
-jFlood.svg.append("g")
+kExp.svg.append("g")
     .attr("class", "y-axis-group");
 
 

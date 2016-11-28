@@ -8,7 +8,7 @@ kExp.river_start = [42.820274, -73.945933];
 kExp.river_end = [42.821580, -73.947104];
 kExp.avg_gage = 216;
 kExp.min_elev = 200;
-kExp.cutoff_elev = 210;
+kExp.cutoff_elev = 180;
 kExp.floodStartIndex = 1;
 // http://www.cityofschenectady.com/DocumentCenter/Home/View/247 p.19
 kExp.minFloodElev = 223;
@@ -83,28 +83,40 @@ kExp.formatDate = d3.time.format("%Y-%m-%d %H:%M");
 
 // Load CSV file
 function loadData() {
-    d3.csv("data/elevation.csv", function(error, csv) {
+    d3.csv("../data/terrain2.csv", function(error, csv) {
         var counter = 0;
         csv.forEach(function(d){
+
             // Convert numeric values to 'numbers'
-            d.elevation = ((+d.elevation)*3.28084);
-            var latlong = d.location.replace(/[\(\)]/g,'').split(',');
-            d.lat = +latlong[0];
-            d.long = +latlong[1];
+            d.X = +d.X;
+            // d.Y = d.Y*3.28084;
+            // var latlong = d.location.replace(/[\(\)]/g,'').split(',');
+            // d.lat = +latlong[0];
+            // d.long = +latlong[1];
+            d.Y = +d.Y;
             d.index = counter;
             counter = counter + 1;
-
-            if (d.index >= kExp.elevTroughIndex & d.elevation >= kExp.minFloodElev){
-                d.elevation = kExp.minFloodElev;
-            }
-            d.elevation = d.elevation <= kExp.cutoff_elev ? kExp.cutoff_elev+.25 : d.elevation;
         });
+
+        // Convert numeric values to 'numbers'
+        //     d.Y = ((+d.Y)*3.28084);
+        //     var latlong = d.location.replace(/[\(\)]/g,'').split(',');
+        //     d.lat = +latlong[0];
+        //     d.long = +latlong[1];
+        //     d.index = counter;
+        //     counter = counter + 1;
+        //
+        //     if (d.index >= kExp.elevTroughIndex & d.Y >= kExp.minFloodElev){
+        //         d.Y = kExp.minFloodElev;
+        //     }
+        //     d.Y = d.Y <= kExp.cutoff_elev ? kExp.cutoff_elev+.25 : d.Y;
+        // });
 
         // Store csv data in global variable
         kExp.data = csv;
 
         // Import Gage Height Data
-        d3.csv("data/flood_gage_height.csv", function(error,gh){
+        d3.csv("../data/expheight.csv", function(error,gh){
             gh.forEach(function(d){
                 d.day = +d.day;
                 d.height = (+d.height)+3;
@@ -142,7 +154,7 @@ function renderVisualization() {
     kExp.svg.select(".x-axis-group")
         .call(kExp.xAxis);
 
-    var elevExtent = d3.extent(kExp.data, function(d){return d.elevation;});
+    var elevExtent = d3.extent(kExp.data, function(d){return d.Y;});
     var gageExtent = d3.extent(kExp.gageHeight,function(d){return d.height});
 
     var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
@@ -160,7 +172,7 @@ function renderVisualization() {
     kExp.elevArea = d3.svg.area()
         .x(function(d) { return kExp.x(d.index); })
         .y0(kExp.height-2)
-        .y1(function(d) { return kExp.y(d.elevation); });
+        .y1(function(d) { return kExp.y(d.Y); });
 
     kExp.svg.append("path")
         .datum(kExp.data)
@@ -170,7 +182,7 @@ function renderVisualization() {
     // Build LAND line
     kExp.line = d3.svg.line()
         .x(function(d) { return kExp.x(d.index); })
-        .y(function(d) { return kExp.y(d.elevation); })
+        .y(function(d) { return kExp.y(d.Y); })
         .interpolate(kExp.interpolate_value);
 
     // Build Line Chart
@@ -207,9 +219,9 @@ function renderVisualization() {
 
     // Call Tip
     kExp.tip.html(function(d){
-        // var html_l1 = d.elevation;
-        // var html_l2 = "Elevation" + ": " + d.elevation + " @ " + d.index;
-        return "Elevation" + ": " + d.elevation + " @ " + d.index;
+        // var html_l1 = d.Y;
+        // var html_l2 = "Elevation" + ": " + d.Y + " @ " + d.index;
+        return "Elevation" + ": " + d.Y + " @ " + d.index;
         //return (html_l1 + "<br/>" + html_l2);
     });
     kExp.svg.call(kExp.tip);
@@ -223,10 +235,10 @@ function renderVisualization() {
         .duration(800)
         .attr("r", function(d) {
             var res = .5;
-            res = d.elevation <= kExp.avg_gage ? 0 : res;
+            res = d.Y <= kExp.avg_gage ? 0 : res;
             return res; })
         .attr("cx", function(d, index) { return kExp.x(d.index) })
-        .attr("cy",function(d){return kExp.y(d.elevation);});
+        .attr("cy",function(d){return kExp.y(d.Y);});
 
     circle
         .on('mouseover', kExp.tip.show)
