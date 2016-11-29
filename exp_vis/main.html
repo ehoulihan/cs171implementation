@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<div>
+    <div id="map" style="height:250px;"></div>
+    <div id="elevation_chart"></div>
+</div>
+<div id="flood-vis-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="user-control" align="center">
+                    <select id="select-area" class="form-control" onchange="updateWater()">
+                        <option value="AVERAGE">Average Height</option>
+                        <option value="FLOOD">Run the Experiment</option>
+                    </select>
+                </div>
+                <div id="flood-time-area"></div>
+            </div>
+            <div class="col-md-9">
+                <div id="chart-area"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/d3.min.js"></script>
+<script src="js/d3.tip.js"></script>
+<!--<script src="https://www.google.com/jsapi"></script>-->
+<!--<script src="js/goog_main.js"></script>-->
+<!--<script async defer-->
+        <!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkorV6bHKKE6j3hLN4xkGjOhWOVl87jNI&callback=initMap">-->
+<!--</script>-->
+
+<script src="js/main.js"></script>
+<!--<script src="js/progressBar.js"></script>-->
+
+</body>
+</html>
