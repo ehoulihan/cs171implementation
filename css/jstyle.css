@@ -1,0 +1,190 @@
+
+/* ADD YOUR STYLES HERE */
+
+
+/*.axis path,*/
+/*.axis line {*/
+    /*fill: none;*/
+    /*stroke: #000;*/
+    /*shape-rendering: crispEdges;*/
+/*}*/
+
+.y-axis path{
+    stroke: none;
+    fill: none;
+    stroke-width: 0px;
+}
+
+.axis text {
+    font-family: 'Calibri', sans-serif;
+    font-size:10px;
+}
+
+.label-text{
+    font-family: 'Calibri', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.browser text {
+    text-anchor: end;
+}
+
+.area {
+    font-family: 'Calibri', sans-serif;
+    opacity: 0.7;
+    clip-path: url(#clip);
+}
+
+
+
+/****************/
+/*  LINE CHART  */
+/****************/
+.form-control {
+    width: 80%;
+}
+select {
+    align-items:center;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000 1px;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.x-axis-group path,
+.x-axis-group line,
+.y-axis-group path,
+.y-axis-group line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 11px;
+}
+
+.line {
+    fill: none;
+    stroke: #1C9A3D;
+    stroke-width: 1.5px;
+}
+
+.elev-line {
+    fill: none;
+    stroke-width: 5px;
+    stroke-linecap: round;
+    stroke: #1C9A3D;
+}
+.land-area{
+    fill: #c6fbcb;
+    stroke-width: 0;
+}
+.water-area{
+    fill: #9fa4f9;
+    stroke-width: 0;
+}
+.water-line {
+    fill: none;
+    stroke-width: 5px;
+    stroke-linecap: round;
+    stroke: #1217d3;
+}
+
+
+.dot {
+    fill: #1C9A3D;
+    stroke: #1C9A3D;
+    stroke-width: 3px;
+}
+
+.water-dot {
+    fill: #1217d3;
+}
+
+#active-dot{
+    fill-opacity: 1;
+    fill:#1217d3;
+}
+
+#large-dot{
+    fill: #FFFFFF;
+    stroke-width: 3px;
+    stroke: #1217d3;
+}
+
+#inactive-dot{
+    fill: #FFFFFF;
+    stroke: #b5b5b5;
+    stroke-width: 0.5px;
+    fill-opacity: .25;
+}
+
+#blank-dot{
+    fill: #FFFFFF;
+    stroke-width: 0px;
+    fill-opacity: 0;
+
+}
+
+#last-active-dot{
+    fill-opacity: 1;
+    fill:#9fa4f9;
+}
+
+.tooltip-circle {
+    fill: #96AB96;
+}
+
+
+.col-md-4{
+    padding-top: 200px;
+}
+
+/*********************/
+/*  TOOLTIP OVERLAY  */
+/*********************/
+
+.tooltip-title {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.d3-tip {
+    line-height: 1;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+/*.d3-tip:after {*/
+    /*box-sizing: border-box;*/
+    /*display: inline;*/
+    /*font-size: 10px;*/
+    /*width: 100%;*/
+    /*line-height: 1;*/
+    /*color: rgba(0, 0, 0, 0.8);*/
+    /*content: "\25BC";*/
+    /*position: absolute;*/
+    /*text-align: center;*/
+/*}*/
+
+/*!* Style northward tooltips differently *!*/
+/*.d3-tip.n:after {*/
+    /*margin: -1px 0 0 0;*/
+    /*top: 100%;*/
+    /*left: 0;*/
+/*}*/
+
+
+
+
