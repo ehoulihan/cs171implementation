@@ -21,7 +21,7 @@ kSpeed.margin = {top: 20, right: 20, bottom: 20, left: 60};
 kSpeed.width = 800 - kSpeed.margin.left - kSpeed.margin.right,
     kSpeed.height = 300 - kSpeed.margin.top - kSpeed.margin.bottom;
 
-kSpeed.svg = d3.select("#chart-area").append("svg")
+kSpeed.svg = d3.select("#speed-chart").append("svg")
     .attr("width", kSpeed.width + kSpeed.margin.left + kSpeed.margin.right)
     .attr("height", kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
     .append("g")
@@ -225,7 +225,7 @@ function kSpeed_updateVisualization() {
     // kSpeed.height = C_HEIGHT;
     kSpeed.timer_ret_val = false;
     //
-    // kSpeed.mainsvg = d3.select("#chart-area")
+    // kSpeed.mainsvg = d3.select("#speed-chart")
     //     .append("svg")
     //     .attr("width", width)
     //     .attr("height", height)
@@ -287,7 +287,7 @@ function kSpeed_updateVisualization() {
     // kSpeed.height = C_HEIGHT;
     //kSpeed.timer_ret_val = false;
     //
-    // kSpeed.mainsvg = d3.select("#chart-area")
+    // kSpeed.mainsvg = d3.select("#speed-chart")
     //     .append("svg")
     //     .attr("width", width)
     //     .attr("height", height)
