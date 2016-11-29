@@ -8,10 +8,11 @@
  * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
  */
 
-DischargeChart = function(_parentElement, _data) {
+DischargeChart = function(_parentElement, _data, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = _data;
+    this.toggle = _toggle;
     this.initVis();
 };
 
@@ -22,7 +23,7 @@ DischargeChart = function(_parentElement, _data) {
 
 DischargeChart.prototype.initVis = function() {
     var vis = this;
-    vis.margin = { top: 60, right: 50, bottom: 60, left: 40 };
+    vis.margin = { top: 60, right: 50, bottom: 60, left: 70 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -42,8 +43,19 @@ DischargeChart.prototype.initVis = function() {
     vis.x = d3.time.scale()
         .range([0, vis.width]);
 
-    vis.y = d3.scale.linear()
+    vis.yLinear = d3.scale.linear()
         .range([vis.height, 0]);
+
+    vis.yLinear.domain([0, d3.max(vis.displayData, function(e){return e.discharge;})]);
+
+    vis.yLog = d3.scale.log()
+        .range([vis.height, 0]);
+
+    vis.yLog.domain([0, d3.max(vis.displayData, function(e){return e.discharge;})]);
+
+    vis.y = vis.yLinear;
+
+    vis.x.domain(d3.extent(vis.displayData, function(e){return e.timestamp;}));
 
     vis.xAxis = d3.svg.axis()
         .scale(vis.x)
@@ -64,6 +76,43 @@ DischargeChart.prototype.initVis = function() {
         .attr("class", "y-axis axis");
 
 
+    vis.svg.append("g")
+        .attr("class", "brush");
+
+    // Initialize the zoom component
+    vis.zoom = d3.behavior.zoom()
+        .x(vis.x)
+    // Subsequently, you can listen to all zooming events
+        .on("zoom", function(){
+            vis.updateVis();
+        })
+
+        // Specify the zoom scale's allowed range
+        .scaleExtent([1,20]);
+
+    vis.svg.append("rect")
+        .attr("class", "pane")
+        .attr("width", vis.width)
+        .attr("height", vis.height)
+        .call(vis.zoom);
+
+    // Define the clipping region
+    vis.svg.append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", vis.width)
+        .attr("height", vis.height);
+
+    $("[name="+vis.toggle+"]").bootstrapSwitch({
+        onSwitchChange : function(event, state){
+            if(state){
+                vis.y = vis.yLog;
+            } else{
+                vis.y = vis.yLinear;
+            }
+            vis.updateVis();
+        }
+    });
 
     vis.wrangleData();
 };
@@ -92,9 +141,6 @@ DischargeChart.prototype.wrangleData = function() {
 DischargeChart.prototype.updateVis = function() {
     var vis = this;
 
-    vis.y.domain([0, d3.max(vis.displayData, function(e){return e.discharge;})]);
-    vis.x.domain(d3.extent(vis.displayData, function(e){return e.timestamp;}));
-
     var line = d3.svg.line()
         .x(function(d) { return vis.x(d.timestamp); })
         .y(function(d) { return vis.y(d.discharge); })
@@ -102,17 +148,18 @@ DischargeChart.prototype.updateVis = function() {
 
     vis.svg.select(".line")   // change the line
         .transition()
-        .duration(1000)
-        .attr("d", line(vis.displayData));
+        .duration(100)
+        .attr("d", line(vis.displayData))
+        .attr("clip-path", "url(#clip)");
 
     vis.svg.select(".y-axis")
         .transition()
-        .duration(1000)
-        .call(vis.yAxis);
+        .duration(100)
+        .call(vis.yAxis.scale(vis.y));
 
     vis.svg.select(".x-axis")
         .transition()
-        .duration(1000)
+        .duration(100)
         .call(vis.xAxis);
 
 
