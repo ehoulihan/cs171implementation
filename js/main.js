@@ -6,6 +6,8 @@ var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
 var crestChart, dischargeChart;
 
+var myEventHandler = {};
+
 // (1) Load data asynchronously
 queue()
     .defer(d3.csv,"data/crests.csv")
@@ -32,12 +34,14 @@ function createVis(error, crestData, stageData, dischargeData){
     })
 
     dischargeData = dischargeData.filter(function(e){
-        return e.timestamp > dateFormatter.parse("8/1/2011") && e.timestamp < dateFormatter.parse("10/20/2011");
+        return e.timestamp > dateFormatter.parse("8/1/2011") &&
+               e.timestamp < dateFormatter.parse("10/20/2011") &&
+               e.timestamp.getMinutes() == 0;
     });
 
 
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years');
 
-    dischargeChart = new DischargeChart("discharge-chart", dischargeData);
+    dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale");
 
 }

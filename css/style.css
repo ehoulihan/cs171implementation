@@ -124,3 +124,9 @@ h1 .sub-headline {
     color: white;
     width: 100%;
 }
+
+rect.pane {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}
