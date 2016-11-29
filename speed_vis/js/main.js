@@ -79,7 +79,7 @@ var data;
 
 // Load CSV file
 function loadData() {
-    d3.csv("../data/terrain2.csv", function(error, csv) {
+    d3.csv("../data/terrain3.csv", function(error, csv) {
         var counter = 0;
         csv.forEach(function(d){
             // Convert numeric values to 'numbers'

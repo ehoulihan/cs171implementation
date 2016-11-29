@@ -6,7 +6,7 @@ kExp = {};
 
 kExp.river_start = [42.820274, -73.945933];
 kExp.river_end = [42.821580, -73.947104];
-kExp.avg_gage = 216;
+kExp.avg_gage = 203;
 kExp.min_elev = 200;
 kExp.cutoff_elev = 180;
 kExp.floodStartIndex = 1;
@@ -85,7 +85,7 @@ kExp.formatDate = d3.time.format("%Y-%m-%d %H:%M");
 
 // Load CSV file
 function loadData() {
-    d3.csv("../data/terrain2.csv", function(error, csv) {
+    d3.csv("../data/terrain3.csv", function(error, csv) {
         var counter = 0;
         csv.forEach(function(d){
 
@@ -121,7 +121,7 @@ function loadData() {
         d3.csv("../data/expheight.csv", function(error,gh){
             gh.forEach(function(d){
                 d.day = +d.day;
-                d.height = (+d.height)+3;
+                d.height = (+d.height)-10;
                 d.hour = Math.floor((+d.minute) / 60);
                 d.minute = (+d.minute) % 60;
                 d.month = +d.month;
