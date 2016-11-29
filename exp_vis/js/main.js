@@ -30,6 +30,8 @@ kExp.svg = d3.select("#chart-area").append("svg")
     .append("g")
     .attr("transform", "translate(" + kExp.margin.left + "," + kExp.margin.top + ")");
 
+
+
 // Create Scales
 kExp.x = d3.scale.linear()
     .range([0,kExp.width]);
@@ -349,6 +351,7 @@ function resetProgress(){
         .attr("id","small-dot")
 }
 
+
 // Progress Bar
 
 kProg = {};
@@ -387,10 +390,14 @@ kProg.svg.append("path")
     .attr("class","water-line");
 
 
+
+
 kProg.tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-5, 0])
     .direction('e');
+
+
 
 function renderProgressBar(){
     kProg.data = kExp.gageHeight;
@@ -457,6 +464,33 @@ function renderProgressBar(){
         .on('mouseover', kProg.tip.show)
         .on('mouseout', kProg.tip.hide);
 
+    var lock8 = kExp.svg.append("rect")
+        .attr("x", -1)
+        .attr("y", -20)
+        .attr("width", 23)
+        .attr("height", 240)
+        .style("fill", "#5E2605")
+        .attr("id", "lock8")
+        .style("opacity", "1");
+
 }
 
+
+var lock8 = kExp.svg.append("rect")
+    .attr("x", -1)
+    .attr("y", -20)
+    .attr("width", 23)
+    .attr("height", 200)
+    .style("fill", "#5E2605")
+    .attr("id", "lock8")
+    .style("opacity", "1");
+
+var lock7 = kExp.svg.append("rect")
+    .attr("x", 707)
+    .attr("y", 65)
+    .attr("width", 23)
+    .attr("height", 155)
+    .style("fill", "#5E2605")
+    .attr("id", "lock7")
+    .style("opacity", "1");
 

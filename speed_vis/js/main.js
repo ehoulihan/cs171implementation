@@ -25,6 +25,15 @@ var svg = d3.select("#chart-area").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var predam_water = svg.append("rect")
+    .attr("x", -1)
+    .attr("y", 180)
+    .attr("width", 720)
+    .attr("height", 80)
+    .style("fill", "#9fa4f9")
+    .attr("id", "predam-water")
+    .style("opacity", "1");
+
 // Create Scales
 var x = d3.scale.linear()
     .range([0,width]);
@@ -127,6 +136,8 @@ function updateVisualization() {
         .interpolate(interpolate_value);
 
 
+
+
     // Build Line Chart
     svg.selectAll(".elev-line")
         .transition().duration(800)
@@ -145,6 +156,11 @@ function updateVisualization() {
         .y(function(d) { return y(avg_gage); })
         .interpolate(interpolate_value);
 
+    // var predam_line = d3.svg.line()
+    //     .x(function(d) { return x(d.index); })
+    //     .y(function(d) { return y(100); })
+    //     .interpolate(interpolate_value);
+
 
     // Build Line Chart
     svg.selectAll(".water-line")
@@ -162,8 +178,10 @@ function updateVisualization() {
         .datum(data)
         .attr("class", "water-area")
         .attr("d", water_area)
-        .style("opacity", "0.5")
+        .style("opacity", "0.3")
         .attr("id", "water_area");
+
+
 
     var land_area = d3.svg.area()
         .x(function(d) { return x(d.X); })
@@ -174,6 +192,28 @@ function updateVisualization() {
         .datum(data)
         .attr("class", "land-area")
         .attr("d", land_area);
+
+    var lock8 = svg.append("rect")
+                                .attr("x", -1)
+                                .attr("y", -1)
+                               .attr("width", 23)
+                                .attr("height", 260)
+                                .style("fill", "#5E2605")
+                                .attr("id", "lock8")
+                                .style("opacity", "0.3");
+
+    var lock7 = svg.append("rect")
+        .attr("x", 700)
+        .attr("y", 105)
+        .attr("width", 23)
+        .attr("height", 155)
+        .style("fill", "#5E2605")
+        .attr("id", "lock7")
+        .style("opacity", "0.3");
+
+
+
+
 
 
     var C_WIDTH = 300,
@@ -208,7 +248,7 @@ function updateVisualization() {
         .attr("class", "object_circle")
         .attr("id", "slow_boat")
         .style("fill", "brown")
-        .style("opacity", "0.5");
+        .style("opacity", "0.3");
 
     var stopdiv=d3.select("#stopdiv");
     stopdiv.on("click", function()	{
@@ -270,7 +310,7 @@ function updateVisualization() {
         .attr("id", "fast_boat")
         .attr("class", "object_circle")
         .style("fill", "brown")
-        .style("opacity", "0.5");
+        .style("opacity", "0.3");
 
     // var stopdiv=d3.select("#stopdiv");
     // stopdiv.on("click", function()	{
@@ -300,7 +340,7 @@ function updateVisualization() {
     $( "#pool" ).hover(
         function() {
             var active   = slow_boat.active ? false : true,
-                newOpacity = active ? 1 : 0.5;
+                newOpacity = active ? 1 : 0.3;
             // Hide or show the elements
             d3.select("#slow_boat").style("opacity", newOpacity);
             d3.select("#slow_boat").style("opacity", newOpacity);
@@ -309,19 +349,35 @@ function updateVisualization() {
             slow_boat.active = active;
 
             var active_water   = water_area.active ? false : true,
-                newOpacity = active ? 1 : 0.5;
+                newOpacity = active ? 1 : 0.3;
             // Hide or show the elements
             d3.select("#water_area").style("opacity", newOpacity);
             d3.select("#water_area").style("opacity", newOpacity);
             // Update whether or not the elements are active
             water_area.active = active_water;
+
+            var active_lock8   = lock8.active ? false : true,
+                newOpacity = active ? 1 : 0.3;
+            // Hide or show the elements
+            d3.select("#lock8").style("opacity", newOpacity);
+            d3.select("#lock8").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            lock8.active = active_lock8;
+
+            var active_lock7   = lock7.active ? false : true,
+                newOpacity = active ? 1 : 0.3;
+            // Hide or show the elements
+            d3.select("#lock7").style("opacity", newOpacity);
+            d3.select("#lock7").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            lock7.active = active_lock7;
         }
     );
 
     $( "#natural_flow" ).hover(
         function() {
             var active   = fast_boat.active ? false : true,
-                newOpacity = active ? 1 : 0.5;
+                newOpacity = active ? 1 : 0.3;
             // Hide or show the elements
             d3.select("#fast_boat").style("opacity", newOpacity);
             d3.select("#fast_boat").style("opacity", newOpacity);
