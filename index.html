@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-switch.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/jstyle.css">
 </head>
 <body>
 
@@ -108,8 +109,19 @@
 
     <div class="row">
         <h2>One Street of Many</h2>
-        <div class="col-md-12" id="profile-chart-area">
-            <img src="http://placehold.it/1450x300">
+        <div id="flood-vis-area">
+            <div class="col-md-3">
+                <div class="user-control" align="center">
+                    <select id="select-area" class="form-control" onchange="updateWater()">
+                        <option value="AVERAGE">Average Height</option>
+                        <option value="FLOOD">Flood Simulation</option>
+                    </select>
+                </div>
+                <div id="flood-time-area"></div>
+            </div>
+            <div class="col-md-9">
+                <div id="chart-area"></div>
+            </div>
         </div>
     </div>
 
@@ -224,5 +236,6 @@
 
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>
+<script src="js/jackie_main.js"></script>
 </body>
 </html>
