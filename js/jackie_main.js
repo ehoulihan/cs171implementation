@@ -39,7 +39,8 @@ jFlood.y = d3.scale.linear()
 
 jFlood.xAxis = d3.svg.axis()
     .scale(jFlood.x)
-    .orient("bottom");
+    .orient("bottom")
+    .ticks(0);
 
 jFlood.yAxis = d3.svg.axis()
     .scale(jFlood.y)
