@@ -39,7 +39,8 @@ jFlood.y = d3.scale.linear()
 
 jFlood.xAxis = d3.svg.axis()
     .scale(jFlood.x)
-    .orient("bottom");
+    .orient("bottom")
+    .ticks(0);
 
 jFlood.yAxis = d3.svg.axis()
     .scale(jFlood.y)
@@ -53,7 +54,7 @@ jFlood.svg.append("g")
     .attr("class", "y-axis-group");
 
 // Initialize data
-loadData();
+j_loadData();
 
 // Initialize Land Line
 jFlood.svg.append("path")
@@ -83,7 +84,7 @@ jFlood.formatDate = d3.time.format("%Y-%m-%d %H:%M");
 
 
 // Load CSV file
-function loadData() {
+function j_loadData() {
     d3.csv("data/elevation.csv", function(error, csv) {
         var counter = 0;
         csv.forEach(function(d){
@@ -124,15 +125,15 @@ function loadData() {
                     d.index = +d.index;
                 });
                 jFlood.imageLinks = file;
-                renderVisualization();
-                renderProgressBar();
+                j_renderVisualization();
+                j_renderProgressBar();
             })
         })
     });
 }
 
 // Render visualization
-function renderVisualization() {
+function j_renderVisualization() {
     // Get User Values
     var numSamples = jFlood.data.length;
     var xVals = [0,numSamples];
@@ -266,7 +267,7 @@ function renderVisualization() {
 //     return res;
 // }
 
-function updateWater(){
+function j_updateWater(){
 
     var timeIndex = jFlood.floodStartIndex;
 
@@ -274,8 +275,8 @@ function updateWater(){
         if(jFlood.stopInterval==true || $("#select-area").val() == "AVERAGE"){
             console.log("STOPPING INTERVAL!");
             clearInterval(interval);
-            resetWater();
-            resetProgress();
+            j_resetWater();
+            j_resetProgress();
         }
         else{
             // Update WATER Area
@@ -326,7 +327,7 @@ function updateWater(){
 
 }
 
-function resetWater(){
+function j_resetWater(){
     jFlood.waterArea.y1(function(d) { return jFlood.y(jFlood.avg_gage);});
     jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
@@ -336,7 +337,7 @@ function resetWater(){
         .transition().duration(800)
         .attr("d", jFlood.waterLine(jFlood.data));
 }
-function resetProgress(){
+function j_resetProgress(){
     jProg.svg.selectAll("#inactive-dot")
         .attr("id","small-dot")
 }
@@ -384,7 +385,7 @@ jProg.tip = d3.tip()
     .offset([-5, 0])
     .direction('e');
 
-function renderProgressBar(){
+function j_renderProgressBar(){
     jProg.data = jFlood.gageHeight;
 
     var dateExtent = d3.extent(jProg.data, function(d){return d.date;});

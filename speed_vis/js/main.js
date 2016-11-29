@@ -7,25 +7,27 @@
  */
 // Global Variables
 
-var river_start = [42.820274, -73.945933];
-var river_end = [42.821580, -73.947104];
-var avg_gage = 200;
-var min_elev = 200;
+kSpeed = {};
+
+kSpeed.river_start = [42.820274, -73.945933];
+kSpeed.river_end = [42.821580, -73.947104];
+kSpeed.avg_gage = 200;
+kSpeed.min_elev = 200;
 
 // SVG drawing area
 
-var margin = {top: 20, right: 20, bottom: 20, left: 60};
+kSpeed.margin = {top: 20, right: 20, bottom: 20, left: 60};
 
-var width = 800 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+kSpeed.width = 800 - kSpeed.margin.left - kSpeed.margin.right,
+    kSpeed.height = 300 - kSpeed.margin.top - kSpeed.margin.bottom;
 
-var svg = d3.select("#chart-area").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+kSpeed.svg = d3.select("#speed-chart").append("svg")
+    .attr("width", kSpeed.width + kSpeed.margin.left + kSpeed.margin.right)
+    .attr("height", kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + kSpeed.margin.left + "," + kSpeed.margin.top + ")");
 
-var predam_water = svg.append("rect")
+kSpeed.predam_water = kSpeed.svg.append("rect")
     .attr("x", -1)
     .attr("y", 180)
     .attr("width", 720)
@@ -35,165 +37,165 @@ var predam_water = svg.append("rect")
     .style("opacity", "1");
 
 // Create Scales
-var x = d3.scale.linear()
-    .range([0,width]);
-var y = d3.scale.linear()
-    .range([height, 0]);
+kSpeed.x = d3.scale.linear()
+    .range([0,kSpeed.width]);
+kSpeed.y = d3.scale.linear()
+    .range([kSpeed.height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
+kSpeed.xAxis = d3.svg.axis()
+    .scale(kSpeed.x)
     .orient("bottom");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
+kSpeed.yAxis = d3.svg.axis()
+    .scale(kSpeed.y)
     .orient("left");
 
-svg.append("g")
+kSpeed.svg.append("g")
     .attr("class", "x-axis-group")
-    .attr("transform", "translate(0," + (height) + ")");
+    .attr("transform", "translate(0," + (kSpeed.height) + ")");
 
-svg.append("g")
+kSpeed.svg.append("g")
     .attr("class", "y-axis-group");
 
 // Date parser (https://github.com/mbostock/d3/wiki/Time-Formatting)
-//var formatDate = d3.time.format("%Y");
+//kSpeed.formatDate = d3.time.format("%Y");
 
 // Initialize data
 loadData();
 
 // Initialize Line
-svg.append("path")
+kSpeed.svg.append("path")
     .attr("class", "elev-line");
 
 // Initialize Water Level
-svg.append("path")
+kSpeed.svg.append("path")
     .attr("class","water-line");
 
 // Initialize Tooltip
 
-var tip = d3.tip()
+kSpeed.tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .direction('e');
-var data;
+kSpeed.data;
 
 // Load CSV file
 function loadData() {
     d3.csv("../data/terrain3.csv", function(error, csv) {
-        var counter = 0;
+        kSpeed.counter = 0;
         csv.forEach(function(d){
             // Convert numeric values to 'numbers'
             d.X = +d.X;
             // d.elevation = d.elevation*3.28084;
-            // var latlong = d.location.replace(/[\(\)]/g,'').split(',');
+            // kSpeed.latlong = d.location.replace(/[\(\)]/g,'').split(',');
             // d.lat = +latlong[0];
             // d.long = +latlong[1];
             d.Y = +d.Y;
             //d.index = counter;
-            counter = counter + 1;
+            kSpeed.counter = kSpeed.counter + 1;
         });
 
         // Store csv data in global variable
-        data = csv;
+        kSpeed.data = csv;
 
         // Draw the visualization for the first time
-        updateVisualization();
+        kSpeed_updateVisualization();
     });
 }
 
 // Render visualization
-function updateVisualization() {
+function kSpeed_updateVisualization() {
     // Get User Values
     console.log("DATA IN VIS");
-    console.log(data);
-    var interpolate_value = "linear";
-    var numSamples = data.length;
-    var xVals = [0,numSamples];
+    console.log(kSpeed.data);
+    kSpeed.interpolate_value = "linear";
+    kSpeed.numSamples = kSpeed.data.length;
+    kSpeed.xVals = [0,kSpeed.numSamples];
 
     //x.domain([xVals[0],xVals[1]]);
 
-    console.log(x.domain());
-    console.log(x.range());
-    svg.select(".x-axis-group")
-        .call(xAxis);
+    console.log(kSpeed.x.domain());
+    console.log(kSpeed.x.range());
+    kSpeed.svg.select(".x-axis-group")
+        .call(kSpeed.xAxis);
 
-    var yExtent = d3.extent(data, function(d){
+    kSpeed.yExtent = d3.extent(kSpeed.data, function(d){
         return d.Y;
     });
 
     //y.domain([min_elev,yExtent[1]]);
 
-    x.domain(d3.extent(data, function(d) { return d.X; }));
-    y.domain(d3.extent(data, function(d) { return d.Y; }));
+    kSpeed.x.domain(d3.extent(kSpeed.data, function(d) { return d.X; }));
+    kSpeed.y.domain(d3.extent(kSpeed.data, function(d) { return d.Y; }));
 
-    svg.select(".y-axis-group")
-        .call(yAxis);
+    kSpeed.svg.select(".y-axis-group")
+        .call(kSpeed.yAxis);
 
     // Add Line Function
-    var line = d3.svg.line()
-        .x(function(d) { return x(d.X); })
-        .y(function(d) { return y(d.Y); })
-        .interpolate(interpolate_value);
+    kSpeed.line = d3.svg.line()
+        .x(function(d) { return kSpeed.x(d.X); })
+        .y(function(d) { return kSpeed.y(d.Y); })
+        .interpolate(kSpeed.interpolate_value);
 
 
 
 
     // Build Line Chart
-    svg.selectAll(".elev-line")
+    kSpeed.svg.selectAll(".elev-line")
         .transition().duration(800)
-        .attr("d", line(data));
+        .attr("d", kSpeed.line(kSpeed.data));
 
     // Get Indeces of Water Start/End
-    var water = data.filter(function(d){
+    kSpeed.water = kSpeed.data.filter(function(d){
         console.log(d.elevation);
-        return (d.elevation <= avg_gage);
+        return (d.elevation <= kSpeed.avg_gage);
     });
     console.log("WATER");
-    console.log(water);
+    console.log(kSpeed.water);
 
-    var water_line = d3.svg.line()
+    kSpeed.water_line = d3.svg.line()
         .x(function(d) { return x(d.index); })
-        .y(function(d) { return y(avg_gage); })
-        .interpolate(interpolate_value);
+        .y(function(d) { return y(kSpeed.avg_gage); })
+        .interpolate(kSpeed.interpolate_value);
 
-    // var predam_line = d3.svg.line()
+    // kSpeed.predam_line = d3.svg.line()
     //     .x(function(d) { return x(d.index); })
     //     .y(function(d) { return y(100); })
     //     .interpolate(interpolate_value);
 
 
     // Build Line Chart
-    svg.selectAll(".water-line")
+    kSpeed.svg.selectAll(".water-line")
         .transition().duration(800)
-        .attr("d", water_line(water));
+        .attr("d", kSpeed.water_line(kSpeed.water));
 
     // Build Areas
-    var water_area = d3.svg.area()
-        .x(function(d) { return x(d.X); })
-        .y0(height)
-        .y1(function(d) { return y(avg_gage); });
+    kSpeed.water_area = d3.svg.area()
+        .x(function(d) { return kSpeed.x(d.X); })
+        .y0(kSpeed.height)
+        .y1(function(d) { return kSpeed.y(kSpeed.avg_gage); });
 
 
-    svg.append("path")
-        .datum(data)
+    kSpeed.svg.append("path")
+        .datum(kSpeed.data)
         .attr("class", "water-area")
-        .attr("d", water_area)
+        .attr("d", kSpeed.water_area)
         .style("opacity", "0.3")
         .attr("id", "water_area");
 
 
 
-    var land_area = d3.svg.area()
-        .x(function(d) { return x(d.X); })
-        .y0(height)
-        .y1(function(d) { return y(d.Y); });
+    kSpeed.land_area = d3.svg.area()
+        .x(function(d) { return kSpeed.x(d.X); })
+        .y0(kSpeed.height)
+        .y1(function(d) { return kSpeed.y(d.Y); });
 
-    svg.append("path")
-        .datum(data)
+    kSpeed.svg.append("path")
+        .datum(kSpeed.data)
         .attr("class", "land-area")
-        .attr("d", land_area);
+        .attr("d", kSpeed.land_area);
 
-    var lock8 = svg.append("rect")
+    kSpeed.lock8 = kSpeed.svg.append("rect")
                                 .attr("x", -1)
                                 .attr("y", -1)
                                .attr("width", 23)
@@ -202,7 +204,7 @@ function updateVisualization() {
                                 .attr("id", "lock8")
                                 .style("opacity", "0.3");
 
-    var lock7 = svg.append("rect")
+    kSpeed.lock7 = kSpeed.svg.append("rect")
         .attr("x", 700)
         .attr("y", 105)
         .attr("width", 23)
@@ -216,31 +218,31 @@ function updateVisualization() {
 
 
 
-    var C_WIDTH = 300,
-        C_HEIGHT = 200;
+    kSpeed.C_WIDTH = 300,
+        kSpeed.C_HEIGHT = 200;
     //
-    // var width = C_WIDTH;
-    // var height = C_HEIGHT;
-    var timer_ret_val = false;
+    // kSpeed.width = C_WIDTH;
+    // kSpeed.height = C_HEIGHT;
+    kSpeed.timer_ret_val = false;
     //
-    // var mainsvg = d3.select("#chart-area")
+    // kSpeed.mainsvg = d3.select("#speed-chart")
     //     .append("svg")
     //     .attr("width", width)
     //     .attr("height", height)
     //     .attr("class", "g_mainsvg");
 
-    var circledata = d3.map();
-    circledata.set('x', 0);
-    circledata.set('y', C_HEIGHT/2);
+    kSpeed.circledata = d3.map();
+    kSpeed.circledata.set('x', 0);
+    kSpeed.circledata.set('y', kSpeed.C_HEIGHT/2);
 
-    var circleg = svg.selectAll("g.blob")
-        .data([circledata])
+    kSpeed.circleg = kSpeed.svg.selectAll("g.blob")
+        .data([kSpeed.circledata])
         .enter()
         .append("svg:g")
         .attr("class", "blob")
-        .attr("transform", function(d) {return "translate(" + C_WIDTH/2 + "," + C_HEIGHT/2 + ")";});
+        .attr("transform", function(d) {return "translate(" + kSpeed.C_WIDTH/2 + "," + kSpeed.C_HEIGHT/2 + ")";});
 
-    var t_circle_object = circleg
+    kSpeed.t_circle_object = kSpeed.circleg
         .append("circle")
         .attr("cx", function(d) { return 0; })
         .attr("cy", function(d) { return 0; })
@@ -250,59 +252,59 @@ function updateVisualization() {
         .style("fill", "brown")
         .style("opacity", "0.3");
 
-    var stopdiv=d3.select("#stopdiv");
-    stopdiv.on("click", function()	{
-        timer_ret_val = true;
+    kSpeed.stopdiv=d3.select("#stopdiv");
+    kSpeed.stopdiv.on("click", function()	{
+        kSpeed.timer_ret_val = true;
     });
 
-    var duration = 18000, targetX = 700,last = 0, t=0;
+    kSpeed.duration = 18000, kSpeed.targetX = 700,kSpeed.last = 0, kSpeed.t=0;
     d3.timer(function(elapsed) {
-        t = (t + (elapsed - last) / duration) % 1;
-        last = elapsed;
-        update();
-        return timer_ret_val;
+        kSpeed.t = (kSpeed.t + (elapsed - kSpeed.last) / kSpeed.duration) % 1;
+        kSpeed.last = elapsed;
+        kSpeed_update();
+        return kSpeed.timer_ret_val;
     });
 
-    function update(elapsed){
-        var t_x = circledata.get('x');
-        console.log (t);
-        t_x = targetX * t;
+    function kSpeed_update(elapsed){
+        kSpeed.t_x = kSpeed.circledata.get('x');
+        console.log (kSpeed.t);
+        kSpeed.t_x = kSpeed.targetX * kSpeed.t;
 
-        svg.selectAll("g.blob")
-            .attr("transform", function(d) {return "translate(" + t_x + "," + d.get('y') + ")";});
+        kSpeed.svg.selectAll("g.blob")
+            .attr("transform", function(d) {return "translate(" + kSpeed.t_x + "," + d.get('y') + ")";});
 
-        circledata.set('x', t_x);
+        kSpeed.circledata.set('x', kSpeed.t_x);
     }
 
 
 
 
 
-    var C1_WIDTH = 300,
-        C1_HEIGHT = 200;
+    kSpeed.C1_WIDTH = 300,
+        kSpeed.C1_HEIGHT = 200;
     //
-    // var width = C_WIDTH;
-    // var height = C_HEIGHT;
-    //var timer_ret_val = false;
+    // kSpeed.width = C_WIDTH;
+    // kSpeed.height = C_HEIGHT;
+    //kSpeed.timer_ret_val = false;
     //
-    // var mainsvg = d3.select("#chart-area")
+    // kSpeed.mainsvg = d3.select("#speed-chart")
     //     .append("svg")
     //     .attr("width", width)
     //     .attr("height", height)
     //     .attr("class", "g_mainsvg");
 
-    var circle1data = d3.map();
-    circledata.set('x', 0);
-    circledata.set('y', C1_HEIGHT/2);
+    kSpeed.circle1data = d3.map();
+    kSpeed.circledata.set('x', 0);
+    kSpeed.circledata.set('y', kSpeed.C1_HEIGHT/2);
 
-    var circleg1 = svg.selectAll("g.blob1")
-        .data([circledata])
+    kSpeed.circleg1 = kSpeed.svg.selectAll("g.blob1")
+        .data([kSpeed.circledata])
         .enter()
         .append("svg:g")
         .attr("class", "blob1")
-        .attr("transform", function(d) {return "translate(" + C1_WIDTH/2 + "," + C1_HEIGHT/2 + ")";});
+        .attr("transform", function(d) {return "translate(" + kSpeed.C1_WIDTH/2 + "," + kSpeed.C1_HEIGHT/2 + ")";});
 
-    var t_circle_object1 = circleg1
+    kSpeed.t_circle_object1 = kSpeed.circleg1
         .append("circle")
         .attr("cx", function(d) { return 0; })
         .attr("cy", function(d) { return 70; })
@@ -312,29 +314,29 @@ function updateVisualization() {
         .style("fill", "brown")
         .style("opacity", "0.3");
 
-    // var stopdiv=d3.select("#stopdiv");
+    // kSpeed.stopdiv=d3.select("#stopdiv");
     // stopdiv.on("click", function()	{
     //     timer_ret_val = true;
     // });
 
-    var duration1 = 2000, targetX1 = 700,last1 = 0, t1=0;
+    kSpeed.duration1 = 2000, targetX1 = 700,last1 = 0, t1=0;
     d3.timer(function(elapsed1) {
-        console.log(duration1);
-        t1 = (t1 + (elapsed1 - last1) / duration1) % 1;
+        console.log(kSpeed.duration1);
+        t1 = (t1 + (elapsed1 - last1) / kSpeed.duration1) % 1;
         last1 = elapsed1;
         update1();
-        return timer_ret_val;
+        return kSpeed.timer_ret_val;
     });
 
     function update1(elapsed1){
-        var t_x1 = circledata.get('x');
+        kSpeed.t_x1 = kSpeed.circledata.get('x');
         console.log (t1);
         t_x1 = targetX1 * t1;
 
-        svg.selectAll("g.blob1")
+        kSpeed.svg.selectAll("g.blob1")
             .attr("transform", function(d) {return "translate(" + t_x1 + "," + d.get('y') + ")";});
 
-        circledata.set('x', t_x1);
+        kSpeed.circledata.set('x', t_x1);
     }
 
     $( "#pool" ).hover(
@@ -391,7 +393,7 @@ function updateVisualization() {
 
     // // Initialize DataPoints
     // //Create Circle
-    // var circle = svg.selectAll("circle")
+    // kSpeed.circle = svg.selectAll("circle")
     //     .data(data);
     //
     // // Call Tip

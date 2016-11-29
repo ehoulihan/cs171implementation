@@ -112,7 +112,7 @@
         <div id="flood-vis-area">
             <div class="col-md-3">
                 <div class="user-control" align="center">
-                    <select id="select-area" class="form-control" onchange="updateWater()">
+                    <select id="select-area" class="form-control" onchange="j_updateWater()">
                         <option value="AVERAGE">Average Height</option>
                         <option value="FLOOD">Flood Simulation</option>
                     </select>
@@ -143,7 +143,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            <img src="http://placehold.it/900x500"><
+            <img src="http://placehold.it/900x500">
             <p>This is a visualization explaining how locks work.</p>
         </div>
         <div class="col-md-4">
@@ -157,9 +157,42 @@
     </div>
 
     <div class="row">
+        <h2>How does the dam contribute to flooding?</h2>
+        <div class="col-md-12">
 
-        <p>This is a visualization explaining why the dam is bad and the problems it causes</p>
+
         <div id="speed-chart">
+            <p>Interact with <a class="highlight">highlighted text</a>.</p>
+            <p> Before the locks were built, water flowed at a <a class="highlight" id="natural_flow"> natural velocity </a> downstream.  </br>However, the construction of the dam created a <a class="highlight" id="pool">standing pool</a>,
+                in which water virtually stands still at a high height.  This enables heavy flooding because...</p>
+
+        </div>
+            </div>
+    </div>
+
+    <div class="row">
+        <h2>Proven: Increasing Discharge Rate At Lock 7 Decreases Flooding</h2>
+        <div class="col-md-12">
+        <div id="exp1-vis-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="user-control" align="center">
+                            <select id="exp-select-area" class="form-control" onchange="updateWater()">
+                                <option value="AVERAGE">Average Height</option>
+                                <option value="FLOOD">Run the Experiment</option>
+                            </select>
+                        </div>
+                        <div id="exp-time-area"></div>
+                    </div>
+                    <div class="col-md-9">
+                        <div id="exp-vis-area"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
     </div>
 
     <div class="row">
@@ -240,5 +273,7 @@
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>
 <script src="js/jackie_main.js"></script>
+<script src="js/karen_main.js"></script>
+<script src="js/karenExp_main.js"></script>
 </body>
 </html>
