@@ -51,7 +51,7 @@ DischargeChart.prototype.initVis = function() {
     vis.yLog = d3.scale.log()
         .range([vis.height, 0]);
 
-    vis.yLog.domain([0, d3.max(vis.displayData, function(e){return e.discharge;})]);
+    vis.yLog.domain([1, d3.max(vis.displayData, function(e){return e.discharge;})]);
 
     vis.y = vis.yLinear;
 
@@ -155,7 +155,7 @@ DischargeChart.prototype.updateVis = function() {
     vis.svg.select(".y-axis")
         .transition()
         .duration(100)
-        .call(vis.yAxis.scale(vis.y));
+        .call(vis.yAxis);
 
     vis.svg.select(".x-axis")
         .transition()
