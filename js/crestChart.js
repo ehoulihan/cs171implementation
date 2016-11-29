@@ -13,6 +13,7 @@ CrestChart = function(_parentElement, _data, _stages, _toggle) {
     this.data = _data;
     this.stages = _stages;
     this.toggle = _toggle;
+    this.dateFormatter = d3.time.format("%m/%d/%Y");
     this.initVis();
 };
 
@@ -36,7 +37,6 @@ CrestChart.prototype.initVis = function() {
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
-
 
     // SVG drawing area
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -70,7 +70,17 @@ CrestChart.prototype.initVis = function() {
 
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
-    // Initialize brush component
+
+    // Initialize tip component
+    vis.tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>Height:</strong> <span style='color:red'>" + d.height + " ft</span>" +
+                "<br>" +
+                "<strong>Date:</strong> <span>" + dateFormatter(d.date) + "</span>";
+        });
+    vis.svg.call(vis.tip);
 
     vis.wrangleData();
 };
@@ -114,7 +124,9 @@ CrestChart.prototype.updateVis = function() {
 
     // enter
     circle.enter().append("circle")
-        .attr("class", "dot");
+        .attr("class", "dot")
+        .on('mouseover', vis.tip.show)
+        .on('mouseout', vis.tip.hide);
 
     // update
     circle.transition()
@@ -130,6 +142,7 @@ CrestChart.prototype.updateVis = function() {
             }
             return "black";
         });
+
 
     // Exit
     circle.exit().remove();
