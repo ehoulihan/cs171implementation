@@ -34,6 +34,10 @@ image-orientation: from-image;
     z-index: 0;
 }
 
+.highlight {
+    background-color: #FFFF00;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
 }
