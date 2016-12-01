@@ -147,6 +147,10 @@ select {
     padding-top: 200px;
 }
 
+#house{
+    height:110px;
+}
+
 /*********************/
 /*  TOOLTIP OVERLAY  */
 /*********************/

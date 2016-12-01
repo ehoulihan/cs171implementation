@@ -124,7 +124,7 @@ CrestChart.prototype.updateVis = function() {
 
     // enter
     circle.enter().append("circle")
-        .attr("class", "dot")
+        .attr("class", "crest-dot")
         .on('mouseover', vis.tip.show)
         .on('mouseout', vis.tip.hide);
 

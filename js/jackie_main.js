@@ -103,7 +103,7 @@ function j_loadData() {
         });
 
         // Store csv data in global variable
-        jFlood.data = csv;
+        jFlood.data = csv.slice(1,190);
 
         // Import Gage Height Data
         d3.csv("data/flood_gage_height.csv", function(error,gh){
@@ -149,7 +149,7 @@ function j_renderVisualization() {
 
     var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
 
-    jFlood.y.domain([jFlood.cutoff_elev,upperBound]);
+    jFlood.y.domain([jFlood.cutoff_elev,upperBound + 5]);
 
     jFlood.svg.select(".y-axis-group")
         .call(jFlood.yAxis);
@@ -241,17 +241,38 @@ function j_renderVisualization() {
     //     });
     //
 
-    var icons = jFlood.svg.selectAll(".icons")
-        .data(jFlood.imageLinks);
+    jFlood.twoStoryHeight = Math.abs(jFlood.y(240) - jFlood.y(223));
+    jFlood.sixFtTall = Math.abs(jFlood.y(229) - jFlood.y(223));
+    var icons = jFlood.svg.append("g")
+        .attr("class","icons");
 
-    icons.enter().append("image")
-        .attr("xlink:href",function(d){
-            return d.title;
-        })
-        .attr("x",function(d){return jFlood.x(d.index-5)})
-        .attr("y",jFlood.y(jFlood.minFloodElev + 10))
-        .attr("width",100)
-        .attr("height",100);
+    icons.append("image")
+        .attr("xlink:href", "img/home.png")
+        .attr("x",jFlood.x(73))
+        .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.twoStoryHeight)
+        .attr("width",70)
+        .attr("height",jFlood.twoStoryHeight)
+        .attr("preserveAspectRatio","none");
+
+    icons.append("image")
+        .attr("xlink:href", "img/man.png")
+        .attr("x",jFlood.x(92))
+        .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.sixFtTall)
+        .attr("width",25)
+        .attr("height",jFlood.sixFtTall)
+        .attr("preserveAspectRatio","none");
+
+    // var icons = jFlood.svg.selectAll(".icons")
+    //     .data(jFlood.imageLinks);
+
+    // icons.enter().append("image")
+    //     .attr("xlink:href",function(d){
+    //         return d.title;
+    //     })
+    //     .attr("x",function(d){return jFlood.x(d.index-5)})
+    //     .attr("y",jFlood.y(jFlood.minFloodElev + 10))
+    //     .attr("width",100)
+    //     .attr("height",100);
     // Exit
     circle.exit().remove();
 
