@@ -219,13 +219,25 @@ select {
 /**********/
 #Shape{
     fill: #6b6b6b;
-    /*fill-rule: evenodd;*/
+    opacity: 0.5;
+    fill-rule: nonzero;
 }
 
 #Shape:hover{
     fill: #000000;
     cursor: pointer;
 }
+
+#Shape2{
+    fill:white;
+    opacity:0;
+}
+
+#Shape2:hover{
+    fill:green;
+    opacity:0.5;
+}
+
 /************/
 /* Carousel */
 /************/

@@ -33,7 +33,7 @@ FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
  */
 
 FloodTimeChart.prototype.playButton = function(){
-    jProg = this;
+    var jProg = this;
     d3.xml("img/play_icon.svg",
         function(error, documentFragment) {
 
@@ -42,6 +42,7 @@ FloodTimeChart.prototype.playButton = function(){
             var svgNode = documentFragment
                 .getElementById("Page-1");
             //use plain Javascript to extract the node
+
 
             jProg.svg = d3.select("#" + jProg.parentElement).append("svg")
                 .attr("width", jProg.width + jProg.margin.left + jProg.margin.right)
