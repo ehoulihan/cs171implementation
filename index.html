@@ -11,8 +11,10 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-switch.min.css">
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/jstyle.css">
+
 </head>
 <body>
 
@@ -99,11 +101,45 @@
     <div class="row">
         <div class="col-md-8" id="extent-chart">
             Here will come a map of where the extended areas of the flood occurred.
-            <img src="img/fema_flood_map.png"/>
+            <!--<img src="img/fema_flood_map.png"/>-->
+            <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel" data-slide-to="1"></li>
+                    <li data-target="#carousel" data-slide-to="2"></li>
+                    <li data-target="#carousel" data-slide-to="3"></li>
+                    <li data-target="#carousel" data-slide-to="4"></li>
+
+                </ol>
+                <!-- Carousel items -->
+                <div class="carousel-inner">
+                    <div class="active item">
+                        <img class="img-responsive" src="img/Flood1.png"/>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="img/Flood2.png"/>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="img/Flood3.png"/>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="img/Flood4.png"/>
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="img/Flood5.png"/>
+                    </div>
+
+                </div>
+                <!-- Carousel nav -->
+                <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+            </div>
+
         </div>
         <div class="col-md-4">
-            The Schenectady Stockade suffered severe amounts of damage during the floods.  In this map you can see the extent of the
-            flooding area, in addition to the flooded areas, of particular interest are the Lock 7 and Lock 8 dams.
+            <p id="map-info-text">
+                1 - The Lock 7 Dam is located along the Mohawk River, and serves as both a lock system and as a hydro-electric plant
+            </p>
         </div>
     </div>
 
@@ -111,16 +147,23 @@
         <h2>One Street of Many</h2>
         <div id="flood-vis-area">
             <div class="col-md-3">
-                <div class="user-control" align="center">
-                    <select id="select-area" class="form-control" onchange="j_updateWater()">
-                        <option value="AVERAGE">Average Height</option>
-                        <option value="FLOOD">Flood Simulation</option>
-                    </select>
-                </div>
-                <div id="flood-time-area"></div>
+                Hurricane Irene Flood Levels by Hour
             </div>
             <div class="col-md-9">
-                <div id="chart-area"></div>
+                <!--<div class="user-control" align="center">-->
+                    <!--<select id="select-area" class="form-control" onchange="runFloodSimulation()">-->
+                        <!--<option value="AVERAGE">Average Height</option>-->
+                        <!--<option value="FLOOD">Flood Simulation</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            </div>
+            <div class="col-md-3">
+                <div id="flood-time-area">
+                    <!--<a href="#" title="Play video" class="play"></a>-->
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="flood-chart-area"></div>
             </div>
         </div>
     </div>
@@ -254,10 +297,16 @@
 <!-- Visualization objects -->
 <script src="js/crestChart.js"></script>
 <script src="js/dischargeChart.js"></script>
+<script src="js/floodChart.js"></script>
+<script src="js/floodTimeChart.js"></script>
+
+<!-- Text Blocks -->
+<script src="js/mapInfo.js"></script>
 
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>
-<script src="js/jackie_main.js"></script>
+
+<!--<script src="js/jackie_main.js"></script>-->
 <script src="js/karen_main.js"></script>
 <script src="js/karenExp_main.js"></script>
 </body>
