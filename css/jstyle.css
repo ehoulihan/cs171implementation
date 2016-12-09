@@ -210,12 +210,22 @@ select {
 }
 
 .sectionJackie{
-    background-image: url(../img/IMG_7742.JPG);
+    background-image: url(../img/bg.png),url(../img/IMG_7742.JPG);
 }
 .section{
     background-size: cover;
 }
 
+.centered-img{
+    margin:auto;
+}
+#small-size-img, .small-size-img{
+    width:25%;
+}
+
+/*.fp-slide{*/
+    /*position:relative;*/
+/*}*/
 /*.fp-controlArrow.fp-prev {*/
     /*left:100px;*/
 /*}*/
