@@ -79,9 +79,9 @@ FloodChart.prototype.initVis = function() {
     jFlood.svg.append("path")
         .attr("class", "elev-line");
 
-    // Initialize Water Level
-    jFlood.svg.append("path")
-        .attr("class","water-line");
+    // // Initialize Water Level
+    // jFlood.svg.append("path")
+    //     .attr("class","water-line");
 
     // Initialize Water Area
     jFlood.svg.append("path")
@@ -139,8 +139,8 @@ FloodChart.prototype.updateVis = function() {
 
     jFlood.x.domain([xVals[0],xVals[1]]);
 
-    jFlood.svg.select(".x-axis-group")
-        .call(jFlood.xAxis);
+    // jFlood.svg.select(".x-axis-group")
+    //     .call(jFlood.xAxis);
 
     var elevExtent = d3.extent(jFlood.elevationData, function(d){return d.elevation;});
     var gageExtent = d3.extent(jFlood.gageHeight,function(d){return d.height});
@@ -190,47 +190,47 @@ FloodChart.prototype.updateVis = function() {
         .attr("d", jFlood.waterArea(jFlood.elevationData));
 
     // Build WATER Line
-    jFlood.waterLine = d3.svg.line()
-        .x(function(d) { return jFlood.x(d.index); })
-        .y(function(d) { return jFlood.y(jFlood.avg_gage); })
-        .interpolate(jFlood.interpolate_value);
-
-    jFlood.svg.selectAll(".water-line")
-        .transition().duration(800)
-        .attr("d", jFlood.waterLine(jFlood.elevationData));
+    // jFlood.waterLine = d3.svg.line()
+    //     .x(function(d) { return jFlood.x(d.index); })
+    //     .y(function(d) { return jFlood.y(jFlood.avg_gage); })
+    //     .interpolate(jFlood.interpolate_value);
+    //
+    // jFlood.svg.selectAll(".water-line")
+    //     .transition().duration(800)
+    //     .attr("d", jFlood.waterLine(jFlood.elevationData));
 
 
     // Initialize DataPoints
     //Create Circle
-    var circle = jFlood.svg.selectAll("circle")
-        .data(jFlood.elevationData);
+    // var circle = jFlood.svg.selectAll("circle")
+    //     .data(jFlood.elevationData);
 
     // Call Tip
-    jFlood.tip.html(function(d){
-        // var html_l1 = d.elevation;
-        // var html_l2 = "Elevation" + ": " + d.elevation + " @ " + d.index;
-        return "Elevation" + ": " + d.elevation + " @ " + d.index;
-        //return (html_l1 + "<br/>" + html_l2);
-    });
-    jFlood.svg.call(jFlood.tip);
+    // jFlood.tip.html(function(d){
+    //     // var html_l1 = d.elevation;
+    //     // var html_l2 = "Elevation" + ": " + d.elevation + " @ " + d.index;
+    //     return "Elevation" + ": " + d.elevation + " @ " + d.index;
+    //     //return (html_l1 + "<br/>" + html_l2);
+    // });
+    // jFlood.svg.call(jFlood.tip);
 
-    circle.enter().append("circle")
-        .attr("class", "dot")
-        .attr("fill", "#707086");
-
-    circle
-        .transition()
-        .duration(800)
-        .attr("r", function(d) {
-            var res = .5;
-            res = d.elevation <= jFlood.avg_gage ? 0 : res;
-            return res; })
-        .attr("cx", function(d, index) { return jFlood.x(d.index) })
-        .attr("cy",function(d){return jFlood.y(d.elevation);});
-
-    circle
-        .on('mouseover', jFlood.tip.show)
-        .on('mouseout', jFlood.tip.hide);
+    // circle.enter().append("circle")
+    //     .attr("class", "dot")
+    //     .attr("fill", "#707086");
+    //
+    // circle
+    //     .transition()
+    //     .duration(800)
+    //     .attr("r", function(d) {
+    //         var res = .5;
+    //         res = d.elevation <= jFlood.avg_gage ? 0 : res;
+    //         return res; })
+    //     .attr("cx", function(d, index) { return jFlood.x(d.index) })
+    //     .attr("cy",function(d){return jFlood.y(d.elevation);});
+    //
+    // circle
+    //     .on('mouseover', jFlood.tip.show)
+    //     .on('mouseout', jFlood.tip.hide);
     //     .on('click',function(d){
     //         d3.selectAll(".dot")
     //             .attr("r",5);
@@ -245,9 +245,12 @@ FloodChart.prototype.updateVis = function() {
     var icons = jFlood.svg.append("g")
         .attr("class","icons");
 
+    var house_index = 73;
+    var person_index = 102;
+
     icons.append("image")
-        .attr("xlink:href", "img/home.png")
-        .attr("x",jFlood.x(73))
+        .attr("xlink:href", "img/house.png")
+        .attr("x",jFlood.x(house_index))
         .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.twoStoryHeight)
         .attr("width",70)
         .attr("height",jFlood.twoStoryHeight)
@@ -255,11 +258,77 @@ FloodChart.prototype.updateVis = function() {
 
     icons.append("image")
         .attr("xlink:href", "img/man.png")
-        .attr("x",jFlood.x(92))
+        .attr("x",jFlood.x(person_index))
         .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.sixFtTall)
         .attr("width",25)
         .attr("height",jFlood.sixFtTall)
         .attr("preserveAspectRatio","none");
+
+
+    // var iconInfo = [
+    //     {
+    //         "label":["1-story House: ","10ft."],
+    //         "path":"img/house.png",
+    //         "xPos":house_index,
+    //         "yShift":jFlood.twoStoryHeight,
+    //         "width": 70
+    //
+    //     },
+    //     {
+    //         "label":["Avg U.S. Man: ","5ft. 10in."],
+    //         "path":"img/man.png",
+    //         "xPos":person_index,
+    //         "yShift": jFlood.sixFtTall,
+    //         "width": 25
+    //     }
+    // ];
+
+    // iconInfo.forEach(function(elt){
+    //     icons.append("image")
+    //         .attr("xlink:href", elt.path)
+    //         .attr("x",jFlood.x(elt.xPos))
+    //         .attr("y",jFlood.y(jFlood.minFloodElev) - elt.yShift)
+    //         .attr("width",25)
+    //         .attr("height",elt.yShift)
+    //         .attr("preserveAspectRatio","none");
+    //     var counter = 0.5;
+    //     for (var item in elt.label){
+    //         jFlood.svg.append("text")
+    //             .attr("x",jFlood.x(elt.xPos))
+    //             .attr("y",jFlood.y(jFlood.minFloodElev - counter))
+    //             .text(elt.lable[item]);
+    //         counter = counter + 2;
+    //     }
+    // });
+
+    jFlood.svg.append("text")
+        .attr("class","icon-label-text")
+        .attr("x",jFlood.x(house_index) + 35)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 1.5))
+        .attr("text-anchor","middle")
+        .html("1-Story House: ");
+
+    jFlood.svg.append("text")
+        .attr("class","icon-label-text")
+        .attr("x",jFlood.x(person_index) + 10)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 1.5))
+        .attr("text-anchor","middle")
+        .html("Avg U.S. Man: ");
+    jFlood.svg.append("text")
+        .attr("class","icon-label-text")
+        .attr("x",jFlood.x(house_index) + 35)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 3))
+        .attr("text-anchor","middle")
+        .html("10ft.");
+    jFlood.svg.append("text")
+        .attr("class","icon-label-text")
+        .attr("x",jFlood.x(person_index) + 10)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 3))
+        .attr("text-anchor","middle")
+        .html("5ft. 10in.");
+
+
+
 
 
 
@@ -272,10 +341,10 @@ FloodChart.prototype.resetVis = function() {
     jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
-    jFlood.waterLine.y(function(d) { return jFlood.y(jFlood.avg_gage); });
-    jFlood.svg.selectAll(".water-line")
-        .transition().duration(800)
-        .attr("d", jFlood.waterLine(jFlood.elevationData));
+    // jFlood.waterLine.y(function(d) { return jFlood.y(jFlood.avg_gage); });
+    // jFlood.svg.selectAll(".water-line")
+    //     .transition().duration(800)
+    //     .attr("d", jFlood.waterLine(jFlood.elevationData));
 };
 
 FloodChart.prototype.updateFloodWater = function(timeIndex){
@@ -288,10 +357,10 @@ FloodChart.prototype.updateFloodWater = function(timeIndex){
         .transition().duration(400)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
 
-    // Update WATER Line
-    jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });
-
-    jFlood.svg.selectAll(".water-line")
-        .transition().duration(400)
-        .attr("d", jFlood.waterLine(jFlood.elevationData));
+    // // Update WATER Line
+    // jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });
+    //
+    // jFlood.svg.selectAll(".water-line")
+    //     .transition().duration(400)
+    //     .attr("d", jFlood.waterLine(jFlood.elevationData));
 }

@@ -34,35 +34,38 @@ FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
 
 FloodTimeChart.prototype.playButton = function(){
     var jProg = this;
+
+    // Insert Play Button
     d3.xml("img/play_icon.svg",
         function(error, documentFragment) {
 
             if (error) {console.log(error); return;}
 
-            var svgNode = documentFragment
-                .getElementById("Page-1");
-            //use plain Javascript to extract the node
+            // Get relevant node from xml file
+            var svgNode = documentFragment.getElementById("Page-1");
 
-
+            // Create SVG
             jProg.svg = d3.select("#" + jProg.parentElement).append("svg")
                 .attr("width", jProg.width + jProg.margin.left + jProg.margin.right)
                 .attr("height", jProg.height + jProg.margin.top + jProg.margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
 
+            // Add path
             jProg.svg.node().appendChild(svgNode);
 
-            var btnX = (jProg.width)/2;
-            var btnY = 30;
 
+            var btnX = (jProg.width)/2; var btnY = 30;
+
+            // Modify svg icon to be a button
             jProg.svg.select("#Page-1")
                 .attr("transform","translate("+btnX+","+btnY+") scale(2)")
-                .on("mouseover",function(){
-                    this.setAttribute("transform","translate("+btnX+","+btnY+") scale(3)")
-                })
-                .on("mouseout",function(){
-                    this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
-                })
+                // .on("mouseover",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+                // })
+                // .on("mouseout",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+                // })
                 .on("click",function(){
                     console.log("Running Flood Simulation");
                     simulationStatus=1;
@@ -77,6 +80,7 @@ FloodTimeChart.prototype.playButton = function(){
 FloodTimeChart.prototype.initVis = function() {
     var jProg = this;
 
+    // Reset html
     d3.select("#"+jProg.parentElement).html("");
 
     jProg.svg = d3.select("#" + jProg.parentElement).append("svg")
@@ -165,6 +169,15 @@ FloodTimeChart.prototype.updateVis = function() {
 
     jProg.svg.select(".y-axis-group")
         .call(jProg.yAxis);
+
+    jProg.svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - jProg.margin.left)
+        .attr("x",0 - (jProg.height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Elevation (feet above sea level)");
+
     //
     var circle = jProg.svg.selectAll("circle")
         .data(jProg.data);
@@ -277,7 +290,7 @@ FloodTimeChart.prototype.resetVis = function() {
     var jProg = this;
 
     jProg.path.exit().remove();
-
+    // Replay Icon Overlay
     d3.xml("img/replay_icon.svg",
         function(error, documentFragment) {
 
@@ -294,12 +307,12 @@ FloodTimeChart.prototype.resetVis = function() {
 
             jProg.svg.select("#Page-1")
                 .attr("transform","translate("+btnX+","+btnY+") scale(2)")
-                .on("mouseover",function(){
-                    this.setAttribute("transform","translate("+btnX+","+btnY+") scale(3)")
-                })
-                .on("mouseout",function(){
-                    this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
-                })
+                // .on("mouseover",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(3)")
+                // })
+                // .on("mouseout",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+                // })
                 .on("click",function(){
                     console.log("Running Flood Simulation");
                     simulationStatus=1;
