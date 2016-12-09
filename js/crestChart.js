@@ -33,10 +33,10 @@ CrestChart.prototype.initVis = function() {
 
 
     // * TO-DO *
-    vis.margin = { top: 60, right: 40, bottom: 60, left: 40 };
+    vis.margin = { top: 60, right: 40, bottom: 100, left: 40 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+        vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -70,6 +70,12 @@ CrestChart.prototype.initVis = function() {
 
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
+
+    // now add titles to the axes
+    vis.yAxisGroup.append("text")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .text("Flood Peak (ft)");
 
     // Initialize tip component
     vis.tip = d3.tip()
@@ -116,36 +122,105 @@ CrestChart.prototype.updateVis = function() {
         vis.x.range([0, 1]);
     }
 
-    var stick_width = $("#stick").width();
+    var circle_diameter = 10;
+
+    var stick_height = $("#stick").height() * 13.2/17.5;
+
+    var stick_width = $("#stick").width() * 1.4/11.6;
     // get the width of the photo to ensure its accuracy
 
-    vis.stick = vis.svg.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", stick_width)
-        .attr("height", vis.y.range()[1])
-        .attr("stroke", "black");
+    d3.extent(vis.displayData, function(e){return e.height;})
 
-    vis.y.domain(d3.extent(vis.displayData, function(e){return e.height;}));
+    vis.y.domain([d3.min(vis.displayData, function(e) {return e.height}),
+                  d3.max(vis.displayData, function(e) {return e.height}) + 1]);
     vis.x.domain(d3.extent(vis.displayData, function(e){ return e.date; }));
 
+    var stick = vis.svg.selectAll("#stick")
+        .data(["random"]);
+
+    stick.enter().append("rect")
+        .attr("class", vis.show_years ? "wide-stick" : "stick")
+        .attr("id", "stick");
+
+    stick.transition()
+        .duration(1000)
+        .attr("class", vis.show_years ? "wide-stick" : "stick")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", vis.show_years ? vis.x.range()[1] : stick_width)
+        .attr("height", vis.y.range()[0]);
+
+    stick.exit().remove();
+
+
+
 // join
-    circle = vis.svg.selectAll("circle")
+    var marks = vis.svg.selectAll("rect.crest-rect")
         .data(vis.displayData);
 
     // enter
-    circle.enter().append("circle")
-        .attr("class", "crest-dot")
+    marks.enter().append("rect")
+        .attr("class", "crest-rect")
         .on('mouseover', vis.tip.show)
         .on('mouseout', vis.tip.hide);
 
     // update
-    circle.transition()
+    marks.transition()
         .duration(1000)
-        .attr("cx", function(d) { return vis.x(d.date); })
-        .attr("cy", function(d, index) { return vis.y(d.height); })
-        .attr("r", 4)
+        .attr("x", function(d) { return vis.x(d.date) - ( vis.show_years ? circle_diameter / 2 : 0); })
+        .attr("y", function(d, index) { return vis.y(d.height) - ( vis.show_years ? circle_diameter / 2 : 0); })
+        .attr("rx", function(e){
+            return vis.show_years ? circle_diameter : 0;
+        })
+        .attr("ry", function(e){
+                return vis.show_years ? circle_diameter : 0;
+        })
+        .attr("width", function(e){
+            return vis.show_years ? circle_diameter : stick_width;
+        })
+        .attr("height", function(){
+            return vis.show_years ? circle_diameter : 3;
+        })
         .attr("fill", function(e){
+            for(var key in vis.stages){
+                if(e.height >= vis.stages[key]){
+                    return vis.classify(vis.stages[key]);
+                }
+            }
+            return "rgba(0,0,0,0.0)";
+        });
+
+
+    // Exit
+    marks.exit().remove();
+
+
+    // get stages in correct format
+    var stages_array = [];
+    for (x in vis.stages){
+        stages_array.push({
+            "type" : x,
+            "height" : vis.stages[x]
+        })
+    }
+    var stage_lines = vis.svg.selectAll("line.stage-line")
+        .data(stages_array);
+
+    stage_lines.enter().append("line")
+        .attr("class", "stage-line");
+
+    stage_lines.transition()
+        .duration(1000)
+        .attr("x1", vis.x.range()[0])
+        .attr("x2", vis.show_years ? vis.x.range()[1] : stick_width)
+        .attr("y1", function(e){
+            return vis.y(e.height);
+        })
+        .attr("y2", function(e){
+            return vis.y(e.height);
+        })
+        .attr("stroke-dasharray", "5, 5")
+        .attr("stroke", function(e){
             for(var key in vis.stages){
                 if(e.height >= vis.stages[key]){
                     return vis.classify(vis.stages[key]);
@@ -153,10 +228,6 @@ CrestChart.prototype.updateVis = function() {
             }
             return "black";
         });
-
-
-    // Exit
-    circle.exit().remove();
 
 
     vis.svg.select(".y-axis")

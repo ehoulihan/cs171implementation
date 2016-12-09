@@ -208,3 +208,22 @@ rect.pane {
     fill: none;
     pointer-events: all;
 }
+
+.stick{
+    stroke: black;
+    stroke-width: 3px;
+    fill: white;
+}
+
+.wide-stick{
+    fill: rgba(0,0,0, .25);
+}
+
+.crest-rect{
+
+}
+
+.stage-line{
+    stroke-width: 1.5px;
+    fill: none;
+}
