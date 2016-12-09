@@ -33,7 +33,7 @@ CrestChart.prototype.initVis = function() {
 
 
     // * TO-DO *
-    vis.margin = { top: 60, right: 40, bottom: 100, left: 40 };
+    vis.margin = { top: 60, right: 40, bottom: 80, left: 60 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 700 - vis.margin.top - vis.margin.bottom;
@@ -68,13 +68,20 @@ CrestChart.prototype.initVis = function() {
         .attr("class", "x-axis axis")
         .attr("transform", "translate(0," + vis.height + ")");
 
+    vis.xAxisGroup.append("text")
+        .attr("class", "label")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ (vis.width / 2) +","+ ( vis.margin.bottom / 2)+")")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("visibility", "hidden")
+        .text("Year");
+
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
 
     // now add titles to the axes
     vis.yAxisGroup.append("text")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-        .attr("transform", "translate("+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("transform", "translate("+ -(vis.margin.left/2) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
         .text("Flood Peak (ft)");
 
     // Initialize tip component
@@ -234,6 +241,9 @@ CrestChart.prototype.updateVis = function() {
         .transition()
         .duration(1000)
         .call(vis.yAxis);
+
+    vis.xAxisGroup.select("text.label")
+        .attr("visibility", vis.show_years ? "visible" : "hidden");
 
     // if showing the pole, then have no labels on the x axis.
     if (!vis.show_years){
