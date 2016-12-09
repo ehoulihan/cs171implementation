@@ -43,13 +43,15 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
                e.timestamp.getMinutes() == 0;
     });
 
-    // Jackie's Data Vis
+    //////////////////////
+    // Jackie's Data Vis//
+    //////////////////////
+
     // Wrangle Data
     elevationData = wrangleElevation(elevationData);
     floodGageData = wrangleFloodGage(floodGageData);
+
     // Instantiate Visualizations
-
-
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
     jFloodTime = new FloodTimeChart("flood-time-area",floodGageData);
 
@@ -58,7 +60,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale");
 
 }
-
+// Data Wrangling Functions
 function wrangleElevation(data){
     var counter = 0;
     data.forEach(function(d){
@@ -92,19 +94,21 @@ function wrangleFloodGage(data){
     });
     return data;
 }
+
+// Jackie's Interaction Functions
 function resetFloodSimulation(){
     jFlood.resetVis();
     jFloodTime.resetVis();
 }
 
 function runFloodSimulation(){
-    console.log("Running Flood Simulation")
+    console.log("Running Flood Simulation");
 
+    // Set a starting point for the flood data
     var timeIndex = jFlood.floodStartIndex;
 
+    // Function to call flood simulation
     var renderUpdateWater = function(){
-
-        //jFlood.updateFloodWater(timeIndex);
 
         if(jFlood.stopInterval==true || (($("#select-area").val() == "AVERAGE") & (simulationStatus==0))){
             console.log("STOPPING INTERVAL!");
@@ -123,59 +127,15 @@ function runFloodSimulation(){
                 clearInterval(interval)
             }
 
-            //jFloodTime.updateFloodProgress(timeIndex);
         }
 
-        // if(jFlood.stopInterval==true || $("#select-area").val() == "AVERAGE"){
-        //     console.log("STOPPING INTERVAL!");
-        //     clearInterval(interval);
-        //     resetFloodSimulation();
-        // }
-        // else{
-        //     // Update WATER Area
-        //     jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[timeIndex].height);});
-        //
-        //     jFlood.svg.selectAll(".water-area")
-        //         .transition().duration(400)
-        //         .attr("d", jFlood.waterArea(jFlood.elevationData));
-        //
-        //     // Update WATER Line
-        //     jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });
-        //
-        //     jFlood.svg.selectAll(".water-line")
-        //         .transition().duration(400)
-        //         .attr("d", jFlood.waterLine(jFlood.elevationData));
-        //
-        //     timeIndex = timeIndex+1;
-        //
-        //     if (timeIndex >= jFlood.floodEndIndex){
-        //         clearInterval(interval)
-        //     }
-        //     jFloodTime.svg.selectAll("circle")
-        //         .attr("id","blank-dot");
-        //
-        //     jFloodTime.svg.selectAll("#small-dot,#inactive-dot,#last-active-dot,#blank-dot")
-        //         .attr("id",function(d,index){
-        //             var res = index==timeIndex ? "small-dot":"inactive-dot";
-        //             res = (index>=timeIndex-6 & index <timeIndex) ? "last-active-dot": res;
-        //             res = index < timeIndex - 6 ? "inactive-dot" : res;
-        //             res = index > timeIndex ? "blank-dot" : res;
-        //             res = (index < timeIndex & d.hour == 24) ? "last-active-dot" : res;
-        //             return res;
-        //         })
-        //     jFloodTime.svg.selectAll("#large-dot")
-        //         .attr("id",function(d,index){
-        //             var res = "inactive-dot";
-        //             if(index ==timeIndex){
-        //                 res = "large-dot";
-        //             }
-        //             return res;
-        //         })
-        //
-        // }
 
     };
+
+    // INTERVAL
     var intervalTimeLapse = 100;
+
+    // Run simulation via transitions for the line and via time interval for water area
     jFloodTime.updateFloodProgressLine((jFlood.floodEndIndex - jFlood.floodStartIndex) * intervalTimeLapse);
     var interval = setInterval(renderUpdateWater,intervalTimeLapse);
 }

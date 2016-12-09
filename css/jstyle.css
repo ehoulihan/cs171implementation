@@ -223,8 +223,10 @@ select {
     fill-rule: nonzero;
 }
 
-#Shape:hover{
+#Shape:hover,#Page-1:hover,#Icons-AV:hover{
     fill: #000000;
+    pointer-events: all;
+    stroke-width: 10px;
     cursor: pointer;
 }
 
