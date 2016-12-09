@@ -12,12 +12,14 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-switch.min.css">
     <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="css/jquery.fullPage.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/jstyle.css">
 
 </head>
 <body>
 
+<!--
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
         <ul class="nav navbar-nav">
@@ -28,213 +30,245 @@
         </ul>
     </div>
 </nav>
+-->
 
 
-<div class="header">
 
-    <div class="jumbotron" id="main-hero">
+<div id="fullpage">
 
-        <div class="container">
+    <div class="section " id="section0">
+        <video autoplay loop muted id="myVideo">
+            <source src="img/dam.mp4" type="video/mp4">
+        </video>
+        <div class="jumbotron layer" id="main-hero">
 
-            <div class="col-md-12">
 
-                <h1>Damming in Upstate New York: Exacerbating Natural Disasters?</h1>
-                <h4><em>Hurricane Irene hit upstate New York hard, causing flooding throughout the region,
-                    but did local infrastructure contribute to the extent of the flooding?</em></h4>
-                <br><br>
-                <blockquote>
-                    <p>
-                        After a century of the Lock 7 Dam's "fixed" crest impeding runoff drainage
-                        and thus [causing] frequently flooding... a strategic 21st century target should
-                        be a suitably sized gate-system installed at the Lock 7 dam.
-                    </p>
-                    <footer>Jim E. Duggan, Consultant and Activist</footer>
-                </blockquote>
+                    <h1>Damming in Upstate New York: Exacerbating Natural Disasters?</h1>
+                    <h4><em>Hurricane Irene hit upstate New York hard, causing flooding throughout the region,
+                        but did local infrastructure contribute to the extent of the flooding?</em></h4>
+                    <br><br>
+                    <blockquote>
+                        <p>
+                            After a century of the Lock 7 Dam's "fixed" crest impeding runoff drainage
+                            and thus [causing] frequently flooding... a strategic 21st century target should
+                            be a suitably sized gate-system installed at the Lock 7 dam.
+                        </p>
+                        <footer>Jim E. Duggan, Consultant and Activist</footer>
+                    </blockquote>
 
-                <div class="text-center">
-                    <a class="btn btn-default start btn-lg" href="#history">Learn More</a>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <video class="bv-video"></video>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Schenectady Stockade and its history of flooding.</h2>
-        </div>
-    </div>
-    <div class="row" id="history">
-        <div class="col-md-4">
-            <img class="img-responsive" src="img/IMG_7746.JPG" />
-        </div>
-        <div class="col-md-4">
-            The Stockade district of Schenectady, NY is positioned next to the Mohawk river.  In the last century, it has flooded xxx times.
-            Floods are sometimes caused by ice jams in the winter, but often occur after severe storms, like Hurricane Irene.  The usual height of
-            the Mohawk river is xxx feet.  Hurricane Irene and the flood of 1913 are classified as "100 year floods."
-        </div>
-        <div class="col-md-4">
-            <div class="row">
-                <input type="checkbox" name="see-years">
-            </div>
-            <div id="flood-history-chart">
-
-            </div>
+                    <div class="text-center">
+                        <a class="btn btn-default start btn-lg" href="#history">Learn More</a>
+                    </div>
         </div>
     </div>
 
-    <br>
-
-    <div class="row">
-        <img class="img-responsive" src="img/IMG_7697A.JPG"/>
-    </div>
-
-    <div class="row">
-        <h2>Places Affected</h2>
-    </div>
-    <div class="row">
-        <div class="col-md-8" id="extent-chart">
-            Here will come a map of where the extended areas of the flood occurred.
-            <!--<img src="img/fema_flood_map.png"/>-->
-            <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel" data-slide-to="1"></li>
-                    <li data-target="#carousel" data-slide-to="2"></li>
-                    <li data-target="#carousel" data-slide-to="3"></li>
-                    <li data-target="#carousel" data-slide-to="4"></li>
-
-                </ol>
-                <!-- Carousel items -->
-                <div class="carousel-inner">
-                    <div class="active item">
-                        <img class="img-responsive" src="img/Flood1.png"/>
-                    </div>
-                    <div class="item">
-                        <img class="img-responsive" src="img/Flood2.png"/>
-                    </div>
-                    <div class="item">
-                        <img class="img-responsive" src="img/Flood3.png"/>
-                    </div>
-                    <div class="item">
-                        <img class="img-responsive" src="img/Flood4.png"/>
-                    </div>
-                    <div class="item">
-                        <img class="img-responsive" src="img/Flood5.png"/>
-                    </div>
-
-                </div>
-                <!-- Carousel nav -->
-                <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-                <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-            </div>
-
-        </div>
-        <div class="col-md-4">
-            <p id="map-info-text">
-                1 - The Lock 7 Dam is located along the Mohawk River, and serves as both a lock system and as a hydro-electric plant
+    <div class="section">
+        <div class="slide active">
+            <h1>Schenectady Stockade and its history of flooding.</h1>
+            <p>
+                The Stockade district of Schenectady, NY is positioned next to the Mohawk river.  In the last century, it has flooded 25 times.
+                Floods are sometimes caused by ice jams in the winter, but often occur after severe storms, like Hurricane Irene.  The usual height of
+                the Mohawk river is 212 feet.  Hurricane Irene and the flood of 1913 are classified as "100 year floods."
             </p>
         </div>
-    </div>
-
-    <div class="row">
-        <h2>One Street of Many</h2>
-        <div id="flood-vis-area">
-            <div class="col-md-3">
-                Hurricane Irene Flood Levels by Hour
-            </div>
-            <div class="col-md-9">
-                Profile of Ingersoll Street
-                <!--<div class="user-control" align="center">-->
-                    <!--<select id="select-area" class="form-control" onchange="runFloodSimulation()">-->
-                        <!--<option value="AVERAGE">Average Height</option>-->
-                        <!--<option value="FLOOD">Flood Simulation</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-            </div>
-            <div class="col-md-3">
-                <div id="flood-time-area">
-                    <!--<a href="#" title="Play video" class="play"></a>-->
-                </div>
-            </div>
-            <div class="col-md-9">
-                <div id="flood-chart-area">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <br>
-
-    <div class="row">
-        <div class="col-md-offset-3">
-            <img class="img-responsive shrink" src="img/papa.jpg"/>
-            <h2>$15.8 Billion: Damages caused by Hurricane Irene to Flooded Areas</h2>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            This is a long paragraph talking about the Vischer Ferry Dam, and its construction.
-        </div>
-    </div>
-
-    <div class="row">
-        <h2>How does the dam contribute to flooding?</h2>
-        <div class="col-md-12">
-
-
-        <div id="speed-chart">
-            <p>Interact with <a class="highlight">highlighted text</a>.</p>
-            <p> Before the locks were built, water flowed at a <a class="highlight" id="natural_flow"> natural velocity </a> downstream.  </br>However, the construction of the dam created a <a class="highlight" id="pool">standing pool</a>,
-                in which water virtually stands still at a high height.  This enables heavy flooding because...</p>
-
-        </div>
-            </div>
-    </div>
-
-    <div class="row">
-        <h2>Proven: Increasing Discharge Rate At Lock 7 Decreases Flooding</h2>
-        <div class="col-md-12">
-        <div id="exp1-vis-area">
-            <div class="container">
+        <div class="slide">
+            <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="user-control" align="center">
-                            <select id="exp-select-area" class="form-control" onchange="updateWater()">
-                                <option value="AVERAGE">Average Height</option>
-                                <option value="FLOOD">Run the Experiment</option>
-                            </select>
+                    <div class="col-md-4 col-md-offset-4">
+                        <div style="display:table-cell; vertical-align:middle; text-align:center">
+                            <img class="img-responsive" src="img/IMG_7746.JPG">
                         </div>
-                        <div id="exp-time-area"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-4">
+                        <div class="row">
+                            <input type="checkbox" name="see-years">
+                        </div>
+                        <div id="flood-history-chart">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="section">
+            <img class="img-responsive" src="img/IMG_7697A.JPG"/>
+    </div>
+
+    <div class="section">
+        <div class="slide active">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8" id="extent-chart">
+                        Here will come a map of where the extended areas of the flood occurred.
+                        <!--<img src="img/fema_flood_map.png"/>-->
+                        <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel" data-slide-to="1"></li>
+                                <li data-target="#carousel" data-slide-to="2"></li>
+                                <li data-target="#carousel" data-slide-to="3"></li>
+                                <li data-target="#carousel" data-slide-to="4"></li>
+                            </ol>
+                            <!-- Carousel items -->
+                            <div class="carousel-inner">
+                                <div class="active item">
+                                    <img class="img-responsive" src="img/Flood1.png"/>
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="img/Flood2.png"/>
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="img/Flood3.png"/>
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="img/Flood4.png"/>
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="img/Flood5.png"/>
+                                </div>
+                            </div>
+                            <!-- Carousel nav -->
+                            <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                            <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <p id="map-info-text">
+                            1 - The Lock 7 Dam is located along the Mohawk River, and serves as both a lock system and as a hydro-electric plant
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="row">
+                <h2>One Street of Many</h2>
+                <div id="flood-vis-area">
+                    <div class="col-md-3">
+                        Hurricane Irene Flood Levels by Hour
                     </div>
                     <div class="col-md-9">
-                        <div id="exp-vis-area"></div>
+                        Profile of Ingersoll Street
+                    </div>
+                    <div class="col-md-3">
+                        <div id="flood-time-area">
+                        <!--<a href="#" title="Play video" class="play"></a>-->
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div id="flood-chart-area"></div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            Discharge rates are correlated with flooding.  Let's examine the discharge rates of the Mohawk river at Freeman's Bridge
-            during Hurricane Irene.
-        </div>
+    <!--<div class="section">-->
+        <!--<div class="container-fluid">-->
+            <!--<div class="row">-->
+                <!--<h2>One Street of Many</h2>-->
+                <!--<div id="flood-vis-area">-->
+                    <!--<div class="col-md-3">-->
+                        <!--<div class="user-control" align="center">-->
+                            <!--<select id="select-area" class="form-control" onchange="j_updateWater()">-->
+                                <!--<option value="AVERAGE">Average Height</option>-->
+                                <!--<option value="FLOOD">Flood Simulation</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                        <!--<div id="flood-time-area"></div>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-9">-->
+                        <!--<div id="chart-area"></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="section">
         <div class="row">
-        <div class="col-md-6" id="discharge-chart">
-            <input type="checkbox" name="change-scale">
+            <div class="col-md-offset-3">
+                <img class="img-responsive shrink" src="img/papa.jpg"/>
+                <h2>$15.8 Billion: Damages caused by Hurricane Irene to Flooded Areas</h2>
+            </div>
         </div>
     </div>
+    <div class="section">
+        <div class="row">
+            <div class="col-md-12">
+                This is a long paragraph talking about the Vischer Ferry Dam, and its construction.
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <h2>How does the dam contribute to flooding?</h2>
+                <div class="col-md-12">
+
+
+                    <div id="speed-chart">
+                        <p>Interact with <a class="highlight">highlighted text</a>.</p>
+                        <p> Before the locks were built, water flowed at a <a class="highlight" id="natural_flow"> natural velocity </a> downstream.  </br>However, the construction of the dam created a <a class="highlight" id="pool">standing pool</a>,
+                            in which water virtually stands still at a high height.  This enables heavy flooding because...</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <h2>Proven: Increasing Discharge Rate At Lock 7 Decreases Flooding</h2>
+                <div class="col-md-12">
+                    <div id="exp1-vis-area">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="user-control" align="center">
+                                        <select id="exp-select-area" class="form-control" onchange="updateWater()">
+                                            <option value="AVERAGE">Average Height</option>
+                                            <option value="FLOOD">Run the Experiment</option>
+                                        </select>
+                                    </div>
+                                    <div id="exp-time-area"></div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div id="exp-vis-area"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    Discharge rates are correlated with flooding.  Let's examine the discharge rates of the Mohawk river at Freeman's Bridge
+                    during Hurricane Irene.
+                </div>
+                <div class="row">
+                    <div class="col-md-6" id="discharge-chart">
+                        <input type="checkbox" name="change-scale">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <!--<div class="row">-->
@@ -253,7 +287,7 @@
             <!--of a changing climate.-->
         <!--</div>-->
     <!--</div>-->
-
+<!--
 
     <div class="jumbotron">
 
@@ -273,7 +307,6 @@
 
 
 
-</div>
 
 <div class="navbar navbar-default navbar-bottom">
     <div class="container">
@@ -282,7 +315,7 @@
         </p>
     </div>
 </div>
-
+-->
 
 
 
@@ -292,8 +325,23 @@
 <script src="js/bootstrap-switch.min.js"></script>
 <script src="js/queue.v1.min.js"></script>
 <script src="js/backgroundVideo.js"></script>
+<script src="js/jquery.fullPage.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="js/d3.tip.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#fullpage').fullpage({
+                verticalCentered: true,
+                sectionsColor: ['#f2f2f2', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff',
+                    '#f2f2f2', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff', '#f2f2f2', '#4BBFC3'],
+                afterRender: function(){
+                    //playing the video
+                    $('video').get(0).play();
+                }
+            });
+        });
+    </script>
 
 
 <!-- Visualization objects -->
@@ -311,5 +359,6 @@
 <!--<script src="js/jackie_main.js"></script>-->
 <script src="js/karen_main.js"></script>
 <script src="js/karenExp_main.js"></script>
+
 </body>
 </html>

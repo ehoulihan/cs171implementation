@@ -1,4 +1,4 @@
-// this is the part of the file where we do all the things to index.html
+
 
 // Function to convert date objects to strings or reverse
 var dateFormatter = d3.time.format("%m/%d/%Y");
