@@ -208,3 +208,13 @@ rect.pane {
     fill: none;
     pointer-events: all;
 }
+
+.stick{
+    stroke: black;
+    stroke-width: 3px;
+    fill: white;
+}
+
+.crest-rect{
+
+}

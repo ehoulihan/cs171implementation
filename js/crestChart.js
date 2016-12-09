@@ -36,7 +36,7 @@ CrestChart.prototype.initVis = function() {
     vis.margin = { top: 60, right: 40, bottom: 60, left: 40 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+        vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -116,35 +116,52 @@ CrestChart.prototype.updateVis = function() {
         vis.x.range([0, 1]);
     }
 
-    var stick_width = $("#stick").width();
+    var circle_diameter = 10;
+
+    var stick_height = $("#stick").height() * 13.2/17.5;
+
+    var stick_width = $("#stick").width() * 1.4/11.6;
     // get the width of the photo to ensure its accuracy
 
     vis.stick = vis.svg.append("rect")
+        .attr("class", "stick")
         .attr("x", 0)
         .attr("y", 0)
         .attr("width", stick_width)
-        .attr("height", vis.y.range()[1])
-        .attr("stroke", "black");
+        .attr("height", vis.y.range()[0]);
 
     vis.y.domain(d3.extent(vis.displayData, function(e){return e.height;}));
     vis.x.domain(d3.extent(vis.displayData, function(e){ return e.date; }));
 
 // join
-    circle = vis.svg.selectAll("circle")
+    var marks = vis.svg.selectAll("rect.crest-rect")
         .data(vis.displayData);
 
     // enter
-    circle.enter().append("circle")
-        .attr("class", "crest-dot")
+    marks.enter().append("rect")
+        .attr("class", "crest-rect")
         .on('mouseover', vis.tip.show)
         .on('mouseout', vis.tip.hide);
 
     // update
-    circle.transition()
+    marks.transition()
         .duration(1000)
-        .attr("cx", function(d) { return vis.x(d.date); })
-        .attr("cy", function(d, index) { return vis.y(d.height); })
-        .attr("r", 4)
+        .attr("x", function(d) { return vis.x(d.date); })
+        .attr("y", function(d, index) { return vis.y(d.height); })
+        .attr("rx", function(e){
+            return vis.show_years ? circle_diameter : 0;
+        })
+        .attr("ry", function(e){
+            if (vis.show_years){
+                return vis.show_years ? circle_diameter : 0;
+            }
+        })
+        .attr("width", function(e){
+            return vis.show_years ? circle_diameter : stick_width;
+        })
+        .attr("height", function(){
+            return vis.show_years ? circle_diameter : 3;
+        })
         .attr("fill", function(e){
             for(var key in vis.stages){
                 if(e.height >= vis.stages[key]){
@@ -156,7 +173,7 @@ CrestChart.prototype.updateVis = function() {
 
 
     // Exit
-    circle.exit().remove();
+    marks.exit().remove();
 
 
     vis.svg.select(".y-axis")
