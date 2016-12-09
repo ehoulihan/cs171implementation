@@ -82,6 +82,7 @@ CrestChart.prototype.initVis = function() {
         });
     vis.svg.call(vis.tip);
 
+
     vis.wrangleData();
 };
 
@@ -114,6 +115,16 @@ CrestChart.prototype.updateVis = function() {
     } else {
         vis.x.range([0, 1]);
     }
+
+    var stick_width = $("#stick").width();
+    // get the width of the photo to ensure its accuracy
+
+    vis.stick = vis.svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", stick_width)
+        .attr("height", vis.y.range()[1])
+        .attr("stroke", "black");
 
     vis.y.domain(d3.extent(vis.displayData, function(e){return e.height;}));
     vis.x.domain(d3.extent(vis.displayData, function(e){ return e.date; }));
