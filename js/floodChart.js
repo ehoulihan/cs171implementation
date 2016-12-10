@@ -16,6 +16,7 @@ FloodChart = function(_parentElement, _eData, _ghData) {
     this.parentElement = _parentElement;
     this.elevationData = _eData;
     this.gageHeight = _ghData;
+    this.maxLineStatus = 0;
     this.initVis();
 };
 
@@ -145,6 +146,8 @@ FloodChart.prototype.updateVis = function() {
     var elevExtent = d3.extent(jFlood.elevationData, function(d){return d.elevation;});
     var gageExtent = d3.extent(jFlood.gageHeight,function(d){return d.height});
 
+    jFlood.maxFloodLevel = gageExtent[1];
+
     var upperBound = d3.max([elevExtent[1],gageExtent[1]]);
 
     jFlood.y.domain([jFlood.cutoff_elev,upperBound + 5]);
@@ -188,6 +191,7 @@ FloodChart.prototype.updateVis = function() {
     jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
+
 
     // Build WATER Line
     // jFlood.waterLine = d3.svg.line()
@@ -247,12 +251,14 @@ FloodChart.prototype.updateVis = function() {
 
     var house_index = 73;
     var person_index = 102;
+    var house_width = 85;
+    var person_width = 25;
 
     icons.append("image")
         .attr("xlink:href", "img/house.png")
         .attr("x",jFlood.x(house_index))
         .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.twoStoryHeight)
-        .attr("width",70)
+        .attr("width",house_width)
         .attr("height",jFlood.twoStoryHeight)
         .attr("preserveAspectRatio","none");
 
@@ -260,70 +266,33 @@ FloodChart.prototype.updateVis = function() {
         .attr("xlink:href", "img/man.png")
         .attr("x",jFlood.x(person_index))
         .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.sixFtTall)
-        .attr("width",25)
+        .attr("width",person_width)
         .attr("height",jFlood.sixFtTall)
         .attr("preserveAspectRatio","none");
 
-
-    // var iconInfo = [
-    //     {
-    //         "label":["1-story House: ","10ft."],
-    //         "path":"img/house.png",
-    //         "xPos":house_index,
-    //         "yShift":jFlood.twoStoryHeight,
-    //         "width": 70
-    //
-    //     },
-    //     {
-    //         "label":["Avg U.S. Man: ","5ft. 10in."],
-    //         "path":"img/man.png",
-    //         "xPos":person_index,
-    //         "yShift": jFlood.sixFtTall,
-    //         "width": 25
-    //     }
-    // ];
-
-    // iconInfo.forEach(function(elt){
-    //     icons.append("image")
-    //         .attr("xlink:href", elt.path)
-    //         .attr("x",jFlood.x(elt.xPos))
-    //         .attr("y",jFlood.y(jFlood.minFloodElev) - elt.yShift)
-    //         .attr("width",25)
-    //         .attr("height",elt.yShift)
-    //         .attr("preserveAspectRatio","none");
-    //     var counter = 0.5;
-    //     for (var item in elt.label){
-    //         jFlood.svg.append("text")
-    //             .attr("x",jFlood.x(elt.xPos))
-    //             .attr("y",jFlood.y(jFlood.minFloodElev - counter))
-    //             .text(elt.lable[item]);
-    //         counter = counter + 2;
-    //     }
-    // });
-
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
-        .attr("x",jFlood.x(house_index) + 35)
-        .attr("y",jFlood.y(jFlood.minFloodElev - 1.5))
+        .attr("x",jFlood.x(house_index) + house_width/2)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 2))
         .attr("text-anchor","middle")
         .html("1-Story House: ");
 
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
-        .attr("x",jFlood.x(person_index) + 10)
-        .attr("y",jFlood.y(jFlood.minFloodElev - 1.5))
+        .attr("x",jFlood.x(person_index) + person_width/2)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 2))
         .attr("text-anchor","middle")
         .html("Avg U.S. Man: ");
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
-        .attr("x",jFlood.x(house_index) + 35)
-        .attr("y",jFlood.y(jFlood.minFloodElev - 3))
+        .attr("x",jFlood.x(house_index) + house_width/2)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 3.5))
         .attr("text-anchor","middle")
         .html("10ft.");
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
-        .attr("x",jFlood.x(person_index) + 10)
-        .attr("y",jFlood.y(jFlood.minFloodElev - 3))
+        .attr("x",jFlood.x(person_index) + person_width/2)
+        .attr("y",jFlood.y(jFlood.minFloodElev - 3.5))
         .attr("text-anchor","middle")
         .html("5ft. 10in.");
 
@@ -347,6 +316,28 @@ FloodChart.prototype.resetVis = function() {
     //     .attr("d", jFlood.waterLine(jFlood.elevationData));
 };
 
+FloodChart.prototype.insertMaxLine = function(waterHeight){
+    var jFlood = this;
+
+    jFlood.svg
+        .append("line")
+        .attr("x1",jFlood.x(0) - 1)
+        .attr("x2",jFlood.x(maxFloodDataPoints))
+        .attr("y1",jFlood.y(waterHeight + 200))
+        .attr("y2",jFlood.y(waterHeight + 200))
+        .attr("class","max-height-line");
+
+    jFlood.svg
+        .append("text")
+        .attr("x",jFlood.x(maxFloodDataPoints))
+        .attr("y",jFlood.y(waterHeight + 200 + 1))
+        .attr("text-anchor","end")
+        .attr("class","max-height-line-text")
+        .text("Max. Water Height: 229ft.");
+
+    jFlood.maxLineStatus = 1;
+};
+
 FloodChart.prototype.updateFloodWater = function(timeIndex){
     var jFlood = this;
 
@@ -354,8 +345,12 @@ FloodChart.prototype.updateFloodWater = function(timeIndex){
     jFlood.waterArea.y1(function(d) { return jFlood.y(200 + jFlood.gageHeight[timeIndex].height);});
 
     jFlood.svg.selectAll(".water-area")
-        .transition().duration(400)
+        .transition().duration(100)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
+
+    if((jFlood.maxFloodLevel == jFlood.gageHeight[timeIndex].height) & (jFlood.maxLineStatus == 0)){
+        jFlood.insertMaxLine(jFlood.maxFloodLevel);
+    }
 
     // // Update WATER Line
     // jFlood.waterLine.y(function(d) { return jFlood.y(200+jFlood.gageHeight[timeIndex].height); });

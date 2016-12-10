@@ -7,6 +7,7 @@ var floodDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
 var crestChart, dischargeChart,jFlood,jFloodTime;
 var simulationStatus = 0;
+var maxFloodDataPoints = 190;
 
 var myEventHandler = {};
 
@@ -74,7 +75,7 @@ function wrangleElevation(data){
     });
 
     // Store csv data in global variable
-    data = data.slice(0,190);
+    data = data.slice(0,maxFloodDataPoints);
     return data;
 }
 

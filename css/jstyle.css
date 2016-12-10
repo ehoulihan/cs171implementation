@@ -161,7 +161,7 @@ select {
 /**********/
 #Shape{
     fill: #6b6b6b;
-    opacity: 0.5;
+    opacity: 0.75;
     fill-rule: nonzero;
 }
 
@@ -232,6 +232,28 @@ select {
     margin-right:30px;
     background: rgba(255,255,255,0.72);
 }
+
+.vis-intro-text{
+    width: 50%;
+    margin: auto;
+    padding-bottom: 2%;
+}
+
+.max-height-line{
+    stroke: red;
+    stroke-width: 3px;
+    opacity: 0.5;
+    stroke-dasharray: 2;
+}
+
+.max-height-line-text{
+    fill:red;
+    fill-opacity: 0.6;
+}
+
+/*.icon-label-text{*/
+    /*color:*/
+/*}*/
 
 /*.vis-intro-text{*/
     /*width;*/

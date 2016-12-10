@@ -16,7 +16,7 @@ FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
 
-    this.margin = {top: 20, right: 50, bottom: 80, left: 50};
+    this.margin = {top: 20, right: 60, bottom: 80, left: 50};
 
     this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
