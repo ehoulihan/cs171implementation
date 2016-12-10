@@ -157,7 +157,7 @@ h1 .sub-headline {
 .axis path,
 .axis line {
     fill: none;
-    stroke: #000;
+    stroke: #ffffff;
     shape-rendering: crispEdges;
 }
 .axis text {
@@ -217,7 +217,7 @@ rect.pane {
 }
 
 .wide-stick{
-    fill: rgba(255 ,255, 255, .25);
+    fill: rgba(255 ,255, 255, .5);
 }
 
 .crest-rect{
@@ -227,4 +227,9 @@ rect.pane {
 .stage-line{
     stroke-width: 1.5px;
     fill: none;
+}
+
+.stage-line-label{
+    fill: whitesmoke;
+    font-size: 11px;
 }

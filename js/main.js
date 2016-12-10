@@ -55,7 +55,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
     jFloodTime = new FloodTimeChart("flood-time-area",floodGageData);
 
-    crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years');
+    crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
     dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale");
 

@@ -6,14 +6,16 @@
 *  @param _data            -- Array data about date and height of river at that date
  * @param _stages           -- object that describes the river's height at a given flood stage
  * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
+ * @param _photoElement    -- photoElement that chooses the initial size
  */
 
-CrestChart = function(_parentElement, _data, _stages, _toggle) {
+CrestChart = function(_parentElement, _data, _stages, _toggle, _photoElement) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.stages = _stages;
     this.toggle = _toggle;
     this.dateFormatter = d3.time.format("%m/%d/%Y");
+    this.photoElement = _photoElement;
     this.initVis();
 };
 
@@ -33,9 +35,9 @@ CrestChart.prototype.initVis = function() {
 
 
     // * TO-DO *
-    vis.margin = { top: 60, right: 40, bottom: 80, left: 60 };
+    vis.margin = { top: 60, right: 200, bottom: 80, left: 200 };
 
-    vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
+    vis.width = $("#" + vis.photoElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
@@ -129,6 +131,8 @@ CrestChart.prototype.updateVis = function() {
         vis.x.range([0, 1]);
     }
 
+    var stick_x = 300;
+
     var circle_diameter = 10;
 
     var stick_height = $("#stick").height() * 13.2/17.5;
@@ -152,7 +156,7 @@ CrestChart.prototype.updateVis = function() {
     stick.transition()
         .duration(1000)
         .attr("class", vis.show_years ? "wide-stick" : "stick")
-        .attr("x", 0)
+        .attr("x", vis.show_years ? 0 : stick_x)
         .attr("y", 0)
         .attr("width", vis.show_years ? vis.x.range()[1] : stick_width)
         .attr("height", vis.y.range()[0]);
@@ -216,6 +220,7 @@ CrestChart.prototype.updateVis = function() {
     stage_lines.enter().append("line")
         .attr("class", "stage-line");
 
+
     stage_lines.transition()
         .duration(1000)
         .attr("x1", vis.x.range()[0])
@@ -236,6 +241,23 @@ CrestChart.prototype.updateVis = function() {
             return "black";
         });
 
+    var line_labels = vis.svg.selectAll(".stage-line-label")
+        .data(stages_array);
+
+    line_labels.enter().append("text")
+        .attr("class", "stage-line-label");
+
+    line_labels.transition()
+        .duration(1000)
+        .attr("text-anchor", "start")
+        .attr("x", (vis.show_years ? vis.x.range()[1] : stick_width) + 5)
+        .attr("y",function(e){
+            return vis.y(e.height);
+        })
+        .text(function(e){
+            console.log(e);
+            return e.type;
+        });
 
     vis.svg.select(".y-axis")
         .transition()
