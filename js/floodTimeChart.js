@@ -90,6 +90,7 @@ FloodTimeChart.prototype.initVis = function() {
         .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
 
     jProg.x = d3.time.scale().range([0,jProg.width]);
+    console.log(jProg.x);
     jProg.y = d3.scale.linear().range([jProg.height, 0]);
 
     jProg.xAxis = d3.svg.axis()

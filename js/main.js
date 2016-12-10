@@ -57,6 +57,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     floodGageData = wrangleFloodGage(floodGageData);
 
 
+
     // Instantiate Visualizations
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
     jFloodTime = new FloodTimeChart("flood-time-area",floodGageData, "flood");
@@ -74,7 +75,16 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     // freemansData = wrangleHeight(freemansData);
     // vischerData = wrangleHeight(vischerData);
     speedElevationData = wrangleSpeedElevation(speedElevationData);
-    kExpTime = new FloodTimeChart("exp-time-area",floodGageData,"experiment");
+
+    lock8Data = wrangleFloodGage(lock8Data);
+    freemansData = wrangleFloodGage(freemansData);
+    vischerData = wrangleFloodGage(vischerData);
+    console.log(lock8Data);
+    console.log(freemansData);
+    console.log(vischerData);
+
+    kExpTime = new ExpTimeChart("exp-time-area", lock8Data, freemansData, vischerData, "experiment");
+    //kExpTimeBig = new FloodTimeChart("exp-time-area2",floodGageData,"experiment");
     speedChart = new SpeedChart("speed-chart", speedElevationData, "speed");
 
 }
@@ -178,6 +188,7 @@ function runSimulation(type){
         console.log("IN EXPERIMENT PATH")
 
         kExpTime.updateFloodProgressLine(5000);
+        //kExpTimeBig.updateFloodProgressLine(5000);
     }
 }
 

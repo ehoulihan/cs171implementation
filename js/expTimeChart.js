@@ -12,17 +12,19 @@
  * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
  */
 
-FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
+ExpTimeChart = function(_parentElement, _dataL8, _dataF, _dataV, _chartType, _toggle) {
     this.parentElement = _parentElement;
-    this.data = _data;
-
+    this.dataL8 = _dataL8;
+    this.dataF = _dataF;
+    this.dataV = _dataV;
+    this.chartType = _chartType;
     this.margin = {top: 20, right: 60, bottom: 80, left: 50};
 
     this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
 
+    console.log("here!");
     this.playButton();
-
 
     //this.initVis();
 };
@@ -32,7 +34,7 @@ FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
  *  Initialize station map
  */
 
-FloodTimeChart.prototype.playButton = function(){
+ExpTimeChart.prototype.playButton = function(){
     var jProg = this;
 
     // Insert Play Button
@@ -67,17 +69,17 @@ FloodTimeChart.prototype.playButton = function(){
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
-                    jFloodTime.initVis();
-                    runFloodSimulation();
+                    jProg.initVis();
+                    runSimulation(jProg.chartType);
                 });
 
         });
 
 }
 
-FloodTimeChart.prototype.initVis = function() {
+ExpTimeChart.prototype.initVis = function() {
     var jProg = this;
 
     // Reset html
@@ -90,6 +92,7 @@ FloodTimeChart.prototype.initVis = function() {
         .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
 
     jProg.x = d3.time.scale().range([0,jProg.width]);
+    console.log(jProg.x);
     jProg.y = d3.scale.linear().range([jProg.height, 0]);
 
     jProg.xAxis = d3.svg.axis()
@@ -142,13 +145,14 @@ FloodTimeChart.prototype.initVis = function() {
  *  The drawing function
  */
 
-FloodTimeChart.prototype.updateVis = function() {
+ExpTimeChart.prototype.updateVis = function() {
     var jProg = this;
 
-    var dateExtent = d3.extent(jProg.data, function(d){return d.date;});
-    var heightExtent = d3.extent(jProg.data,function(d){return d.height});
+    var dateExtent = d3.extent(jProg.dataL8, function(d){return d.date;});
+    var heightExtent = d3.extent(jProg.dataL8,function(d){return d.height});
 
     jProg.x.domain([dateExtent[0],dateExtent[1]]);
+    jProg.y.domain([212, 216]);
 
     jProg.svg.select(".x-axis-group")
         .call(jProg.xAxis)
@@ -165,7 +169,7 @@ FloodTimeChart.prototype.updateVis = function() {
         });
 
 
-    jProg.y.domain(jFlood.y.domain());
+    //jProg.y.domain(jFlood.y.domain());
 
     jProg.svg.select(".y-axis-group")
         .call(jProg.yAxis);
@@ -179,16 +183,40 @@ FloodTimeChart.prototype.updateVis = function() {
         .text("Elevation (feet above sea level)");
 
     //
-    var circle = jProg.svg.selectAll("circle")
-        .data(jProg.data);
+    var circleL8 = jProg.svg.selectAll("circle")
+        .data(jProg.dataL8);
 
-    circle.enter().append("circle")
+    var circleF = jProg.svg.selectAll("circle")
+        .data(jProg.dataF);
+
+    var circleV = jProg.svg.selectAll("circle")
+        .data(jProg.dataV);
+
+    circleL8.enter().append("circle")
         .attr("class", "water-dot")
         .attr("fill", "#707086")
         .attr("cx", function(d, index) {return jProg.x(d.date) })
         .attr("cy",function(d){
             return jProg.y(d.height + 200);
         });
+
+    circleF.enter().append("circle")
+        .attr("class", "water-dot")
+        .attr("fill", "red")
+        .attr("cx", function(d, index) {return jProg.x(d.date) })
+        .attr("cy",function(d){
+            return jProg.y(d.height + 200);
+        });
+
+    circleV.enter().append("circle")
+        .attr("class", "water-dot")
+        .attr("fill", "yellow")
+        .attr("cx", function(d, index) {return jProg.x(d.date) })
+        .attr("cy",function(d){
+            return jProg.y(d.height + 200);
+        });
+
+
 
     //
     // circle
@@ -213,56 +241,156 @@ FloodTimeChart.prototype.updateVis = function() {
     //
 
 };
-FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
+ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
     var jProg = this;
 
-    var progressLine = d3.svg.line()
+    console.log(jProg);
+    // var progressLineL8 = d3.svg.line()
+    //     .x(function (d) { return jProg.x(d.date);})
+    //     .y(function (d) { return jProg.y(d.height+200)});
+
+
+
+    var progressLineL8 = d3.svg.line()
         .x(function (d) { return jProg.x(d.date);})
         .y(function (d) { return jProg.y(d.height+200)});
 
-    jProg.path = jProg.svg.append("path")
-        .data([jProg.data])
+    var progressLineF = d3.svg.line()
+        .x(function (d) { return jProg.x(d.date);})
+        .y(function (d) { return jProg.y(d.height+200)});
+
+    var progressLineV = d3.svg.line()
+        .x(function (d) { return jProg.x(d.date);})
+        .y(function (d) { return jProg.y(d.height+200)});
+
+
+    // var progressLineV = d3.svg.line()
+    //     .x(function (d) { return jProg.x(d.date);})
+    //     .y(function (d) { return jProg.y(d.height+200)});
+
+    jProg.pathL8 = jProg.svg.append("path")
+        .data([jProg.dataL8])
         .attr({
-            d: progressLine,
+            d: progressLineL8,
             fill: "none",
-            stroke: "#337ab7",
+            stroke: "red",
+            "stroke-width": 2
+        });
+
+    jProg.pathF = jProg.svg.append("path")
+        .data([jProg.dataF])
+        .attr({
+            d: progressLineF,
+            fill: "none",
+            stroke: "blue",
+            "stroke-width": 2
+        });
+
+    jProg.pathV = jProg.svg.append("path")
+        .data([jProg.dataV])
+        .attr({
+            d: progressLineV,
+            fill: "none",
+            stroke: "yellow",
             "stroke-width": 2
         });
     // animate path
-    var totalLength = jProg.path[0][0].getTotalLength();
+    var totalLengthL8 = jProg.pathL8[0][0].getTotalLength();
+    var totalLengthF = jProg.pathF[0][0].getTotalLength();
+    var totalLengthV = jProg.pathV[0][0].getTotalLength();
+
+    console.log(totalLengthL8);
+    console.log(totalLengthF);
+    console.log(totalLengthV);
+
     // var totalLength = path.node().getTotalLength();
 
     var duration = totalTime;
-    var interval = Math.round(duration/jProg.data.length);
+    var interval = Math.round(duration/jProg.dataL8.length);
 
     var segments = [0];
-    for(var i = 1; i < jProg.data.length; i++) {
+    for(var i = 1; i < jProg.dataL8.length; i++) {
         var tmp = jProg.svg.append("path")
-            .datum([jProg.data[i-1], jProg.data[i]])
-            .attr("d", progressLine);
+            .datum([jProg.dataL8[i-1], jProg.dataL8[i]])
+            .attr("d", progressLineL8);
+        segments.push(segments[i-1] + tmp[0][0].getTotalLength());
+        tmp.remove();
+    }
+
+    var segments = [0];
+    for(var i = 1; i < jProg.dataF.length; i++) {
+        var tmp = jProg.svg.append("path")
+            .datum([jProg.dataF[i-1], jProg.dataF[i]])
+            .attr("d", progressLineF);
+        segments.push(segments[i-1] + tmp[0][0].getTotalLength());
+        tmp.remove();
+    }
+
+    var segments = [0];
+    for(var i = 1; i < jProg.dataV.length; i++) {
+        var tmp = jProg.svg.append("path")
+            .datum([jProg.dataV[i-1], jProg.dataV[i]])
+            .attr("d", progressLineV);
         segments.push(segments[i-1] + tmp[0][0].getTotalLength());
         tmp.remove();
     }
 
 
-    jProg.path
-        .attr("stroke-dasharray", totalLength + " " + totalLength)
-        .attr("stroke-dashoffset", totalLength)
+    jProg.pathL8
+        .attr("stroke-dasharray", totalLengthL8 + " " + totalLengthL8)
+        .attr("stroke-dashoffset", totalLengthL8)
         .transition()
         .duration(duration)
         .ease("linear")
         .attr("stroke-dashoffset", 0)
-        .attr("id","water-progress-line");
+        .attr("id","L8-line");
 
-    jProg.circles = jProg.svg.selectAll("circle")
-        .data(jProg.data)
+    jProg.pathF
+        .attr("stroke-dasharray", totalLengthF + " " + totalLengthF)
+        .attr("stroke-dashoffset", totalLengthF)
+        .transition()
+        .duration(duration)
+        .ease("linear")
+        .attr("stroke-dashoffset", 0)
+        .attr("id","F-line");
+
+    jProg.pathV
+        .attr("stroke-dasharray", totalLengthV + " " + totalLengthV)
+        .attr("stroke-dashoffset", totalLengthV)
+        .transition()
+        .duration(duration)
+        .ease("linear")
+        .attr("stroke-dashoffset", 0)
+        .attr("id","V-line");
+
+    jProg.circlesL8 = jProg.svg.selectAll("circle")
+        .data(jProg.dataL8)
+        .enter()
+        .append("circle")
+        .attr("fill", "red");
+
+    jProg.circlesL8
+        .transition()
+        .delay(function (d, i) { return segments[i]*duration/totalLengthL8;})
+        .ease("linear")
+        .attr({
+            cx: function (d) { return jProg.x(d.date); },
+            cy: function (d) { return jProg.y(d.height + 200)},
+            r: 4,
+            fill: "red",
+            // /stroke: "#78B446",
+            "stroke-width": 4
+        });
+
+    jProg.circlesF = jProg.svg.selectAll("circle")
+        .data(jProg.dataF)
         .enter()
         .append("circle")
         .attr("fill", "blue");
 
-    jProg.circles
+    jProg.circlesF
         .transition()
-        .delay(function (d, i) { return segments[i]*duration/totalLength;})
+        .delay(function (d, i) { return segments[i]*duration/totalLengthF;})
         .ease("linear")
         .attr({
             cx: function (d) { return jProg.x(d.date); },
@@ -273,20 +401,52 @@ FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
             "stroke-width": 4
         });
 
+
+    jProg.circlesV = jProg.svg.selectAll("circle")
+        .data(jProg.dataV)
+        .enter()
+        .append("circle")
+        .attr("fill", "green");
+
+    jProg.circlesV
+        .transition()
+        .delay(function (d, i) { return segments[i]*duration/totalLengthV;})
+        .ease("linear")
+        .attr({
+            cx: function (d) { return jProg.x(d.date); },
+            cy: function (d) { return jProg.y(d.height + 200)},
+            r: 4,
+            fill: "green",
+            // /stroke: "#78B446",
+            "stroke-width": 4
+        });
+
+
+
+
+
     jProg.tip.html(function(d){
         return "Elevation" + ": " + (d.height+200) + " @ " + d.date.toLocaleTimeString();
     });
     jProg.svg.call(jProg.tip);
 
 
-    jProg.circles
+    jProg.circlesL8
+        .on('mouseover', jProg.tip.show)
+        .on('mouseout', jProg.tip.hide);
+
+    jProg.circlesF
+        .on('mouseover', jProg.tip.show)
+        .on('mouseout', jProg.tip.hide);
+
+    jProg.circlesV
         .on('mouseover', jProg.tip.show)
         .on('mouseout', jProg.tip.hide);
 
 
 }
 
-FloodTimeChart.prototype.resetVis = function() {
+ExpTimeChart.prototype.resetVis = function() {
     var jProg = this;
 
     jProg.path.exit().remove();
@@ -314,10 +474,10 @@ FloodTimeChart.prototype.resetVis = function() {
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
                     jFloodTime.initVis();
-                    runFloodSimulation();
+                    runSimulation(jProg.chartType);
                 });
 
         });

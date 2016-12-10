@@ -32,6 +32,56 @@ SpeedChart = function(_parentElement, _data, _chartType, _toggle) {
     this.initVis();
 };
 
+// SpeedChart.prototype.playButton = function(){
+//     var jProg = this;
+//
+//     // Insert Play Button
+//     d3.xml("img/play_icon.svg",
+//         function(error, documentFragment) {
+//
+//             if (error) {console.log(error); return;}
+//
+//             // Get relevant node from xml file
+//             var svgNode = documentFragment.getElementById("Page-1");
+//
+//             // Create SVG
+//             jProg.svg = d3.select("#" + jProg.parentElement).append("svg")
+//                 .attr("width", jProg.width + jProg.margin.left + jProg.margin.right)
+//                 .attr("height", jProg.height + jProg.margin.top + jProg.margin.bottom)
+//                 .append("g")
+//                 .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
+//
+//             // Add path
+//             jProg.svg.node().appendChild(svgNode);
+//
+//
+//             var btnX = (jProg.width)/2 - 30; var btnY = jProg.height/2 - 40;
+//
+//             // Modify svg icon to be a button
+//             jProg.svg.select("#Page-1")
+//                 .attr("transform","translate("+btnX+","+btnY+") scale(4)")
+//                 // .on("mouseover",function(){
+//                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+//                 // })
+//                 // .on("mouseout",function(){
+//                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+//                 // })
+//                 .on("click",function(){
+//                     console.log("**Running Simulation of type: " + jProg.chartType + "**");
+//                     simulationStatus=1;
+//                     jProg.initVis();
+//                     //runSimulation(jProg.chartType);
+//                 });
+//
+//         });
+//
+// };
+
+
+
+
+
+
 SpeedChart.prototype.initVis = function() {
     var kSpeed = this;
 
@@ -246,7 +296,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("class", "object_circle")
         .attr("id", "slow_boat")
         .style("fill", "brown")
-        .style("opacity", "0.3");
+        .style("opacity", "0");
 
     kSpeed.stopdiv=d3.select("#stopdiv");
     kSpeed.stopdiv.on("click", function()	{
@@ -335,10 +385,10 @@ SpeedChart.prototype.updateVis = function() {
         kSpeed.circledata.set('x', t_x1);
     }
 
-    $( "#pool" ).hover(
+    $( "#speed-play-button" ).click(
         function() {
             var active   = slow_boat.active ? false : true,
-                newOpacity = active ? 1 : 0.3;
+                newOpacity = active ? 1 : 0;
             // Hide or show the elements
             d3.select("#slow_boat").style("opacity", newOpacity);
             d3.select("#slow_boat").style("opacity", newOpacity);
@@ -347,7 +397,7 @@ SpeedChart.prototype.updateVis = function() {
             slow_boat.active = active;
 
             var active_water   = water_area.active ? false : true,
-                newOpacity = active ? 1 : 0.3;
+                newOpacity = active ? 1 : 0;
             // Hide or show the elements
             d3.select("#water_area").style("opacity", newOpacity);
             d3.select("#water_area").style("opacity", newOpacity);
@@ -355,7 +405,7 @@ SpeedChart.prototype.updateVis = function() {
             water_area.active = active_water;
 
             var active_lock8   = lock8.active ? false : true,
-                newOpacity = active ? 1 : 0.3;
+                newOpacity = active ? 1 : 0;
             // Hide or show the elements
             d3.select("#lock8").style("opacity", newOpacity);
             d3.select("#lock8").style("opacity", newOpacity);
@@ -363,7 +413,7 @@ SpeedChart.prototype.updateVis = function() {
             lock8.active = active_lock8;
 
             var active_lock7   = lock7.active ? false : true,
-                newOpacity = active ? 1 : 0.3;
+                newOpacity = active ? 1 : 0;
             // Hide or show the elements
             d3.select("#lock7").style("opacity", newOpacity);
             d3.select("#lock7").style("opacity", newOpacity);
