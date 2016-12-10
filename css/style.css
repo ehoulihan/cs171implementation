@@ -59,6 +59,10 @@ h1{
     font-size: 6em;
 }
 
+h4{
+    font-size: 1.5em;
+}
+
 .section{
     text-align:center;
 }
@@ -89,16 +93,29 @@ h1{
 /* Layer with position absolute in order to have it over the video
 * --------------------------------------- */
 #section0 .layer {
-    position: absolute;
+    position: relative;
     z-index: 4;
     width: 100%;
 }
+
+#section0 blockquote {
+    text-align: left;
+    width: 50%;
+    margin-left: 25%;
+    color: #444;
+}
+
+#section0 blockquote footer {
+    color: #444;
+}
+
 
 
 
 .jumbotron {
     background: rgb(200, 200, 200); /* This is for ie8 and below */
     background: rgba(200, 200, 200, 0.5);
+
 }
 
 /*solves problem with overflowing video in Mac with Chrome */

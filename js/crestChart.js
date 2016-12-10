@@ -137,7 +137,6 @@ CrestChart.prototype.updateVis = function() {
 
     var stick_x =  vis.width / 2 - $("#" + vis.photoElement).width() / 2 +
                 $("#" + vis.photoElement).width() * 5.0/11.6;
-    console.log(stick_x)
 
     var circle_diameter = 10;
 

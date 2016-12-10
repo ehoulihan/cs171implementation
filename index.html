@@ -36,7 +36,7 @@
 
 <div id="fullpage">
 
-    <div class="section " id="section0">
+    <div class="section" id="section0">
         <video autoplay loop muted id="myVideo">
             <source src="img/dam.mp4" type="video/mp4">
         </video>
@@ -47,22 +47,21 @@
                     <h4><em>Hurricane Irene hit upstate New York hard, causing flooding throughout the region,
                         but did local infrastructure contribute to the extent of the flooding?</em></h4>
                     <br><br>
-                    <blockquote>
-                        <p>
-                            After a century of the Lock 7 Dam's "fixed" crest impeding runoff drainage
-                            and thus [causing] frequently flooding... a strategic 21st century target should
-                            be a suitably sized gate-system installed at the Lock 7 dam.
-                        </p>
-                        <footer>Jim E. Duggan, Consultant and Activist</footer>
-                    </blockquote>
-
+                        <blockquote>
+                            <p>
+                                <em>After a century of the Lock 7 Dam's "fixed" crest impeding runoff drainage
+                                and thus [causing] frequently flooding... a strategic 21st century target should
+                                be a suitably sized gate-system installed at the Lock 7 dam.</em>
+                            </p>
+                            <footer>Jim E. Duggan, Consultant and Activist</footer>
+                        </blockquote>
                     <div class="text-center">
-                        <a class="btn btn-default start btn-lg" href="#history">Learn More</a>
+                        <a class="btn btn-default start btn-lg" href="#secondpage">Learn More</a>
                     </div>
         </div>
     </div>
 
-    <div class="section sectionJackie">
+    <div class="section sectionJackie" id="flood-history">
         <div class="slide active">
             <h1>Schenectady Stockade and its history of flooding.</h1>
             <p>
@@ -141,8 +140,6 @@
     <!--</div>-->
 
 
-
-
     <!--<div class="section">-->
             <!--<img class="img-responsive" src="img/IMG_7697A.JPG"/>-->
     <!--</div>-->
@@ -160,7 +157,7 @@
                                 1 - The Lock 7 Dam is located along the Mohawk River, and serves as both a lock system and as a hydro-electric plant
                             </p>
                         </div>
-                        <div class="button clean-button" id="map-info-button"">Next</div>
+                        <div class="button clean-button" id="map-info-button">Next</div>
                     </div>
                 </div>
             </div>
@@ -340,6 +337,7 @@
                 verticalCentered: true,
                 sectionsColor: ['#f2f2f2', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff',
                     '#f2f2f2', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff', '#f2f2f2', '#4BBFC3'],
+                anchors: ["firstpage","secondpage"],
                 afterRender: function(){
                     //playing the video
                     $('video').get(0).play();
