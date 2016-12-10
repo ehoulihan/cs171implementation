@@ -5,7 +5,7 @@ var dateFormatter = d3.time.format("%m/%d/%Y");
 var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 var floodDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
-var crestChart, dischargeChart,jFlood,jFloodTime;
+var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime;
 var simulationStatus = 0;
 var maxFloodDataPoints = 190;
 
@@ -21,10 +21,11 @@ queue()
     .defer(d3.csv,"data/lock8_experiment_clean.csv")
     .defer(d3.csv,"data/expheight.csv")
     .defer(d3.csv,"data/vischer_experiment_clean.csv")
+    .defer(d3.csv, "data/terrain3.csv")
     .await(createVis);
 
 
-function createVis(error, crestData, stageData, dischargeData,elevationData,floodGageData, lock8Data, freemansData, vischerData){
+function createVis(error, crestData, stageData, dischargeData,elevationData,floodGageData, lock8Data, freemansData, vischerData, speedElevationData){
     if(error) { console.log(error); }
 
     crestData.forEach(function(e){
@@ -55,6 +56,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     elevationData = wrangleElevation(elevationData);
     floodGageData = wrangleFloodGage(floodGageData);
 
+
     // Instantiate Visualizations
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
     jFloodTime = new FloodTimeChart("flood-time-area",floodGageData, "flood");
@@ -70,7 +72,9 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     // lock8Data = wrangleHeight(lock8Data);
     // freemansData = wrangleHeight(freemansData);
     // vischerData = wrangleHeight(vischerData);
-    kExpTime = new FloodTimeChart("exp-time-area",floodGageData);
+    speedElevationData = wrangleSpeedElevation(speedElevationData);
+    kExpTime = new FloodTimeChart("exp-time-area",floodGageData,"experiment");
+    speedChart = new SpeedChart("speed-chart", speedElevationData, "speed");
 
 }
 // Data Wrangling Functions
@@ -107,6 +111,22 @@ function wrangleFloodGage(data){
     });
     return data;
 }
+
+// Karen Speed Vis Data Wrangling
+function wrangleSpeedElevation(data){
+    var counter = 0;
+    data.forEach(function(d){
+        d.X = +d.X;
+        d.Y = +d.Y;
+        counter = counter + 1;
+    });
+
+    // Store csv data in global variable
+    return data;
+
+}
+
+
 
 // Jackie's Interaction Functions
 function resetFloodSimulation(){
@@ -153,7 +173,8 @@ function runSimulation(type){
         var interval = setInterval(renderUpdateWater,intervalTimeLapse);
     }
     else{
-        kFloodTime.updateFloodProgressLine(500);
+        console.log("IN EXPERIMENT PATH")
+        kExpTime.updateFloodProgressLine(500);
     }
 }
 

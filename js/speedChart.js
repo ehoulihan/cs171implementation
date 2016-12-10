@@ -7,6 +7,7 @@
  */
 // Global Variables
 
+
 var river_start = [42.820274, -73.945933];
 var river_end = [42.821580, -73.947104];
 var avg_gage = 213;
@@ -91,6 +92,8 @@ function loadData() {
         updateVisualization();
     });
 }
+
+
 
 // Render visualization
 function updateVisualization() {

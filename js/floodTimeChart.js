@@ -217,6 +217,7 @@ FloodTimeChart.prototype.updateVis = function() {
 FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
     var jProg = this;
 
+    console.log(jProg);
     var progressLine = d3.svg.line()
         .x(function (d) { return jProg.x(d.date);})
         .y(function (d) { return jProg.y(d.height+200)});

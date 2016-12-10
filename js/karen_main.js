@@ -7,104 +7,100 @@
  */
 // Global Variables
 
-kSpeed = {};
+SpeedChart = function(_parentElement, _data, _chartType, _toggle) {
+    this.parentElement = _parentElement;
+    this.data = _data;
+    this.chartType = _chartType;
+    this.margin = {top: 20, right: 20, bottom: 20, left: 60};
 
-kSpeed.river_start = [42.820274, -73.945933];
-kSpeed.river_end = [42.821580, -73.947104];
-kSpeed.avg_gage = 200;
-kSpeed.min_elev = 200;
+    this.width = 800 - this.margin.left -this.margin.right;
+    this.height = 300 - this.margin.top - this.margin.bottom;
 
-// SVG drawing area
 
-kSpeed.margin = {top: 20, right: 20, bottom: 20, left: 60};
+    // this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
+    // this.height = 400 - this.margin.top - this.margin.bottom;
 
-kSpeed.width = 800 - kSpeed.margin.left - kSpeed.margin.right,
-    kSpeed.height = 300 - kSpeed.margin.top - kSpeed.margin.bottom;
+    this.river_start = [42.820274, -73.945933];
+    this.river_end = [42.821580, -73.947104];
+    this.avg_gage = 200;
+    this.min_elev = 200;
 
-kSpeed.svg = d3.select("#speed-chart").append("svg")
-    .attr("width", kSpeed.width + kSpeed.margin.left + kSpeed.margin.right)
-    .attr("height", kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + kSpeed.margin.left + "," + kSpeed.margin.top + ")");
+    console.log("here!");
+    //this.playButton();
 
-kSpeed.predam_water = kSpeed.svg.append("rect")
-    .attr("x", -1)
-    .attr("y", 180)
-    .attr("width", 720)
-    .attr("height", 80)
-    .style("fill", "#9fa4f9")
-    .attr("id", "predam-water")
-    .style("opacity", "1");
 
-// Create Scales
-kSpeed.x = d3.scale.linear()
-    .range([0,kSpeed.width]);
-kSpeed.y = d3.scale.linear()
-    .range([kSpeed.height, 0]);
+    this.initVis();
+};
 
-kSpeed.xAxis = d3.svg.axis()
-    .scale(kSpeed.x)
-    .orient("bottom");
+SpeedChart.prototype.initVis = function() {
+    var kSpeed = this;
 
-kSpeed.yAxis = d3.svg.axis()
-    .scale(kSpeed.y)
-    .orient("left");
+    kSpeed.svg = d3.select("#speed-chart").append("svg")
+        .attr("width", kSpeed.width + kSpeed.margin.left + kSpeed.margin.right)
+        .attr("height", kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + kSpeed.margin.left + "," + kSpeed.margin.top + ")");
 
-kSpeed.svg.append("g")
-    .attr("class", "x-axis-group")
-    .attr("transform", "translate(0," + (kSpeed.height) + ")");
+    kSpeed.predam_water = kSpeed.svg.append("rect")
+        .attr("x", -1)
+        .attr("y", 180)
+        .attr("width", 720)
+        .attr("height", 80)
+        .style("fill", "#9fa4f9")
+        .attr("id", "predam-water")
+        .style("opacity", "1");
 
-kSpeed.svg.append("g")
-    .attr("class", "y-axis-group");
+    // Create Scales
+    kSpeed.x = d3.scale.linear()
+        .range([0, kSpeed.width]);
+    kSpeed.y = d3.scale.linear()
+        .range([kSpeed.height, 0]);
 
-// Date parser (https://github.com/mbostock/d3/wiki/Time-Formatting)
-//kSpeed.formatDate = d3.time.format("%Y");
+    kSpeed.xAxis = d3.svg.axis()
+        .scale(kSpeed.x)
+        .orient("bottom");
 
-// Initialize data
-loadData();
+    kSpeed.yAxis = d3.svg.axis()
+        .scale(kSpeed.y)
+        .orient("left");
 
-// Initialize Line
-kSpeed.svg.append("path")
-    .attr("class", "elev-line");
+    kSpeed.svg.append("g")
+        .attr("class", "x-axis-group")
+        .attr("transform", "translate(0," + (kSpeed.height) + ")");
 
-// Initialize Water Level
-kSpeed.svg.append("path")
-    .attr("class","water-line");
+    kSpeed.svg.append("g")
+        .attr("class", "y-axis-group");
 
-// Initialize Tooltip
+    // Date parser (https://github.com/mbostock/d3/wiki/Time-Formatting)
+    //kSpeed.formatDate = d3.time.format("%Y");
 
-kSpeed.tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .direction('e');
-kSpeed.data;
+    // Initialize data
+    // loadData();
 
-// Load CSV file
-function loadData() {
-    d3.csv("data/terrain3.csv", function(error, csv) {
-        kSpeed.counter = 0;
-        csv.forEach(function(d){
-            // Convert numeric values to 'numbers'
-            d.X = +d.X;
-            // d.elevation = d.elevation*3.28084;
-            // kSpeed.latlong = d.location.replace(/[\(\)]/g,'').split(',');
-            // d.lat = +latlong[0];
-            // d.long = +latlong[1];
-            d.Y = +d.Y;
-            //d.index = counter;
-            kSpeed.counter = kSpeed.counter + 1;
-        });
+    // Initialize Line
+    kSpeed.svg.append("path")
+        .attr("class", "elev-line");
 
-        // Store csv data in global variable
-        kSpeed.data = csv;
+    // Initialize Water Level
+    kSpeed.svg.append("path")
+        .attr("class", "water-line");
 
-        // Draw the visualization for the first time
-        kSpeed_updateVisualization();
-    });
-}
+    // Initialize Tooltip
+
+    kSpeed.tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .direction('e');
+
+    kSpeed.updateVis();
+
+
+};
 
 // Render visualization
-function kSpeed_updateVisualization() {
+SpeedChart.prototype.updateVis = function() {
+
+    var kSpeed = this;
     // Get User Values
     console.log("DATA IN VIS");
     console.log(kSpeed.data);
@@ -280,7 +276,7 @@ function kSpeed_updateVisualization() {
 
 
 
-    kSpeed.C1_WIDTH = 300,
+    kSpeed.C1_WIDTH = 300;
         kSpeed.C1_HEIGHT = 200;
     //
     // kSpeed.width = C_WIDTH;
@@ -430,7 +426,7 @@ function kSpeed_updateVisualization() {
     // Exit
     // circle.exit().remove();
 
-}
+};
 
 
 // Show details for a specific FIFA World Cup
