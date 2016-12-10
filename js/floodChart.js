@@ -77,8 +77,8 @@ FloodChart.prototype.initVis = function() {
         .attr("class", "y-axis-group");
 
     // Initialize Land Line
-    jFlood.svg.append("path")
-        .attr("class", "elev-line");
+    // jFlood.svg.append("path")
+    //     .attr("class", "elev-line");
 
     // // Initialize Water Level
     // jFlood.svg.append("path")
@@ -172,14 +172,14 @@ FloodChart.prototype.updateVis = function() {
         .attr("d", jFlood.elevArea(jFlood.elevationData));
 
     // Build LAND line
-    jFlood.line = d3.svg.line()
-        .x(function(d) { return jFlood.x(d.index); })
-        .y(function(d) { return jFlood.y(d.elevation); })
-        .interpolate(jFlood.interpolate_value);
-
-    jFlood.svg.selectAll(".elev-line")
-        .transition().duration(800)
-        .attr("d", jFlood.line(jFlood.elevationData));
+    // jFlood.line = d3.svg.line()
+    //     .x(function(d) { return jFlood.x(d.index); })
+    //     .y(function(d) { return jFlood.y(d.elevation); })
+    //     .interpolate(jFlood.interpolate_value);
+    //
+    // jFlood.svg.selectAll(".elev-line")
+    //     .transition().duration(800)
+    //     .attr("d", jFlood.line(jFlood.elevationData));
 
 
     // Build WATER Area
@@ -244,14 +244,14 @@ FloodChart.prototype.updateVis = function() {
     //     });
     //
 
-    jFlood.twoStoryHeight = Math.abs(jFlood.y(240) - jFlood.y(223));
-    jFlood.sixFtTall = Math.abs(jFlood.y(229) - jFlood.y(223));
+    jFlood.twoStoryHeight = Math.abs(jFlood.y(241) - jFlood.y(223));
+    jFlood.sixFtTall = Math.abs(jFlood.y(228.75) - jFlood.y(223));
     var icons = jFlood.svg.append("g")
         .attr("class","icons");
 
     var house_index = 73;
-    var person_index = 102;
-    var house_width = 85;
+    var person_index = 115;
+    var house_width = 160;
     var person_width = 25;
 
     icons.append("image")
@@ -275,7 +275,7 @@ FloodChart.prototype.updateVis = function() {
         .attr("x",jFlood.x(house_index) + house_width/2)
         .attr("y",jFlood.y(jFlood.minFloodElev - 2))
         .attr("text-anchor","middle")
-        .html("1-Story House: ");
+        .html("2-Story House: ");
 
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
@@ -288,7 +288,7 @@ FloodChart.prototype.updateVis = function() {
         .attr("x",jFlood.x(house_index) + house_width/2)
         .attr("y",jFlood.y(jFlood.minFloodElev - 3.5))
         .attr("text-anchor","middle")
-        .html("10ft.");
+        .html("18ft.");
     jFlood.svg.append("text")
         .attr("class","icon-label-text")
         .attr("x",jFlood.x(person_index) + person_width/2)

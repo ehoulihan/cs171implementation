@@ -83,7 +83,7 @@ select {
     stroke: #1C9A3D;
 }
 .land-area{
-    fill: #c6fbcb;
+    fill: rgba(105, 171, 111, 1);
     stroke-width: 0;
 }
 .water-area{
@@ -230,7 +230,7 @@ select {
     padding-top:20px;
     margin-left:30px;
     margin-right:30px;
-    background: rgba(255,255,255,0.72);
+    background: rgba(255,255,255,0.50);
 }
 
 .vis-intro-text{
@@ -247,8 +247,9 @@ select {
 }
 
 .max-height-line-text{
-    fill:red;
-    fill-opacity: 0.6;
+    fill: #b94141;
+    font-weight: bold;
+    fill-opacity: 1;
 }
 
 /*.icon-label-text{*/
