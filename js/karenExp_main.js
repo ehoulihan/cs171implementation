@@ -24,11 +24,11 @@ kExp.margin = {top: 20, right: 20, bottom: 60, left: 60};
 kExp.width = 900 - kExp.margin.left - kExp.margin.right;
 kExp.height = 300 - kExp.margin.top - kExp.margin.bottom;
 
-kExp.svg = d3.select("#exp-vis-area").append("svg")
-    .attr("width", kExp.width + kExp.margin.left + kExp.margin.right)
-    .attr("height", kExp.height + kExp.margin.top + kExp.margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + kExp.margin.left + "," + kExp.margin.top + ")");
+// kExp.svg = d3.select("#exp-vis-area").append("svg")
+//     .attr("width", kExp.width + kExp.margin.left + kExp.margin.right)
+//     .attr("height", kExp.height + kExp.margin.top + kExp.margin.bottom)
+//     .append("g")
+//     .attr("transform", "translate(" + kExp.margin.left + "," + kExp.margin.top + ")");
 
 
 

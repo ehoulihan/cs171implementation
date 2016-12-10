@@ -18,13 +18,13 @@ queue()
     .defer(d3.csv, "data/discharge15s.csv")
     .defer(d3.csv,"data/elevation.csv")
     .defer(d3.csv,"data/flood_gage_height.csv")
+    .defer(d3.csv,"data/lock8_experiment_clean.csv")
     .defer(d3.csv,"data/expheight.csv")
-    .defer(d3.csv,"data/flood_gage_height.csv")
-    .defer(d3.csv,"data/flood_gage_height.csv")
+    .defer(d3.csv,"data/vischer_experiment_clean.csv")
     .await(createVis);
 
 
-function createVis(error, crestData, stageData, dischargeData,elevationData,floodGageData, freemansData, lock8Data, vischerData){
+function createVis(error, crestData, stageData, dischargeData,elevationData,floodGageData, lock8Data, freemansData, vischerData){
     if(error) { console.log(error); }
 
     crestData.forEach(function(e){
@@ -67,7 +67,10 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     // Karen's Data Vis//
     //////////////////////
 
-    heightData = wrangleHeight()
+    // lock8Data = wrangleHeight(lock8Data);
+    // freemansData = wrangleHeight(freemansData);
+    // vischerData = wrangleHeight(vischerData);
+    kExpTime = new FloodTimeChart("exp-time-area",floodGageData);
 
 }
 // Data Wrangling Functions
