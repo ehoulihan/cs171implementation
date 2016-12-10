@@ -35,10 +35,10 @@ CrestChart.prototype.initVis = function() {
 
 
     // * TO-DO *
-    vis.margin = { top: 60, right: 200, bottom: 80, left: 200 };
+    vis.margin = { top: 60, right: 80, bottom: 80, left: 80 };
 
     vis.width = $("#" + vis.photoElement).width() - vis.margin.left - vis.margin.right,
-        vis.height = 700 - vis.margin.top - vis.margin.bottom;
+        vis.height = $("#" + vis.photoElement).height() - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -131,13 +131,15 @@ CrestChart.prototype.updateVis = function() {
         vis.x.range([0, 1]);
     }
 
-    var stick_x = 300;
+    
+
+    var stick_x = $("#" + vis.photoElement).width() * 5.0/11.6;
 
     var circle_diameter = 10;
 
-    var stick_height = $("#stick").height() * 13.2/17.5;
+    var stick_height = $("#" + vis.photoElement).height() * 13.2/17.5;
 
-    var stick_width = $("#stick").width() * 1.4/11.6;
+    var stick_width = $("#" + vis.photoElement).width() * 1.4/11.6;
     // get the width of the photo to ensure its accuracy
 
     d3.extent(vis.displayData, function(e){return e.height;})
@@ -178,7 +180,7 @@ CrestChart.prototype.updateVis = function() {
     // update
     marks.transition()
         .duration(1000)
-        .attr("x", function(d) { return vis.x(d.date) - ( vis.show_years ? circle_diameter / 2 : 0); })
+        .attr("x", function(d) { return vis.x(d.date) - ( vis.show_years ? circle_diameter / 2 : stick_x); })
         .attr("y", function(d, index) { return vis.y(d.height) - ( vis.show_years ? circle_diameter / 2 : 0); })
         .attr("rx", function(e){
             return vis.show_years ? circle_diameter : 0;
