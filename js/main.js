@@ -150,6 +150,29 @@ function runFloodSimulation(){
     var interval = setInterval(renderUpdateWater,intervalTimeLapse);
 }
 
+// function mapInfoButtonClick(){
+//     console.log("Clicked!");
+//     $("#map-info-button").css('color', 'red');
+//
+// }
+
+$("#map-info-button").click(function(){
+    var currentIndex = +($("#flood-map-pic").attr("src").slice(-5)[0]);
+    currentIndex = currentIndex == 5 ? 1 : currentIndex + 1;
+    $("#flood-map-pic")
+        .fadeOut(function(){
+            $(this).attr("src","img/Flood" + currentIndex + ".png")
+                .bind('onreadystatechange load', function(){
+                    if (this.complete) $(this).fadeIn(500);
+                });
+        });
+    $("#map-info-text")
+        .fadeOut(function(){
+            $(this).html(mapInfo[currentIndex - 1]).fadeIn();
+            $(this).attr("display","block");
+        })
+});
+
 // $(document).ready(function() {
 //     var icon = $('.play');
 //     icon.click(function() {
@@ -161,17 +184,17 @@ function runFloodSimulation(){
 //     });
 // });
 
-$(document).ready(function () {
-
-    $('#myCarousel').carousel({
-        interval: 3000
-    });
-
-    $('#myCarousel').carousel('cycle');
-
-});
-
-$('#myCarousel').on('slid.bs.carousel', function() {
-    currentIndex = $('div.active').index();
-    $('#map-info-text').html(mapInfo[currentIndex]);
-});
+// $(document).ready(function () {
+//
+//     $('#myCarousel').carousel({
+//         interval: 3000
+//     });
+//
+//     $('#myCarousel').carousel('cycle');
+//
+// });
+//
+// $('#myCarousel').on('slid.bs.carousel', function() {
+//     currentIndex = $('div.active').index();
+//     $('#map-info-text').html(mapInfo[currentIndex]);
+// });
