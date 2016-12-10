@@ -87,7 +87,7 @@ select {
     stroke-width: 0;
 }
 .water-area{
-    fill: #9fa4f9;
+    fill: rgba(81, 86, 169, 0.73);
     stroke-width: 0;
 }
 .water-line {
@@ -97,6 +97,10 @@ select {
     stroke: #1217d3;
 }
 
+#water-progress-line{
+    stroke: #3c4798;
+    stroke-width: 3px;
+}
 
 .dot {
     fill: #1C9A3D;
