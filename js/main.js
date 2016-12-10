@@ -54,7 +54,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     // Instantiate Visualizations
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
-    jFloodTime = new FloodTimeChart("flood-time-area",floodGageData);
+    jFloodTime = new FloodTimeChart("flood-time-area",floodGageData, "flood");
 
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
@@ -102,44 +102,49 @@ function resetFloodSimulation(){
     jFloodTime.resetVis();
 }
 
-function runFloodSimulation(){
+function runSimulation(type){
     console.log("Running Flood Simulation");
+    if(type == "flood"){
+        // Set a starting point for the flood data
+        var timeIndex = jFlood.floodStartIndex;
 
-    // Set a starting point for the flood data
-    var timeIndex = jFlood.floodStartIndex;
+        // Function to call flood simulation
+        var renderUpdateWater = function(){
 
-    // Function to call flood simulation
-    var renderUpdateWater = function(){
-
-        if(jFlood.stopInterval==true || (($("#select-area").val() == "AVERAGE") & (simulationStatus==0))){
-            console.log("STOPPING INTERVAL!");
-            clearInterval(interval);
-            resetFloodSimulation();
-        }
-        else{
-
-            jFlood.updateFloodWater(timeIndex);
-
-            timeIndex = timeIndex+1;
-
-            if (timeIndex >= jFlood.floodEndIndex){
-                simulationStatus = 0;
+            if(jFlood.stopInterval==true || (($("#select-area").val() == "AVERAGE") & (simulationStatus==0))){
+                console.log("STOPPING INTERVAL!");
+                clearInterval(interval);
                 resetFloodSimulation();
-                clearInterval(interval)
+            }
+            else{
+
+                jFlood.updateFloodWater(timeIndex);
+
+                timeIndex = timeIndex+1;
+
+                if (timeIndex >= jFlood.floodEndIndex){
+                    simulationStatus = 0;
+                    resetFloodSimulation();
+                    clearInterval(interval)
+                }
+
             }
 
-        }
 
+        };
 
-    };
+        // INTERVAL
+        var intervalTimeLapse = 100;
 
-    // INTERVAL
-    var intervalTimeLapse = 100;
-
-    // Run simulation via transitions for the line and via time interval for water area
-    jFloodTime.updateFloodProgressLine((jFlood.floodEndIndex - jFlood.floodStartIndex) * intervalTimeLapse);
-    var interval = setInterval(renderUpdateWater,intervalTimeLapse);
+        // Run simulation via transitions for the line and via time interval for water area
+        jFloodTime.updateFloodProgressLine((jFlood.floodEndIndex - jFlood.floodStartIndex) * intervalTimeLapse);
+        var interval = setInterval(renderUpdateWater,intervalTimeLapse);
+    }
+    else{
+        kFloodTime.updateFloodProgressLine(500);
+    }
 }
+
 
 // function mapInfoButtonClick(){
 //     console.log("Clicked!");

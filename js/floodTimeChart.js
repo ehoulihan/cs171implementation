@@ -12,10 +12,10 @@
  * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
  */
 
-FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
+FloodTimeChart = function(_parentElement, _data, _chartType, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
-
+    this.chartType = _chartType;
     this.margin = {top: 20, right: 60, bottom: 80, left: 50};
 
     this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
@@ -70,7 +70,7 @@ FloodTimeChart.prototype.playButton = function(){
                     console.log("Running Flood Simulation");
                     simulationStatus=1;
                     jFloodTime.initVis();
-                    runFloodSimulation();
+                    runSimulation(jProg.chartType);
                 });
 
         });
@@ -317,7 +317,7 @@ FloodTimeChart.prototype.resetVis = function() {
                     console.log("Running Flood Simulation");
                     simulationStatus=1;
                     jFloodTime.initVis();
-                    runFloodSimulation();
+                    runSimulation(jProg.chartType);
                 });
 
         });
