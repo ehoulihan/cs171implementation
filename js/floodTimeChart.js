@@ -55,11 +55,11 @@ FloodTimeChart.prototype.playButton = function(){
             jProg.svg.node().appendChild(svgNode);
 
 
-            var btnX = (jProg.width)/2; var btnY = 30;
+            var btnX = (jProg.width)/2 - 30; var btnY = jProg.height/2 - 40;
 
             // Modify svg icon to be a button
             jProg.svg.select("#Page-1")
-                .attr("transform","translate("+btnX+","+btnY+") scale(2)")
+                .attr("transform","translate("+btnX+","+btnY+") scale(4)")
                 // .on("mouseover",function(){
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
