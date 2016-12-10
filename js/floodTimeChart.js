@@ -23,7 +23,6 @@ FloodTimeChart = function(_parentElement, _data, _chartType, _toggle) {
 
     this.playButton();
 
-
     //this.initVis();
 };
 
@@ -67,9 +66,9 @@ FloodTimeChart.prototype.playButton = function(){
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
-                    jFloodTime.initVis();
+                    jProg.initVis();
                     runSimulation(jProg.chartType);
                 });
 
@@ -314,7 +313,7 @@ FloodTimeChart.prototype.resetVis = function() {
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
                     jFloodTime.initVis();
                     runSimulation(jProg.chartType);

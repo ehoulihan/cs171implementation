@@ -5,7 +5,7 @@ var dateFormatter = d3.time.format("%m/%d/%Y");
 var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 var floodDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
-var crestChart, dischargeChart,jFlood,jFloodTime;
+var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime;
 var simulationStatus = 0;
 var maxFloodDataPoints = 190;
 
@@ -55,6 +55,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     // Instantiate Visualizations
     jFlood = new FloodChart("flood-chart-area", elevationData, floodGageData);
     jFloodTime = new FloodTimeChart("flood-time-area",floodGageData, "flood");
+    kExpTime = new FloodTimeChart("exp-time-area2",floodGageData,"experiment");
 
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
@@ -141,7 +142,7 @@ function runSimulation(type){
         var interval = setInterval(renderUpdateWater,intervalTimeLapse);
     }
     else{
-        kFloodTime.updateFloodProgressLine(500);
+        kExpTime.updateFloodProgressLine(5000);
     }
 }
 
