@@ -255,7 +255,7 @@ FloodChart.prototype.updateVis = function() {
     var person_width = 25;
 
     icons.append("image")
-        .attr("xlink:href", "img/house.png")
+        .attr("xlink:href", "img/home2.png")
         .attr("x",jFlood.x(house_index))
         .attr("y",jFlood.y(jFlood.minFloodElev) - jFlood.twoStoryHeight)
         .attr("width",house_width)
