@@ -171,47 +171,47 @@ function renderVisualization() {
     // });
 
     // Build LAND area
-    kExp.elevArea = d3.svg.area()
-        .x(function(d) { return kExp.x(d.index); })
-        .y0(kExp.height-2)
-        .y1(function(d) { return kExp.y(d.Y); });
-
-    kExp.svg.append("path")
-        .datum(kExp.data)
-        .attr("class", "land-area")
-        .attr("d", kExp.elevArea(kExp.data));
-
-    // Build LAND line
-    kExp.line = d3.svg.line()
-        .x(function(d) { return kExp.x(d.index); })
-        .y(function(d) { return kExp.y(d.Y); })
-        .interpolate(kExp.interpolate_value);
-
-    // Build Line Chart
-    kExp.svg.selectAll(".elev-line")
-        .transition().duration(800)
-        .attr("d", kExp.line(kExp.data));
-
-
-    // Build WATER Area
-    kExp.waterArea = d3.svg.area()
-        .x(function(d) { return kExp.x(d.index); })
-        .y0(kExp.height-2)
-        .y1(function(d) { return kExp.y(kExp.avg_gage); });
-
-    kExp.svg.selectAll(".water-area")
-        .transition().duration(800)
-        .attr("d", kExp.waterArea(kExp.data));
-
-    // Build WATER Line
-    kExp.waterLine = d3.svg.line()
-        .x(function(d) { return kExp.x(d.index); })
-        .y(function(d) { return kExp.y(kExp.avg_gage); })
-        .interpolate(kExp.interpolate_value);
-
-    kExp.svg.selectAll(".water-line")
-        .transition().duration(800)
-        .attr("d", kExp.waterLine(kExp.data));
+    // kExp.elevArea = d3.svg.area()
+    //     .x(function(d) { return kExp.x(d.index); })
+    //     .y0(kExp.height-2)
+    //     .y1(function(d) { return kExp.y(d.Y); });
+    //
+    // kExp.svg.append("path")
+    //     .datum(kExp.data)
+    //     .attr("class", "land-area")
+    //     .attr("d", kExp.elevArea(kExp.data));
+    //
+    // // Build LAND line
+    // kExp.line = d3.svg.line()
+    //     .x(function(d) { return kExp.x(d.index); })
+    //     .y(function(d) { return kExp.y(d.Y); })
+    //     .interpolate(kExp.interpolate_value);
+    //
+    // // Build Line Chart
+    // kExp.svg.selectAll(".elev-line")
+    //     .transition().duration(800)
+    //     .attr("d", kExp.line(kExp.data));
+    //
+    //
+    // // Build WATER Area
+    // kExp.waterArea = d3.svg.area()
+    //     .x(function(d) { return kExp.x(d.index); })
+    //     .y0(kExp.height-2)
+    //     .y1(function(d) { return kExp.y(kExp.avg_gage); });
+    //
+    // kExp.svg.selectAll(".water-area")
+    //     .transition().duration(800)
+    //     .attr("d", kExp.waterArea(kExp.data));
+    //
+    // // Build WATER Line
+    // kExp.waterLine = d3.svg.line()
+    //     .x(function(d) { return kExp.x(d.index); })
+    //     .y(function(d) { return kExp.y(kExp.avg_gage); })
+    //     .interpolate(kExp.interpolate_value);
+    //
+    // kExp.svg.selectAll(".water-line")
+    //     .transition().duration(800)
+    //     .attr("d", kExp.waterLine(kExp.data));
 
 
     // Initialize DataPoints
@@ -464,33 +464,33 @@ function renderProgressBar(){
         .on('mouseover', kProg.tip.show)
         .on('mouseout', kProg.tip.hide);
 
-    var lock8 = kExp.svg.append("rect")
-        .attr("x", -1)
-        .attr("y", -20)
-        .attr("width", 23)
-        .attr("height", 240)
-        .style("fill", "#5E2605")
-        .attr("id", "lock8")
-        .style("opacity", "1");
+    // var lock8 = kExp.svg.append("rect")
+    //     .attr("x", -1)
+    //     .attr("y", -20)
+    //     .attr("width", 23)
+    //     .attr("height", 240)
+    //     .style("fill", "#5E2605")
+    //     .attr("id", "lock8")
+    //     .style("opacity", "1");
 
 }
 
-
-var lock8 = kExp.svg.append("rect")
-    .attr("x", -1)
-    .attr("y", -20)
-    .attr("width", 23)
-    .attr("height", 200)
-    .style("fill", "#5E2605")
-    .attr("id", "lock8")
-    .style("opacity", "1");
-
-var lock7 = kExp.svg.append("rect")
-    .attr("x", 707)
-    .attr("y", 65)
-    .attr("width", 23)
-    .attr("height", 155)
-    .style("fill", "#5E2605")
-    .attr("id", "lock7")
-    .style("opacity", "1");
+//
+// var lock8 = kExp.svg.append("rect")
+//     .attr("x", -1)
+//     .attr("y", -20)
+//     .attr("width", 23)
+//     .attr("height", 200)
+//     .style("fill", "#5E2605")
+//     .attr("id", "lock8")
+//     .style("opacity", "1");
+//
+// var lock7 = kExp.svg.append("rect")
+//     .attr("x", 707)
+//     .attr("y", 65)
+//     .attr("width", 23)
+//     .attr("height", 155)
+//     .style("fill", "#5E2605")
+//     .attr("id", "lock7")
+//     .style("opacity", "1");
 
