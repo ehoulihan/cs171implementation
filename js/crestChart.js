@@ -35,9 +35,9 @@ CrestChart.prototype.initVis = function() {
 
 
     // * TO-DO *
-    vis.margin = { top: 60, right: 80, bottom: 80, left: 80 };
+    vis.margin = { top: 60, right: 200, bottom: 100, left: 200 };
 
-    vis.width = $("#" + vis.photoElement).width() - vis.margin.left - vis.margin.right,
+    vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = $("#" + vis.photoElement).height() - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
@@ -73,7 +73,7 @@ CrestChart.prototype.initVis = function() {
     vis.xAxisGroup.append("text")
         .attr("class", "label")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-        .attr("transform", "translate("+ (vis.width / 2) +","+ ( vis.margin.bottom / 2)+")")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("transform", "translate("+ (vis.width / 2) +","+ ( vis.margin.bottom / 3)+")")  // text is drawn off the screen top left, move down and out and rotate
         .attr("visibility", "hidden")
         .text("Year");
 
@@ -83,7 +83,7 @@ CrestChart.prototype.initVis = function() {
     // now add titles to the axes
     vis.yAxisGroup.append("text")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-        .attr("transform", "translate("+ -(vis.margin.left/2) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("transform", "translate("+ -(vis.margin.left/4) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
         .text("Flood Peak (ft)");
 
     // Initialize tip component
@@ -125,15 +125,19 @@ CrestChart.prototype.wrangleData = function() {
 CrestChart.prototype.updateVis = function() {
     var vis = this;
 
+
+
     if (vis.show_years){
         vis.x.range([0, vis.width]);
     } else {
         vis.x.range([0, 1]);
     }
 
-    
 
-    var stick_x = $("#" + vis.photoElement).width() * 5.0/11.6;
+
+    var stick_x =  vis.width / 2 - $("#" + vis.photoElement).width() / 2 +
+                $("#" + vis.photoElement).width() * 5.0/11.6;
+    console.log(stick_x)
 
     var circle_diameter = 10;
 
@@ -180,7 +184,7 @@ CrestChart.prototype.updateVis = function() {
     // update
     marks.transition()
         .duration(1000)
-        .attr("x", function(d) { return vis.x(d.date) - ( vis.show_years ? circle_diameter / 2 : stick_x); })
+        .attr("x", function(d) { return vis.show_years ? vis.x(d.date) - circle_diameter / 2 : stick_x; })
         .attr("y", function(d, index) { return vis.y(d.height) - ( vis.show_years ? circle_diameter / 2 : 0); })
         .attr("rx", function(e){
             return vis.show_years ? circle_diameter : 0;
@@ -225,8 +229,8 @@ CrestChart.prototype.updateVis = function() {
 
     stage_lines.transition()
         .duration(1000)
-        .attr("x1", vis.x.range()[0])
-        .attr("x2", vis.show_years ? vis.x.range()[1] : stick_width)
+        .attr("x1", vis.show_years ? vis.x.range()[0] : stick_x)
+        .attr("x2", vis.show_years ? vis.x.range()[1] : stick_x + stick_width)
         .attr("y1", function(e){
             return vis.y(e.height);
         })
@@ -252,18 +256,18 @@ CrestChart.prototype.updateVis = function() {
     line_labels.transition()
         .duration(1000)
         .attr("text-anchor", "start")
-        .attr("x", (vis.show_years ? vis.x.range()[1] : stick_width) + 5)
+        .attr("x", (vis.show_years ? vis.x.range()[1] : stick_width + stick_x) + 5)
         .attr("y",function(e){
             return vis.y(e.height);
         })
         .text(function(e){
-            console.log(e);
             return e.type;
         });
 
-    vis.svg.select(".y-axis")
+    vis.yAxisGroup
         .transition()
         .duration(1000)
+        .attr("transform", "translate("+ (vis.show_years ? 0 : stick_x) +",0)")  // text is drawn off the screen top left, move down and out and rotate
         .call(vis.yAxis);
 
     vis.xAxisGroup.select("text.label")
@@ -279,6 +283,7 @@ CrestChart.prototype.updateVis = function() {
     var result = vis.svg.select(".x-axis")
             .transition()
             .duration(1000)
+            .attr("visibility", vis.show_years ? "visible" : "hidden")
             .call(vis.xAxis);
 
 
