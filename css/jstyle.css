@@ -217,6 +217,10 @@ select {
     background-image: url(../img/bg.png),url(../img/IMG_7742.JPG);
 }
 
+#exp-section{
+    background-image: url(../img/bg.png),url(../img/IMG_6946.JPG);
+}
+
 .section{
     background-size: cover;
 }

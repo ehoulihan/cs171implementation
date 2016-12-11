@@ -497,10 +497,10 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
     //     attr("width", 50).
     //     attr("fill", legendColor[i]);//color
     // };
-
+    var xTrans = jProg.width-200; var yTrans = jProg.height - 100;
     jProg.legend = jProg.svg.append("g")
         .attr("class","legend")
-        .attr("transform","translate(50,30)")
+        .attr("transform","translate("+xTrans+","+yTrans+")")
         .style("font-size","12px")
         .call(d3.legend);
 
