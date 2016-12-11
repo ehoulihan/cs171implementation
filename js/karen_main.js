@@ -87,7 +87,7 @@ SpeedChart.prototype.initVis = function() {
 
     kSpeed.svg = d3.select("#speed-chart").append("svg")
         .attr("width", kSpeed.width + kSpeed.margin.left + kSpeed.margin.right)
-        .attr("height", kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
+        .attr("height", 50 + kSpeed.height + kSpeed.margin.top + kSpeed.margin.bottom)
         .append("g")
         .attr("transform", "translate(" + kSpeed.margin.left + "," + kSpeed.margin.top + ")");
 
@@ -165,17 +165,49 @@ SpeedChart.prototype.updateVis = function() {
     kSpeed.svg.select(".x-axis-group")
         .call(kSpeed.xAxis);
 
+    kSpeed.svg.select(".x-axis-group")
+        .call(kSpeed.xAxis)
+        .selectAll("text")
+        .attr("y", 0)
+        .attr("x", 9)
+        .attr("dy", ".35em")
+        //.attr("transform", "rotate(60)")
+        .style("text-anchor", "start")
+        .text(function(d,index){
+            var res = "";
+            // res = index;
+            return res;
+        });
+
+
+
+    kSpeed.svg.append("text")
+        //.attr("transform", "rotate(-90)")
+        .attr("y", 290)
+        .attr("x", 230)
+        .attr("dy", "1em")
+        .style("text-anchor", "start")
+        .text("11 Mile Span from Lock8 to Lock7");
+
     kSpeed.yExtent = d3.extent(kSpeed.data, function(d){
         return d.Y;
     });
 
-    //y.domain([min_elev,yExtent[1]]);
+    //kSpeed.y.domain([170,210]);
 
     kSpeed.x.domain(d3.extent(kSpeed.data, function(d) { return d.X; }));
     kSpeed.y.domain(d3.extent(kSpeed.data, function(d) { return d.Y; }));
 
     kSpeed.svg.select(".y-axis-group")
         .call(kSpeed.yAxis);
+
+    kSpeed.svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - kSpeed.margin.left)
+        .attr("x",0 - (kSpeed.height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Elevation (feet above sea level)");
 
     // Add Line Function
     kSpeed.line = d3.svg.line()
@@ -288,15 +320,33 @@ SpeedChart.prototype.updateVis = function() {
         .attr("class", "blob")
         .attr("transform", function(d) {return "translate(" + kSpeed.C_WIDTH/2 + "," + kSpeed.C_HEIGHT/2 + ")";});
 
+    kSpeed.textg = kSpeed.svg.selectAll("g.blob")
+        .data([kSpeed.circledata])
+        .enter()
+        .append("svg:g")
+        .attr("class", "blob")
+        .attr("transform", function(d) {return "translate(" + kSpeed.C_WIDTH/2 + "," + kSpeed.C_HEIGHT/2 + ")";});
+
     kSpeed.t_circle_object = kSpeed.circleg
-        .append("circle")
-        .attr("cx", function(d) { return 0; })
-        .attr("cy", function(d) { return 0; })
-        .attr("r", function(d) {return 30; })
+        .append("polygon")
+        .attr("points", "0,-20 0,30 50,5")
+        //.translate(0, 50)
         .attr("class", "object_circle")
         .attr("id", "slow_boat")
         .style("fill", "brown")
         .style("opacity", "0");
+
+
+    kSpeed.circle_text = kSpeed.textg
+        .append("text")
+        //.attr("class", "axis-label")
+        //.attr("transform", "rotate(-90)")
+        .attr("y", -30)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Life Expectancy");
+
+
 
     kSpeed.stopdiv=d3.select("#stopdiv");
     kSpeed.stopdiv.on("click", function()	{
@@ -350,11 +400,21 @@ SpeedChart.prototype.updateVis = function() {
         .attr("class", "blob1")
         .attr("transform", function(d) {return "translate(" + kSpeed.C1_WIDTH/2 + "," + kSpeed.C1_HEIGHT/2 + ")";});
 
+    // kSpeed.t_circle_object1 = kSpeed.circleg1
+    //     .append("circle")
+    //     .attr("cx", function(d) { return 0; })
+    //     .attr("cy", function(d) { return 70; })
+    //     .attr("r", function(d) {return 30; })
+    //     .attr("id", "fast_boat")
+    //     .attr("class", "object_circle")
+    //     .style("fill", "brown")
+    //     .style("opacity", "0.3");
+
     kSpeed.t_circle_object1 = kSpeed.circleg1
-        .append("circle")
-        .attr("cx", function(d) { return 0; })
-        .attr("cy", function(d) { return 70; })
-        .attr("r", function(d) {return 30; })
+        .append("polygon")
+        .attr("points", "0,50 0,100 50,75")
+        // .attr("cy", function(d) { return 70; })
+        // .attr("r", function(d) {return 30; })
         .attr("id", "fast_boat")
         .attr("class", "object_circle")
         .style("fill", "brown")
@@ -387,6 +447,17 @@ SpeedChart.prototype.updateVis = function() {
 
     $( "#speed-play-button" ).click(
         function() {
+
+
+            $("#speed-play-button").fadeOut(function () {
+                $("#speed-play-button").text(($("#speed-play-button").text() == 'Build the Dams') ? 'Reset' : 'Build the Dams').fadeIn();
+            });
+
+            $("#speed-text").fadeOut(function () {
+                $("#speed-text").text(($("#speed-text").text() == 'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.') ? 'However, the construction of the dam created a standing pool, in which water virtually stands still at a high height.  This enables heavy flooding because...' :
+                    'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.').fadeIn();
+            });
+
             var active   = slow_boat.active ? false : true,
                 newOpacity = active ? 1 : 0;
             // Hide or show the elements
