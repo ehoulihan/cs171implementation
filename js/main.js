@@ -205,22 +205,28 @@ function runSimulation(type){
 //
 // }
 
-$("#map-info-button").click(function(){
-    var currentIndex = +($("#flood-map-pic").attr("src").slice(-5)[0]);
-    currentIndex = currentIndex == 5 ? 1 : currentIndex + 1;
-    $("#flood-map-pic")
-        .fadeOut(function(){
-            $(this).attr("src","img/Flood" + currentIndex + ".png")
-                .bind('onreadystatechange load', function(){
-                    if (this.complete) $(this).fadeIn(500);
-                });
-        });
-    $("#map-info-text")
-        .fadeOut(function(){
-            $(this).html(mapInfo[currentIndex - 1]).fadeIn();
-            $(this).attr("display","block");
-        })
-});
+// $("#map-info-button").click(function(){
+//     var currentIndex = +($("#flood-map-pic").attr("src").slice(-5)[0]);
+//     currentIndex = currentIndex == 5 ? 1 : currentIndex + 1;
+//     $("#flood-map-pic")
+//         .fadeOut(function(){
+//             $(this).attr("src","img/Flood" + currentIndex + ".png")
+//                 .bind('onreadystatechange load', function(){
+//                     if (this.complete) $(this).fadeIn(500);
+//                 });
+//         });
+//     $("#map-info-text")
+//         .fadeOut(function(){
+//             $(this).html(mapInfo[currentIndex - 1]).fadeIn();
+//             $(this).attr("display","block");
+//         })
+// });
+
+function jumpToNext(){
+
+}
+
+
 
 // $(document).ready(function() {
 //     var icon = $('.play');
