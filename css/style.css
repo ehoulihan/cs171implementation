@@ -37,7 +37,6 @@ h1,h2,h3,h4,h5,h6 {
     font-size: 100%;
     margin:0;
     padding:0;
-    color:#444;
 }
 q:before,q:after {
     content:'';
@@ -109,13 +108,22 @@ h4{
     color: #444;
 }
 
+#flood-history p {
+    text-align: left;
+    width: 66%;
+    margin-left: 16.5%;
+}
 
 
 
 .jumbotron {
     background: rgb(200, 200, 200); /* This is for ie8 and below */
     background: rgba(200, 200, 200, 0.5);
+    color: whitesmoke;
+}
 
+.jumbotron h4 {
+    color: #444;
 }
 
 /*solves problem with overflowing video in Mac with Chrome */
@@ -130,6 +138,7 @@ h4{
 
 body {
   font-family: 'Roboto', sans-serif;
+    color:whitesmoke;
 }
 
 h1 {
@@ -215,11 +224,6 @@ h1 .sub-headline {
     position: absolute;
 }
 
-#main-hero{
-    z-index: 11;
-    color: white;
-    width: 100%;
-}
 
 rect.pane {
     cursor: move;
