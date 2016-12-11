@@ -318,7 +318,6 @@ FloodTimeChart.prototype.resetVis = function() {
                     jFloodTime.initVis();
                     runSimulation(jProg.chartType);
                 });
-
         });
 
 };

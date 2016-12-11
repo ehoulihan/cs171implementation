@@ -310,6 +310,10 @@ FloodChart.prototype.resetVis = function() {
     jFlood.svg.selectAll(".water-area")
         .transition().duration(800)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
+
+    if(jFlood.maxLineStatus == 1){
+        $("#flood-vis-row").after("<div class=\"text-center\" style=\"padding-top:1%;\"><a class=\"btn btn-default start btn-lg\" href=\"#papaSection\">Continue</a></div>");
+    }
     // jFlood.waterLine.y(function(d) { return jFlood.y(jFlood.avg_gage); });
     // jFlood.svg.selectAll(".water-line")
     //     .transition().duration(800)
@@ -335,7 +339,7 @@ FloodChart.prototype.insertMaxLine = function(waterHeight){
         .attr("class","max-height-line-text")
         .text("Max. Water Height: 229ft.");
 
-    jFlood.maxLineStatus = 1;
+    jFlood.maxLineStatus++;
 };
 
 FloodChart.prototype.updateFloodWater = function(timeIndex){
