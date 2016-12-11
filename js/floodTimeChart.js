@@ -12,17 +12,16 @@
  * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
  */
 
-FloodTimeChart = function(_parentElement, _data, _stages, _toggle) {
+FloodTimeChart = function(_parentElement, _data, _chartType, _toggle) {
     this.parentElement = _parentElement;
     this.data = _data;
-
+    this.chartType = _chartType;
     this.margin = {top: 20, right: 60, bottom: 80, left: 50};
 
     this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
 
     this.playButton();
-
 
     //this.initVis();
 };
@@ -67,10 +66,10 @@ FloodTimeChart.prototype.playButton = function(){
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
-                    jFloodTime.initVis();
-                    runFloodSimulation();
+                    jProg.initVis();
+                    runSimulation(jProg.chartType);
                 });
 
         });
@@ -314,10 +313,10 @@ FloodTimeChart.prototype.resetVis = function() {
                 //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
                 // })
                 .on("click",function(){
-                    console.log("Running Flood Simulation");
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
                     jFloodTime.initVis();
-                    runFloodSimulation();
+                    runSimulation(jProg.chartType);
                 });
 
         });

@@ -147,9 +147,9 @@ select {
 }
 
 
-.col-md-4{
-    padding-top: 200px;
-}
+/*.col-md-4{*/
+    /*padding-top: 200px;*/
+/*}*/
 
 #house{
     height:110px;
@@ -256,6 +256,55 @@ select {
     fill-opacity: 1;
 }
 
+/***************/
+/* COOL BUTTON */
+/***************/
+.clean-button {
+    color: whitesmoke;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin-left: 15%;
+    margin-right:15%;
+    padding: 20px;
+    border: 2px solid #f7f7f7;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+.clean-button:after {
+    position: absolute;
+    -webkit-transition: .3s;
+    transition: .3s;
+    content: '';
+    width: 0;
+    left: 50%;
+    bottom: 0;
+    height: 3px;
+    background: #f7f7f7;
+}
+.clean-button:hover:after {
+    width: 100%;
+    left: 0;
+}
+.clean-button:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 0px 3px #f7f7f7;
+
+}
+.clean-button:hover:after {
+    width: 0%;
+}
+
+#map-info-button{
+    font-size:20px;
+ }
+#flood-map-pic{
+    width:85%;
+}
 /*.icon-label-text{*/
     /*color:*/
 /*}*/
@@ -277,6 +326,11 @@ select {
 /************/
 /* Carousel */
 /************/
+
+.img-and-text{
+    margin-left:50px;
+    margin-right: 50px;
+}
 
 .carousel-fade .carousel-inner .item {
     -webkit-transition-property: opacity;
@@ -328,6 +382,7 @@ body,
 }
 
 #map-info-text{
+    color: whitesmoke;
     font-size: 30px;
 }
 /*********************/
