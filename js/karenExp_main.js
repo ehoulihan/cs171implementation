@@ -475,6 +475,45 @@ function renderProgressBar(){
 
 }
 
+ExpTimeChart.prototype.resetVis = function() {
+    var jProg = this;
+
+    jProg.path.exit().remove();
+    // Replay Icon Overlay
+    d3.xml("img/replay_icon.svg",
+        function(error, documentFragment) {
+
+            if (error) {console.log(error); return;}
+
+            var svgNode = documentFragment
+                .getElementById("Page-1");
+            //use plain Javascript to extract the node
+
+            jProg.svg.node().appendChild(svgNode);
+
+            var btnX = (jProg.width)/2;
+            var btnY = 30;
+
+            jProg.svg.select("#Page-1")
+                .attr("transform","translate("+btnX+","+btnY+") scale(2)")
+                // .on("mouseover",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(3)")
+                // })
+                // .on("mouseout",function(){
+                //     this.setAttribute("transform","translate("+btnX+","+btnY+") scale(2)")
+                // })
+                .on("click",function(){
+                    console.log("**Running Simulation of type: " + jProg.chartType + "**");
+                    simulationStatus=1;
+                    jFloodTime.initVis();
+                    runSimulation(jProg.chartType);
+                });
+
+        });
+
+};
+
+
 //
 // var lock8 = kExp.svg.append("rect")
 //     .attr("x", -1)

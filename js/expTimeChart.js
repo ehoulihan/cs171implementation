@@ -18,9 +18,9 @@ ExpTimeChart = function(_parentElement, _dataL8, _dataF, _dataV, _chartType, _to
     this.dataF = _dataF;
     this.dataV = _dataV;
     this.chartType = _chartType;
-    this.margin = {top: 20, right: 60, bottom: 80, left: 50};
+    this.margin = {top: 20, right: 60, bottom: 80, left: 80};
 
-    this.width = $("#" + this.parentElement).width() - this.margin.left - this.margin.right;
+    this.width = 800 - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
 
     console.log("here!");
@@ -33,6 +33,59 @@ ExpTimeChart = function(_parentElement, _dataL8, _dataF, _dataV, _chartType, _to
 /*
  *  Initialize station map
  */
+
+d3.legend = function(g) {
+    g.each(function() {
+        var g= d3.select(this),
+            items = {},
+            svg = d3.select(g.property("nearestViewportElement")),
+            legendPadding = g.attr("data-style-padding") || 5,
+            lb = g.selectAll(".legend-box").data([true]),
+            li = g.selectAll(".legend-items").data([true])
+
+        lb.enter().append("rect").classed("legend-box",true)
+        li.enter().append("g").classed("legend-items",true)
+
+        svg.selectAll("[data-legend]").each(function() {
+            var self = d3.select(this)
+            items[self.attr("data-legend")] = {
+                pos : self.attr("data-legend-pos") || this.getBBox().y,
+                color : self.attr("data-legend-color") != undefined ? self.attr("data-legend-color") : self.style("fill") != 'none' ? self.style("fill") : self.style("stroke")
+            }
+        })
+
+        items = d3.entries(items).sort(function(a,b) { return a.value.pos-b.value.pos})
+
+
+        li.selectAll("text")
+            .data(items,function(d) { return d.key})
+            .call(function(d) { d.enter().append("text")})
+            .call(function(d) { d.exit().remove()})
+            .attr("y",function(d,i) { return i+"em"})
+            .attr("x","1em")
+            .text(function(d) { ;return d.key})
+
+        li.selectAll("circle")
+            .data(items,function(d) { return d.key})
+            .call(function(d) { d.enter().append("circle")})
+            .call(function(d) { d.exit().remove()})
+            .attr("cy",function(d,i) { return i-0.25+"em"})
+            .attr("cx",0)
+            .attr("r","0.4em")
+            .style("fill",function(d) { console.log(d.value.color);return d.value.color})
+
+        // Reposition and resize the box
+        var lbbox = li[0][0].getBBox()
+        lb.attr("x",(lbbox.x-legendPadding))
+            .attr("y",(lbbox.y-legendPadding))
+            .attr("height",(lbbox.height+2*legendPadding))
+            .attr("width",(lbbox.width+2*legendPadding))
+    })
+    return g
+};
+
+
+
 
 ExpTimeChart.prototype.playButton = function(){
     var jProg = this;
@@ -176,13 +229,13 @@ ExpTimeChart.prototype.updateVis = function() {
 
     jProg.svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - jProg.margin.left)
-        .attr("x",0 - (jProg.height / 2))
+        .attr("y", 0 - jProg.margin.left + 10)
+        .attr("x",0 - (jProg.height / 2) + 10)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Elevation (feet above sea level)");
 
-    //
+
     var circleL8 = jProg.svg.selectAll("circle")
         .data(jProg.dataL8);
 
@@ -270,12 +323,18 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
 
     jProg.pathL8 = jProg.svg.append("path")
         .data([jProg.dataL8])
+
         .attr({
             d: progressLineL8,
             fill: "none",
             stroke: "red",
             "stroke-width": 2
-        });
+
+        })
+        .attr("data-legend", "Lock 8")
+    ;
+
+    // .attr("data-legend",function(d) { return d.name})
 
     jProg.pathF = jProg.svg.append("path")
         .data([jProg.dataF])
@@ -284,7 +343,9 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
             fill: "none",
             stroke: "blue",
             "stroke-width": 2
-        });
+        })
+        .attr("data-legend", "Freemans Bridge")
+    ;
 
     jProg.pathV = jProg.svg.append("path")
         .data([jProg.dataV])
@@ -293,7 +354,9 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
             fill: "none",
             stroke: "yellow",
             "stroke-width": 2
-        });
+        })
+        .attr("data-legend", "Vischer Ferry")
+    ;
     // animate path
     var totalLengthL8 = jProg.pathL8[0][0].getTotalLength();
     var totalLengthF = jProg.pathF[0][0].getTotalLength();
@@ -421,6 +484,28 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
             "stroke-width": 4
         });
 
+    // var legendColor = ['red', 'blue', 'yellow'];
+    //
+    // var legend = d3.select("#exp-legend").
+    // append("svg:svg").
+    // attr("width", 250).
+    // attr("height", 20)
+    // for (var i = 0; i <= 2; i++) {
+    //     legend.append("svg:rect").
+    //     attr("x", i*50).
+    //     attr("height", 20).
+    //     attr("width", 50).
+    //     attr("fill", legendColor[i]);//color
+    // };
+
+    jProg.legend = jProg.svg.append("g")
+        .attr("class","legend")
+        .attr("transform","translate(50,30)")
+        .style("font-size","12px")
+        .call(d3.legend);
+
+
+
 
 
 
@@ -449,7 +534,7 @@ ExpTimeChart.prototype.updateFloodProgressLine = function(totalTime){
 ExpTimeChart.prototype.resetVis = function() {
     var jProg = this;
 
-    jProg.path.exit().remove();
+    //jProg.path.exit().remove();
     // Replay Icon Overlay
     d3.xml("img/replay_icon.svg",
         function(error, documentFragment) {
@@ -476,10 +561,11 @@ ExpTimeChart.prototype.resetVis = function() {
                 .on("click",function(){
                     console.log("**Running Simulation of type: " + jProg.chartType + "**");
                     simulationStatus=1;
-                    jFloodTime.initVis();
+                    kExpTime.initVis();
                     runSimulation(jProg.chartType);
                 });
 
         });
 
 };
+

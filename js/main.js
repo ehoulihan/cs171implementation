@@ -145,6 +145,11 @@ function resetFloodSimulation(){
     jFloodTime.resetVis();
 }
 
+function resetExpSimulation(){
+    console.log("RESETTING KAREN!")
+    kExpTime.resetVis();
+}
+
 function runSimulation(type){
     console.log("Running Flood Simulation");
     if(type == "flood"){
@@ -188,6 +193,7 @@ function runSimulation(type){
         console.log("IN EXPERIMENT PATH")
 
         kExpTime.updateFloodProgressLine(5000);
+        setTimeout(resetExpSimulation, 5000);
         //kExpTimeBig.updateFloodProgressLine(5000);
     }
 }
