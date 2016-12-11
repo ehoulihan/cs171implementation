@@ -181,13 +181,15 @@ SpeedChart.prototype.updateVis = function() {
 
 
 
+
+
     kSpeed.svg.append("text")
         //.attr("transform", "rotate(-90)")
-        .attr("y", 290)
-        .attr("x", 230)
+        .attr("y", 280)
+        .attr("x", 200)
         .attr("dy", "1em")
         .style("text-anchor", "start")
-        .text("11 Mile Span from Lock8 to Lock7");
+        .text("11 Mile Span of the Mohawk River from Lock 8 to Lock 7");
 
     kSpeed.yExtent = d3.extent(kSpeed.data, function(d){
         return d.Y;
@@ -196,8 +198,8 @@ SpeedChart.prototype.updateVis = function() {
     //kSpeed.y.domain([170,210]);
 
     kSpeed.x.domain(d3.extent(kSpeed.data, function(d) { return d.X; }));
-    kSpeed.y.domain(d3.extent(kSpeed.data, function(d) { return d.Y; }));
-
+    //kSpeed.y.domain(d3.extent(kSpeed.data, function(d) { return d.Y; }));
+    kSpeed.y.domain([180, 215]);
     kSpeed.svg.select(".y-axis-group")
         .call(kSpeed.yAxis);
 
@@ -274,22 +276,32 @@ SpeedChart.prototype.updateVis = function() {
         .attr("d", kSpeed.land_area);
 
     kSpeed.lock8 = kSpeed.svg.append("rect")
-                                .attr("x", -1)
-                                .attr("y", -1)
+                                .attr("x", -2)
+                                .attr("y", 0)
                                .attr("width", 23)
                                 .attr("height", 260)
                                 .style("fill", "#5E2605")
                                 .attr("id", "lock8")
-                                .style("opacity", "0.3");
+                                .style("opacity", "0");
 
     kSpeed.lock7 = kSpeed.svg.append("rect")
         .attr("x", 700)
-        .attr("y", 105)
+        .attr("y", 107)
         .attr("width", 23)
         .attr("height", 155)
         .style("fill", "#5E2605")
         .attr("id", "lock7")
-        .style("opacity", "0.3");
+        .style("opacity", "0");
+
+    kSpeed.svg.append("text")
+    //.attr("transform", "rotate(-90)")
+        .attr("y", 235)
+        .attr("x", 30)
+        .attr("dy", "1em")
+        .style("text-anchor", "start")
+        .text("River Bottom");
+
+
 
 
 
@@ -445,6 +457,46 @@ SpeedChart.prototype.updateVis = function() {
         kSpeed.circledata.set('x', t_x1);
     }
 
+    kSpeed.text8 = kSpeed.svg.append("text")
+    //.attr("transform", "rotate(-90)")
+        .attr("y", -23)
+        .attr("x", -10)
+        .attr("dy", "1em")
+        .attr("id", "text8")
+        .style("text-anchor", "start")
+        .style("opacity", "0")
+        .text("Lock 8");
+
+    kSpeed.text7 =kSpeed.svg.append("text")
+    //.attr("transform", "rotate(-90)")
+        .attr("y", 80)
+        .attr("x", 690)
+        .attr("dy", "1em")
+        .attr("id", "text7")
+        .style("text-anchor", "start")
+        .style("opacity", "0")
+        .text("Lock 7");
+
+    kSpeed.heightb =kSpeed.svg.append("text")
+    //.attr("transform", "rotate(-90)")
+        .attr("y", 155)
+        .attr("x", 30)
+        .attr("dy", "1em")
+        .attr("id", "heightb")
+        .style("text-anchor", "start")
+        .style("opacity", "1")
+        .text("Pre-dam river height and velocity");
+
+    kSpeed.heighta =kSpeed.svg.append("text")
+    //.attr("transform", "rotate(-90)")
+        .attr("y", 80)
+        .attr("x", 30)
+        .attr("dy", "1em")
+        .attr("id", "heighta")
+        .style("text-anchor", "start")
+        .style("opacity", "0")
+        .text("Post-dam river height and velocity");
+
     $( "#speed-play-button" ).click(
         function() {
 
@@ -490,6 +542,30 @@ SpeedChart.prototype.updateVis = function() {
             d3.select("#lock7").style("opacity", newOpacity);
             // Update whether or not the elements are active
             lock7.active = active_lock7;
+
+            var active_text7   = text7.active ? false : true,
+                newOpacity = active ? 1 : 0;
+            // Hide or show the elements
+            d3.select("#text7").style("opacity", newOpacity);
+            d3.select("#text7").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            text7.active = active_text7;
+
+            var active_text8   = text8.active ? false : true,
+                newOpacity = active ? 1 : 0;
+            // Hide or show the elements
+            d3.select("#text8").style("opacity", newOpacity);
+            d3.select("#text8").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            text8.active = active_text8;
+
+            var active_heighta   = text8.active ? false : true,
+                newOpacity = active ? 1 : 0;
+            // Hide or show the elements
+            d3.select("#heighta").style("opacity", newOpacity);
+            d3.select("#heighta").style("opacity", newOpacity);
+            // Update whether or not the elements are active
+            heighta.active = active_heighta;
         }
     );
 

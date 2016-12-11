@@ -221,6 +221,12 @@ select {
     background-image: url(../img/bg.png),url(../img/IMG_6946.JPG);
 }
 
+#speed-section{
+    background-image: url(../img/bg.png),url(../img/IMG_6887.JPG);
+}
+
+
+
 .section{
     background-size: cover;
 }
@@ -269,8 +275,8 @@ select {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    margin-left: 15%;
-    margin-right:15%;
+    margin-left: 40%;
+    margin-right: 40%;
     padding: 20px;
     border: 2px solid #f7f7f7;
     text-align: center;

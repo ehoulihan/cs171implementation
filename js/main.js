@@ -21,7 +21,7 @@ queue()
     .defer(d3.csv,"data/lock8_experiment_clean.csv")
     .defer(d3.csv,"data/expheight.csv")
     .defer(d3.csv,"data/vischer_experiment_clean.csv")
-    .defer(d3.csv, "data/terrain3.csv")
+    .defer(d3.csv, "data/terrain_real.csv")
     .await(createVis);
 
 
