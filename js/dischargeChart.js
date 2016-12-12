@@ -5,14 +5,16 @@
  *  @param _parentElement   -- HTML element in which to draw the visualization
  *  @param _data            -- Array data about date and height of river at that date
  * @param _stages           -- object that describes the river's height at a given flood stage
- * @param _toggle           -- oHTML identifier for the toggle switch as the axis changes
+ * @param _toggle           -- HTML identifier for the toggle switch as the axis changes
+ * @param _discharge        -- this is a param that will draw lines at these areas.
  */
 
-DischargeChart = function(_parentElement, _data, _toggle) {
+DischargeChart = function(_parentElement, _data, _toggle, _discharge) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = _data;
     this.toggle = _toggle;
+    this.discharge = _discharge;
     this.initVis();
 };
 
@@ -23,7 +25,7 @@ DischargeChart = function(_parentElement, _data, _toggle) {
 
 DischargeChart.prototype.initVis = function() {
     var vis = this;
-    vis.margin = { top: 60, right: 50, bottom: 60, left: 70 };
+    vis.margin = { top: 60, right: 200, bottom: 60, left: 70 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -38,6 +40,12 @@ DischargeChart.prototype.initVis = function() {
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
+        .on("mouseover", function(){
+            $.fn.fullpage.setAllowScrolling(false);
+        })
+        .on("mouseout", function(){
+            $.fn.fullpage.setAllowScrolling(true);
+        })
         .call(vis.tip);
 
     vis.x = d3.time.scale()
@@ -82,8 +90,11 @@ DischargeChart.prototype.initVis = function() {
     // Initialize the zoom component
     vis.zoom = d3.behavior.zoom()
         .x(vis.x)
+        .xExtent(vis.x.domain())
     // Subsequently, you can listen to all zooming events
         .on("zoom", function(){
+
+            vis.zoom.translate(vis.zoom.translate());
             vis.updateVis();
         })
 
@@ -148,9 +159,48 @@ DischargeChart.prototype.updateVis = function() {
 
     vis.svg.select(".line")   // change the line
         .transition()
-        .duration(100)
+        .duration(10)
         .attr("d", line(vis.displayData))
         .attr("clip-path", "url(#clip)");
+
+
+    var stage_lines = vis.svg.selectAll("line.flowrate-line")
+        .data(vis.discharge);
+
+    stage_lines.enter().append("line")
+        .attr("class", "flowrate-line");
+
+    stage_lines.transition()
+        .duration(10)
+        .attr("x1", vis.x.range()[0])
+        .attr("x2", vis.x.range()[1])
+        .attr("y1", function(e){
+            return vis.y(e.amount);
+        })
+        .attr("y2", function(e){
+            return vis.y(e.amount);
+        })
+        .attr("stroke-dasharray", "5, 5")
+        .attr("stroke", function(e){
+            return "whitesmoke"
+        });
+
+    var line_labels = vis.svg.selectAll(".flowrate-line-label")
+        .data(vis.discharge);
+
+    line_labels.enter().append("text")
+        .attr("class", "flowrate-line-label");
+
+    line_labels.transition()
+        .duration(10)
+        .attr("text-anchor", "start")
+        .attr("x", vis.x.range()[1] + 5)
+        .attr("y",function(e){
+            return vis.y(e.amount);
+        })
+        .text(function(e){
+            return e.name;
+        });
 
     vis.svg.select(".y-axis")
         .transition()

@@ -28,6 +28,13 @@ queue()
 function createVis(error, crestData, stageData, dischargeData,elevationData,floodGageData, lock8Data, freemansData, vischerData, speedElevationData){
     if(error) { console.log(error); }
 
+    dischargeLevels = [
+        {"name": "Flow Rate During Experiment",
+         "amount": 10000},
+        {"name": "Current Max Flow Rate",
+            "amount": 45000}
+    ];
+
     crestData.forEach(function(e){
         e.date = dateFormatter.parse(e.date);
         e.height = +e.height;
@@ -65,7 +72,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
-    dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale");
+    dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale", dischargeLevels);
 
     //////////////////////
     // Karen's Data Vis//
