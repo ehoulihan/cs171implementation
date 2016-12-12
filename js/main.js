@@ -94,10 +94,10 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     lock8Data = wrangleFloodGage(lock8Data);
     freemansData = wrangleFloodGage(freemansData);
     vischerData = wrangleFloodGage(vischerData);
-    console.log(lock8Data);
-    console.log(freemansData);
-    console.log(vischerData);
-
+    // console.log(lock8Data);
+    // console.log(freemansData);
+    // console.log(vischerData);
+    //
     kExpTime = new ExpTimeChart("exp-time-area", lock8Data, freemansData, vischerData, "experiment");
     //kExpTimeBig = new FloodTimeChart("exp-time-area2",floodGageData,"experiment");
     speedChart = new SpeedChart("speed-chart", speedElevationData, "speed");
