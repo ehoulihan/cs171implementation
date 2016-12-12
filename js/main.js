@@ -99,7 +99,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     // console.log(vischerData);
     //
     kExpTime = new ExpTimeChart("exp-time-area", lock8Data, freemansData, vischerData, "experiment");
-    //kExpTimeBig = new FloodTimeChart("exp-time-area2",floodGageData,"experiment");
+    kExpTimeBig = new FloodTimeChart("exp-time-area2",floodGageData,"experiment");
     speedChart = new SpeedChart("speed-chart", speedElevationData, "speed");
 
 }
