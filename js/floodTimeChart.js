@@ -90,7 +90,6 @@ FloodTimeChart.prototype.initVis = function() {
         .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
 
     jProg.x = d3.time.scale().range([0,jProg.width]);
-    console.log(jProg.x);
     jProg.y = d3.scale.linear().range([jProg.height, 0]);
 
     jProg.xAxis = d3.svg.axis()
@@ -217,7 +216,6 @@ FloodTimeChart.prototype.updateVis = function() {
 FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
     var jProg = this;
 
-    console.log(jProg);
     var progressLine = d3.svg.line()
         .x(function (d) { return jProg.x(d.date);})
         .y(function (d) { return jProg.y(d.height+200)});
