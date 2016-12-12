@@ -220,6 +220,10 @@ select {
     background-image: url(../img/bg.png),url(../img/IMG_6980.JPG);
 }
 
+#nys-section{
+    background-image: url(../img/bg.png),url(../img/IMG_6929.JPG);
+}
+
 
 .section{
     background-size: cover;
