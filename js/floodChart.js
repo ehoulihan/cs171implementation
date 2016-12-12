@@ -338,7 +338,7 @@ FloodChart.prototype.insertMaxLine = function(waterHeight){
         .attr("x",jFlood.x(maxFloodDataPoints))
         .attr("y",jFlood.y(waterHeight + 200 + 1))
         .attr("text-anchor","end")
-        .attr("class","max-height-line-text")
+        .attr("id","max-height-line-text")
         .text("Max. Water Height: 229ft.");
 
     jFlood.maxLineStatus++;

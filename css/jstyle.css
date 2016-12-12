@@ -51,7 +51,7 @@ select {
 .axis path,
 .axis line {
     fill: none;
-    stroke: #000 1px;
+    stroke: #444 1px;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
@@ -61,7 +61,7 @@ select {
 .y-axis-group path,
 .y-axis-group line {
     fill: none;
-    stroke: #000;
+    stroke: #444;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
@@ -235,17 +235,26 @@ select {
 #flood-vis-section{
     background-image: url(../img/bg.png),url(../img/IMG_7515.JPG);
 }
+
+#flood-vis-area text, #speed-chart text, #exp-time-area text{
+    color:#444;
+    fill: #444;
+}
+
 .vis-wrapper{
     padding-top:20px;
     margin-left:30px;
     margin-right:30px;
     background: rgba(255,255,255,0.75);
+    color: #444;
 }
 
 .vis-intro-text{
-    width: 50%;
+    width: 85%;
     margin: auto;
     padding-bottom: 2%;
+    color:#444;
+    font-size: 1.2em;
 }
 
 .max-height-line{
@@ -255,7 +264,7 @@ select {
     stroke-dasharray: 2;
 }
 
-.max-height-line-text{
+#max-height-line-text{
     fill: #b94141;
     font-weight: bold;
     fill-opacity: 1;
@@ -343,7 +352,7 @@ select {
 }
 
 .map-info-text{
-    /*color: whitesmoke;*/
+    color: #444444;
     font-size: 17px;
 }
 
