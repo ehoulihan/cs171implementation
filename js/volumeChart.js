@@ -39,8 +39,8 @@ VolumeChart.prototype.initVis = function(){
 
 
     // Scales and axes
-    vis.x = d3.scale.ordinal()
-        .rangeBands([0, vis.width], .2);
+    console.log("here is the width " + vis.width);
+    vis.x = d3.scale.ordinal();
 
     vis.y = d3.scale.linear()
         .range([vis.height,0]);
@@ -59,7 +59,7 @@ VolumeChart.prototype.initVis = function(){
 
     vis.svg.append("g")
         .attr("class", "y-axis axis");
-    
+
 
 
     // (Filter, aggregate, modify data)
@@ -77,26 +77,41 @@ VolumeChart.prototype.wrangleData = function(){
 
     // get the data in the format we need
     // we need to know how many 15 minute intervals there were.
+
+
     var start = vis.filteredData[0];
     var end = vis.filteredData[vis.filteredData.length - 1];
 
         // converts to 15 minute intervals
-    var min_intervals = (end.timestamp - start.timestamp) / 1000 / 60 / 15;
-
+    var min_intervals = (end.timestamp - start.timestamp) / 1000 / 60;
     console.log(min_intervals);
-    console.log(start);
-    console.log(end);
+    console.log(end.volume);
+    console.log(start.volume);
+    console.log(end.volume - start.volume);
+
+    var sum = 0;
+    vis.filteredData.forEach(function(e){
+        sum += e.discharge * 60;
+    })
+
+    console.log(sum);
+
+    // console.log(min_intervals);
+    // console.log(start);
+    // console.log(end);
 
     vis.displayData = [];
-    vis.flowrateData.forEach(function(e){
+    vis.flowrateData.forEach(function(e, i){
         vis.displayData.push({
+            'id' : i,
             'label' : e.name,
             'value': e.amount * min_intervals
         })
     });
     vis.displayData.push({
+        'id' : vis.displayData.length,
         'label' : 'Volume of Water That Went Over the Dam',
-        'value' : end.volume - start.volume
+        'value' : sum
     });
 
     // Update the visualization
@@ -111,10 +126,10 @@ VolumeChart.prototype.wrangleData = function(){
 VolumeChart.prototype.updateVis = function(){
     var vis = this;
 
-    console.log(vis.displayData);
     // Update domains
     vis.y.domain([0, d3.max(vis.displayData, function(e){ return e.value;})]);
-    vis.x.domain(d3.map(vis.displayData, function(e){return e.label;}));
+    vis.x.domain(vis.displayData.map(function(e){return e.label;}))
+        .rangeRoundBands([0, vis.width], .05);
 
     // Draw actual bars
     var bars = vis.svg.selectAll(".bar")
@@ -159,13 +174,15 @@ VolumeChart.prototype.updateVis = function(){
 VolumeChart.prototype.onSelectionChange = function(selectionStart, selectionEnd){
     var vis = this;
 
+    console.log(selectionStart);
+    console.log(selectionEnd);
 
     // Filter data depending on selected time period (brush)
     // *** TO-DO ***
-    vis.filteredData = vis.data.filter(function(d){
-        return d.time >= selectionStart && d.time <= selectionEnd;
+    vis.filteredData = vis.dischargeData.filter(function(d){
+        return d.timestamp >= selectionStart && d.timestamp <= selectionEnd;
     })
-
+    console.log(vis.filteredData);
 
     vis.wrangleData();
 }
