@@ -297,8 +297,10 @@ ExpTimeChart.prototype.updateVis = function (){
         function draw(k) {
 
             var two_hours = 2*60*60*1000;
-            // next step, incorporate k-counter to this loop
+
+            // if indeces are not matching
             if((jProg.dataL8[k - counter].date-jProg.dataF[k].date) != 0){
+                // stop the lock 8 counter
                 counter += 2;
                 if(line_made == 0) {
                     var p1 = $.extend(true, {}, jProg.dataL8[k - counter]);
@@ -311,12 +313,6 @@ ExpTimeChart.prototype.updateVis = function (){
                         .data([jProg.naData]) 
                         .attr("d",line) 
                         .attr("class","animated-na-line");
-                    //     .attr("animation-duration",animDur+"s") 
-                    // var path_len = $("#na-line")[0].getTotalLength();
-                    //
-                    // naPath.attr("stroke-dasharray",path_len)
-                    //     .attr("stroke-dashoffset",path_len);
-
                     line_made = 1;
                 }
             }
@@ -390,6 +386,73 @@ ExpTimeChart.prototype.updateVis = function (){
             .call(d3.legend);
 
         jProg.resetVis();
+
+
+        var focus = jProg.svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+        focus.append("circle")
+            .attr("r", 8);
+
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", ".35em")
+            .attr("id","l1-text");
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", "1.35em")
+            .attr("id","l2-text");
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", "2.35em")
+            .attr("id","l3-text");
+
+        jProg.svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", jProg.width)
+            .attr("height", jProg.height)
+            .on("mouseover", function() { focus.style("display", null); })
+            .on("mouseout", function() { focus.style("display", "none"); })
+            .on("mousemove", mousemove);
+
+        var bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+        function mousemove() {
+            var x0 = jProg.x.invert(d3.mouse(this)[0]),
+                i = bisectDate(jProg.dataF, x0, 1),
+                d0 = jProg.dataF[i - 1],
+                d1 = jProg.dataF[i],
+                d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+            index = x0 - d0.date > d1.date - x0 ? (i) : (i-1);
+
+            focus.attr("transform", "translate(" + jProg.x(jProg.dataF[index].date) + "," + jProg.y(jProg.dataF[index].height + 200) + ")");
+
+            // Align Indeces
+            function findWithAttr(array, value) {
+                for(var i = 0; i < array.length; i += 1) {
+                    if(array[i]["date"].getTime() === value.getTime()) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            var textL8 = 0;
+            var otherIndex = findWithAttr(jProg.dataL8,jProg.dataF[index].date);
+            textL8 = otherIndex > -1 ? (jProg.dataL8[otherIndex].height + 200) : -1;
+            textL8 = otherIndex > -1 ? "Lock 8: "+textL8 + "ft.": "Lock 8: gage broken";
+
+            var textF = jProg.dataF[index].height + 200;
+            textF = "Freemans: "+textF+"ft.";
+            var textV = jProg.dataV[index].height + 200;
+            textV = "Lock 7: "+textV+"ft.";
+
+            focus.select("#l1-text").text(textF);
+            focus.select("#l2-text").text(textV);
+            focus.select("#l3-text").text(textL8);
+
+        }
 
     }
 };
