@@ -250,8 +250,8 @@ FloodChart.prototype.updateVis = function() {
         .attr("class","icons");
 
     var house_index = 73;
-    var person_index = 115;
-    var house_width = 160;
+    var person_index = 118;
+    var house_width = 175;
     var person_width = 25;
 
     icons.append("image")
