@@ -122,7 +122,7 @@ h4{
 
 .jumbotron {
     background: rgb(200, 200, 200); /* This is for ie8 and below */
-    background: rgba(200, 200, 200, 0.5);
+    background: rgba(200, 200, 200, 0.75);
     color: whitesmoke;
 }
 
@@ -256,7 +256,7 @@ rect.pane {
 }
 
 .wide-stick{
-    fill: rgba(255 ,255, 255, .5);
+    fill: rgba(255 ,255, 255, .75);
 }
 
 .crest-rect{
