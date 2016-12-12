@@ -187,10 +187,21 @@ h1 .sub-headline {
 .axis path,
 .axis line {
     fill: none;
-    stroke: #ffffff;
+    stroke: #444;
     shape-rendering: crispEdges;
 }
 .axis text {
+    font-size: 1em;
+    fill: #444;
+}
+
+#flood-history .axis path,
+.axis line {
+    fill: none;
+    stroke: #ffffff;
+    shape-rendering: crispEdges;
+}
+#flood-history .axis text {
     font-size: 1em;
     fill: whitesmoke;
 }
@@ -284,6 +295,8 @@ rect.pane {
     background: whitesmoke;
 }
 
-
-
+.padding{
+    margin-left: 10%;
+    margin-right: 10%;
+}
 
