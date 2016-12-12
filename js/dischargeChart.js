@@ -9,12 +9,13 @@
  * @param _discharge        -- this is a param that will draw lines at these areas.
  */
 
-DischargeChart = function(_parentElement, _data, _toggle, _discharge) {
+DischargeChart = function(_parentElement, _data, _toggle, _discharge, _eventHandler) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = _data;
     this.toggle = _toggle;
     this.discharge = _discharge;
+    this.eventHandler = _eventHandler;
     this.initVis();
 };
 
@@ -93,7 +94,7 @@ DischargeChart.prototype.initVis = function() {
         .xExtent(vis.x.domain())
     // Subsequently, you can listen to all zooming events
         .on("zoom", function(){
-
+            $(vis.eventHandler).trigger("viewChanged", vis.x.domain());
             vis.zoom.translate(vis.zoom.translate());
             vis.updateVis();
         })
