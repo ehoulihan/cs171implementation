@@ -17,6 +17,7 @@ FloodChart = function(_parentElement, _eData, _ghData) {
     this.elevationData = _eData;
     this.gageHeight = _ghData;
     this.maxLineStatus = 0;
+    this.buttonStatus = 0;
     this.initVis();
 };
 
@@ -311,8 +312,9 @@ FloodChart.prototype.resetVis = function() {
         .transition().duration(800)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
 
-    if(jFlood.maxLineStatus == 1){
+    if(jFlood.buttonStatus == 0){
         $("#flood-vis-row").after("<div class=\"text-center\" style=\"padding-top:1%;\"><a class=\"btn btn-default start btn-lg\" href=\"#papaSection\">Continue</a></div>");
+        jFlood.buttonStatus = 1;
     }
     // jFlood.waterLine.y(function(d) { return jFlood.y(jFlood.avg_gage); });
     // jFlood.svg.selectAll(".water-line")
@@ -351,7 +353,7 @@ FloodChart.prototype.updateFloodWater = function(timeIndex){
     jFlood.svg.selectAll(".water-area")
         .transition().duration(100)
         .attr("d", jFlood.waterArea(jFlood.elevationData));
-
+    var counter = 0;
     if((jFlood.maxFloodLevel == jFlood.gageHeight[timeIndex].height) & (jFlood.maxLineStatus == 0)){
         jFlood.insertMaxLine(jFlood.maxFloodLevel);
     }

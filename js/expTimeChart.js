@@ -295,56 +295,56 @@ ExpTimeChart.prototype.updateVis = function (){
         var counter = 0;
         var line_made = 0;
 
-        function draw(k) {
+            function draw(k) {
 
-            var two_hours = 2*60*60*1000;
+                var two_hours = 2*60*60*1000;
 
-            // if indeces are not matching
-            if((jProg.dataL8[k - counter].date-jProg.dataF[k].date) != 0){
-                // stop the lock 8 counter
-                counter += 2;
-                if(line_made == 0) {
-                    var p1 = $.extend(true, {}, jProg.dataL8[k - counter]);
-                    var p2 = $.extend(true, {}, jProg.dataL8[k - counter + 1]);
-                    var p3 =  $.extend(true, {}, jProg.dataL8[k - counter + 1]);
-                    p2.date = new Date((p1.date.getTime() + p3.date.getTime()) / 2);
-                    p2.height = ((p1.height + p3.height) / 2);
-                    jProg.naData = [p1, p2, p3];
-                    g.select("#na-line") 
-                        .data([jProg.naData]) 
-                        .attr("d",line) 
-                        .attr("class","animated-na-line");
-                    line_made = 1;
+                // if indeces are not matching
+                if((jProg.dataL8[k - counter].date-jProg.dataF[k].date) != 0){
+                    // stop the lock 8 counter
+                    counter += 2;
+                    if(line_made == 0) {
+                        var p1 = $.extend(true, {}, jProg.dataL8[k - counter]);
+                        var p2 = $.extend(true, {}, jProg.dataL8[k - counter + 1]);
+                        var p3 =  $.extend(true, {}, jProg.dataL8[k - counter + 1]);
+                        p2.date = new Date((p1.date.getTime() + p3.date.getTime()) / 2);
+                        p2.height = ((p1.height + p3.height) / 2);
+                        jProg.naData = [p1, p2, p3];
+                        g.select("#na-line") 
+                            .data([jProg.naData]) 
+                            .attr("d",line) 
+                            .attr("class","animated-na-line");
+                        line_made = 1;
+                    }
                 }
+
+                new_dt_L8 = jProg.dataL8.slice(0,k-counter+1);
+                new_dt_F = jProg.dataF.slice(0,k+1);
+                new_dt_V = jProg.dataV.slice(0,k+1);
+
+
+                g.select("#exp-l2-line")
+                    .data([new_dt_F])
+                    .attr("d",line);
+
+                g.select("#exp-l2-circle")
+                    .attr("transform","translate(" + jProg.x(new_dt_F[k].date) + "," + jProg.y(new_dt_F[k].height + 200) + ")");
+
+                g.select("#exp-l3-line")
+                    .data([new_dt_V])
+                    .attr("d",line);
+
+                g.select("#exp-l3-circle")
+                    .attr("transform","translate(" + jProg.x(new_dt_V[k].date) + "," + jProg.y(new_dt_V[k].height + 200) + ")");
+
+                //// Lock 8 Line
+                g.select("#exp-l1-line")
+                    .data([new_dt_L8])
+                    .attr("d",line);
+
+                g.select("#exp-l1-circle")
+                    .attr("transform","translate(" + jProg.x(new_dt_L8[k-counter].date) + "," + jProg.y(new_dt_L8[k-counter].height + 200) + ")");
             }
-
-            new_dt_L8 = jProg.dataL8.slice(0,k-counter+1);
-            new_dt_F = jProg.dataF.slice(0,k+1);
-            new_dt_V = jProg.dataV.slice(0,k+1);
-
-
-            g.select("#exp-l2-line")
-                .data([new_dt_F])
-                .attr("d",line);
-
-            g.select("#exp-l2-circle")
-                .attr("transform","translate(" + jProg.x(new_dt_F[k].date) + "," + jProg.y(new_dt_F[k].height + 200) + ")");
-
-            g.select("#exp-l3-line")
-                .data([new_dt_V])
-                .attr("d",line);
-
-            g.select("#exp-l3-circle")
-                .attr("transform","translate(" + jProg.x(new_dt_V[k].date) + "," + jProg.y(new_dt_V[k].height + 200) + ")");
-
-            //// Lock 8 Line
-            g.select("#exp-l1-line")
-                .data([new_dt_L8])
-                .attr("d",line);
-
-            g.select("#exp-l1-circle")
-                .attr("transform","translate(" + jProg.x(new_dt_L8[k-counter].date) + "," + jProg.y(new_dt_L8[k-counter].height + 200) + ")");
-        }
 
         var k = 1, n = 167;
         jProg.expIntervalTime = 50;
@@ -361,101 +361,93 @@ ExpTimeChart.prototype.updateVis = function (){
 
         var myInterval = setInterval(drawLines, jProg.expIntervalTime);
 
-            // var t = d3.interval(function() {
-            //     draw(k);
-            //     if ((k += 2) >= n - 1) {
-            //         draw(n - 1);
-            //         t.stop();
-            //         return true;
-            //     }
-            // }, jProg.expIntervalTime);
 
-            var xTrans = jProg.width - 200;
-            var yTrans = jProg.height - 100;
+        var xTrans = jProg.width - 200;
+        var yTrans = jProg.height - 100;
 
-            jProg.legend = jProg.svg.append("g")
-                .attr("class", "legend")
-                .attr("transform", "translate(" + xTrans + "," + yTrans + ")")
-                .style("font-size", "12px")
-                .call(d3.legend);
+        jProg.legend = jProg.svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + xTrans + "," + yTrans + ")")
+            .style("font-size", "12px")
+            .call(d3.legend);
 
-            jProg.resetVis();
+        jProg.resetVis();
 
 
-            var focus = jProg.svg.append("g")
-                .attr("class", "focus")
-                .style("display", "none");
+        var focus = jProg.svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
 
-            focus.append("circle")
-                .attr("r", 8);
+        focus.append("circle")
+            .attr("r", 8);
 
-            focus.append("text")
-                .attr("x", 9)
-                .attr("dy", ".35em")
-                .attr("id", "l1-text");
-            focus.append("text")
-                .attr("x", 9)
-                .attr("dy", "1.35em")
-                .attr("id", "l2-text");
-            focus.append("text")
-                .attr("x", 9)
-                .attr("dy", "2.35em")
-                .attr("id", "l3-text");
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", ".35em")
+            .attr("id", "l1-text");
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", "1.35em")
+            .attr("id", "l2-text");
+        focus.append("text")
+            .attr("x", 9)
+            .attr("dy", "2.35em")
+            .attr("id", "l3-text");
 
-            jProg.svg.append("rect")
-                .attr("class", "overlay")
-                .attr("width", jProg.width)
-                .attr("height", jProg.height)
-                .on("mouseover", function () {
-                    focus.style("display", null);
-                })
-                .on("mouseout", function () {
-                    focus.style("display", "none");
-                })
-                .on("mousemove", mousemove);
+        jProg.svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", jProg.width)
+            .attr("height", jProg.height)
+            .on("mouseover", function () {
+                focus.style("display", null);
+            })
+            .on("mouseout", function () {
+                focus.style("display", "none");
+            })
+            .on("mousemove", mousemove);
 
-            var bisectDate = d3.bisector(function (d) {
-                return d.date;
-            }).left;
+        var bisectDate = d3.bisector(function (d) {
+            return d.date;
+        }).left;
 
-            function mousemove() {
-                var x0 = jProg.x.invert(d3.mouse(this)[0]),
-                    i = bisectDate(jProg.dataF, x0, 1),
-                    d0 = jProg.dataF[i - 1],
-                    d1 = jProg.dataF[i],
-                    d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        function mousemove() {
+            var x0 = jProg.x.invert(d3.mouse(this)[0]),
+                i = bisectDate(jProg.dataF, x0, 1),
+                d0 = jProg.dataF[i - 1],
+                d1 = jProg.dataF[i],
+                d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-                index = x0 - d0.date > d1.date - x0 ? (i) : (i - 1);
+            index = x0 - d0.date > d1.date - x0 ? (i) : (i - 1);
 
-                focus.attr("transform", "translate(" + jProg.x(jProg.dataF[index].date) + "," + jProg.y(jProg.dataF[index].height + 200) + ")");
+            focus.attr("transform", "translate(" + jProg.x(jProg.dataF[index].date) + "," + jProg.y(jProg.dataF[index].height + 200) + ")");
 
-                // Align Indeces
-                function findWithAttr(array, value) {
-                    for (var i = 0; i < array.length; i += 1) {
-                        if (array[i]["date"].getTime() === value.getTime()) {
-                            return i;
-                        }
+            // Align Indeces
+            function findWithAttr(array, value) {
+                for (var i = 0; i < array.length; i += 1) {
+                    if (array[i]["date"].getTime() === value.getTime()) {
+                        return i;
                     }
-                    return -1;
                 }
-
-                var textL8 = 0;
-                var otherIndex = findWithAttr(jProg.dataL8, jProg.dataF[index].date);
-                textL8 = otherIndex > -1 ? (jProg.dataL8[otherIndex].height + 200) : -1;
-                textL8 = otherIndex > -1 ? "Lock 8: " + textL8 + "ft." : "Lock 8: gage broken";
-
-                var textF = jProg.dataF[index].height + 200;
-                textF = "Freemans: " + textF + "ft.";
-                var textV = jProg.dataV[index].height + 200;
-                textV = "Lock 7: " + textV + "ft.";
-
-                focus.select("#l1-text").text(textF);
-                focus.select("#l2-text").text(textV);
-                focus.select("#l3-text").text(textL8);
-
+                return -1;
             }
+
+            var textL8 = 0;
+            var otherIndex = findWithAttr(jProg.dataL8, jProg.dataF[index].date);
+            textL8 = otherIndex > -1 ? (jProg.dataL8[otherIndex].height + 200) : -1;
+            textL8 = otherIndex > -1 ? "Lock 8: " + textL8 + "ft." : "Lock 8: gage broken";
+
+            var textF = jProg.dataF[index].height + 200;
+            textF = "Freemans: " + textF + "ft.";
+            var textV = jProg.dataV[index].height + 200;
+            textV = "Lock 7: " + textV + "ft.";
+
+            focus.select("#l1-text").text(textF);
+            focus.select("#l2-text").text(textV);
+            focus.select("#l3-text").text(textL8);
+
         }
-    };
+    }
+};
 // ExpTimeChart.prototype.updateVis = function() {
 //     var jProg = this;
 //

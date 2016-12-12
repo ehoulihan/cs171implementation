@@ -90,7 +90,6 @@ FloodTimeChart.prototype.initVis = function() {
         .attr("transform", "translate(" + jProg.margin.left + "," + jProg.margin.top + ")");
 
     jProg.x = d3.time.scale().range([0,jProg.width]);
-    console.log(jProg.x);
     jProg.y = d3.scale.linear().range([jProg.height, 0]);
 
     jProg.xAxis = d3.svg.axis()
@@ -217,7 +216,6 @@ FloodTimeChart.prototype.updateVis = function() {
 FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
     var jProg = this;
 
-    console.log(jProg);
     var progressLine = d3.svg.line()
         .x(function (d) { return jProg.x(d.date);})
         .y(function (d) { return jProg.y(d.height+200)});
@@ -256,34 +254,62 @@ FloodTimeChart.prototype.updateFloodProgressLine = function(totalTime){
         .attr("stroke-dashoffset", 0)
         .attr("id","water-progress-line");
 
-    jProg.circles = jProg.svg.selectAll("circle")
-        .data(jProg.data)
-        .enter()
-        .append("circle")
-        .attr("fill", "blue");
+    var focus = jProg.svg.append("g")
+        .attr("class", "focus")
+        .style("display", "none");
 
-    jProg.circles
-        .transition()
-        .delay(function (d, i) { return segments[i]*duration/totalLength;})
-        .ease("linear")
-        .attr({
-            cx: function (d) { return jProg.x(d.date); },
-            cy: function (d) { return jProg.y(d.height + 200)},
-            r: 4,
-            fill: "blue",
-            // /stroke: "#78B446",
-            "stroke-width": 4
-        });
+    focus.append("circle")
+        .attr("r", 8);
 
-    jProg.tip.html(function(d){
-        return "Elevation" + ": " + (d.height+200) + " @ " + d.date.toLocaleTimeString();
-    });
-    jProg.svg.call(jProg.tip);
+    focus.append("text")
+        .attr("x", 9)
+        .attr("dy", ".35em")
+        .attr("id", "l1-text");
+    focus.append("text")
+        .attr("x", 9)
+        .attr("dy", "1.35em")
+        .attr("id", "l2-text");
+
+    jProg.svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", jProg.width)
+        .attr("height", jProg.height)
+        .on("mouseover", function () {
+            focus.style("display", null);
+        })
+        .on("mouseout", function () {
+            focus.style("display", "none");
+        })
+        .on("mousemove", mousemove);
+
+    var bisectDate = d3.bisector(function (d) {
+        return d.date;
+    }).left;
+
+    function mousemove() {
+        var x0 = jProg.x.invert(d3.mouse(this)[0]),
+            i = bisectDate(jProg.data, x0, 1),
+            d0 = jProg.data[i - 1],
+            d1 = jProg.data[i],
+            d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+        index = x0 - d0.date > d1.date - x0 ? (i) : (i - 1);
+
+        focus.attr("transform", "translate(" + jProg.x(jProg.data[index].date) + "," + jProg.y(jProg.data[index].height + 200) + ")");
 
 
-    jProg.circles
-        .on('mouseover', jProg.tip.show)
-        .on('mouseout', jProg.tip.hide);
+        var text1 = jProg.data[index].height + 200;
+        textA = "Height: " + text1 + "ft.";
+        var text2 = jProg.data[index].date.toLocaleDateString();
+        var currentHours = jProg.data[index].date.getHours()
+        var text3 = (currentHours == 12 || currentHours == 0)  ? 12 : currentHours % 12;
+        var text4 = currentHours > 11 ? "PM" : "AM";
+        textB = "on " + text2+ " @ "+text3+""+text4;
+
+        focus.select("#l1-text").text(textA);
+        focus.select("#l2-text").text(textB);
+
+    }
 
 
 }
