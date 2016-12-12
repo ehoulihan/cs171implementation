@@ -30,9 +30,9 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     dischargeLevels = [
         {"name": "Flow Rate During Experiment",
-         "amount": 10000},
+         "amount": 2000},
         {"name": "Current Max Flow Rate",
-            "amount": 45000}
+            "amount": 25000}
     ];
 
     crestData.forEach(function(e){
