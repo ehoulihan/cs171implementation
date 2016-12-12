@@ -2,10 +2,10 @@
 
 // Function to convert date objects to strings or reverse
 var dateFormatter = d3.time.format("%m/%d/%Y");
-var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
+var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M:%S");
 var floodDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
-var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime;
+var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime, volumeChart;
 var simulationStatus = 0;
 var maxFloodDataPoints = 190;
 
@@ -15,7 +15,7 @@ var myEventHandler = {};
 queue()
     .defer(d3.csv,"data/crests.csv")
     .defer(d3.json, "data/stages.json")
-    .defer(d3.csv, "data/discharge15s.csv")
+    .defer(d3.csv, "data/discharge_with_volume.csv")
     .defer(d3.csv,"data/elevation.csv")
     .defer(d3.csv,"data/flood_gage_height.csv")
     .defer(d3.csv,"data/lock8_experiment_clean.csv")
@@ -47,6 +47,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     dischargeData.forEach(function(e){
         e.discharge = +e.discharge;
         e.timestamp = dischargeDateFormatter.parse(e.timestamp);
+        e.volume = +e.volume;
     })
 
     dischargeData = dischargeData.filter(function(e){
@@ -73,6 +74,8 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
     dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale", dischargeLevels);
+
+    volumeChart = new VolumeChart("volume-chart", dischargeData, dischargeLevels);
 
     //////////////////////
     // Karen's Data Vis//

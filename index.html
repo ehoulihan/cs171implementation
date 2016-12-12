@@ -295,22 +295,33 @@
     </div>
 
     <div class="section">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    Discharge rates are correlated with flooding.  Let's examine the discharge rates of the Mohawk river at Freeman's Bridge
-                    during Hurricane Irene.
+        <h1 style="color:whitesmoke;">What Would It Take to Prevent Flooding?</h1>
+        <div class="row vis-wrapper" id="flood-vis-row">
+            <p class="vis-intro-text">Discharge rates are correlated with flooding.  Let's examine the discharge rates of the Mohawk river at Freeman's Bridge
+                during Hurricane Irene.
+            </p>
+            <div id="flood-vis-area">
+                <div class="col-md-3">
+                    Volume of Water That Passed Over Dam
                 </div>
-                <div class="row">
-                    <div class="col-md-6" id="discharge-chart">
+                <div class="col-md-8">
+                    Flow Rate of Vischer Ferry Dam around Hurricane Irene
+                </div>
+                <div class="col-md-3">
+                    <div id="volume-chart">
+
                     </div>
+                </div>
+                <div class="col-md-9">
+                    <div id="discharge-chart"></div>
                 </div>
             </div>
         </div>
-    </div>
 
 </div>
 
+
+<
 
     <!--<div class="row">-->
         <!--<div class="col-md-12">-->
@@ -395,6 +406,7 @@
 <script src="js/floodTimeChart.js"></script>
 <script src="js/karen_main.js"></script>
 <script src="js/expTimeChart.js"></script>
+<script src="js/volumeChart.js"></script>
 
 <!-- Text Blocks -->
 <script src="js/mapInfo.js"></script>
