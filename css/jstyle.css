@@ -70,12 +70,6 @@ select {
     font-size: 11px;
 }
 
-.line {
-    fill: none;
-    stroke: #1C9A3D;
-    stroke-width: 1.5px;
-}
-
 .elev-line {
     fill: none;
     stroke-width: 5px;
@@ -238,7 +232,7 @@ select {
     margin:auto;
 }
 #small-size-img, .small-size-img{
-    width:25%;
+    width:35%;
 }
 
 #flood-vis-section{

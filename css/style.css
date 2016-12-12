@@ -107,7 +107,7 @@ h4{
 
 #flood-history blockquote {
     text-align: left;
-    width: 50%;
+    width: 75%;
     margin-left: 25%;
 }
 
@@ -196,9 +196,19 @@ h1 .sub-headline {
 }
 
 .line {
+    stroke: #3c4798;
+    stroke-width: 3px;
     fill: none;
-    stroke: #1C9A3D;
-    stroke-width: 1.5px;
+}
+
+.flowrate-line {
+    stroke: 3px;
+    fill: none;
+}
+
+.flowrate-line-label{
+    fill: whitesmoke;
+    font-size: 11px;
 }
 
 .tooltip-circle {
@@ -259,6 +269,10 @@ rect.pane {
     font-size: 11px;
 }
 
+
+
 .legend rect {
     fill:white;
-    opacity:0.6;}
+    opacity:0.6;
+}
+
