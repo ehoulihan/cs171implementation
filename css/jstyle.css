@@ -433,6 +433,32 @@ select {
     font-weight: bold;
 }
 
+#punchy-headline, #v-impt-text, #intro-impt-text{
+    margin-top: 20px;
+    margin-bottom:20px;
+}
+#punchy-headline{
+    font-size: 3.8em;
+    color: whitesmoke;
+}
+#v-impt-text{
+    font-size: 3.8em;
+    color:whitesmoke;
+}
+
+#intro-impt-text{
+    font-size: 2em;
+}
+
+.explain-big-text{
+    color: #444;
+    font-size: 1.4em;
+    text-align: left;
+}
+#story-wrapper{
+    margin:auto;
+    background-color: rgba(255,255,255,0.6);
+}
 /* Creates a small triangle extender for the tooltip */
 /*.d3-tip:after {*/
     /*box-sizing: border-box;*/
