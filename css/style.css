@@ -53,6 +53,7 @@ h4{
     font-size: 1.5em;
 }
 
+
 .section{
     text-align:center;
 }
@@ -118,7 +119,10 @@ h4{
 
 
 
-
+.jumbo{
+    background: rgba(200, 200, 200, 0.75);
+    padding-top: 5%;
+}
 
 .jumbotron {
     background: rgb(200, 200, 200); /* This is for ie8 and below */
@@ -206,6 +210,10 @@ h1 .sub-headline {
     fill: whitesmoke;
 }
 
+.tick line{
+    stroke: #444;
+}
+
 .line {
     stroke: #3c4798;
     stroke-width: 3px;
@@ -218,12 +226,13 @@ h1 .sub-headline {
 }
 
 .flowrate-line {
-    stroke: 3px;
+    stroke-width: 3px;
+    stroke: #444;
     fill: none;
 }
 
 .flowrate-line-label{
-    fill: whitesmoke;
+    fill: #444;
 }
 
 .tooltip-circle {

@@ -57,10 +57,13 @@ VolumeChart.prototype.initVis = function(){
         .attr("class", "x-axis axis")
         .attr("transform", "translate(0," + vis.height + ")");
 
-    vis.svg.append("g")
+    vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
 
-
+    vis.yAxisGroup.append("text")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ -(vis.margin.left/1.2) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .text("Volume (cubic ft)");
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -110,7 +113,7 @@ VolumeChart.prototype.wrangleData = function(){
     });
     vis.displayData.push({
         'id' : vis.displayData.length,
-        'label' : 'Volume of Water That Went Over the Dam',
+        'label' : 'Actual Volume',
         'value' : sum
     });
 

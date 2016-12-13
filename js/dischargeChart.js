@@ -181,10 +181,7 @@ DischargeChart.prototype.updateVis = function() {
         .attr("y2", function(e){
             return vis.y(e.amount);
         })
-        .attr("stroke-dasharray", "5, 5")
-        .attr("stroke", function(e){
-            return "whitesmoke"
-        });
+        .attr("stroke-dasharray", "5, 5");
 
     var line_labels = vis.svg.selectAll(".flowrate-line-label")
         .data(vis.discharge);

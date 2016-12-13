@@ -5,7 +5,7 @@ var dateFormatter = d3.time.format("%m/%d/%Y");
 var dischargeDateFormatter = d3.time.format("%Y-%m-%d %H:%M:%S");
 var floodDateFormatter = d3.time.format("%Y-%m-%d %H:%M");
 
-var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime, volumeChart;
+var crestChart, dischargeChart,jFlood,jFloodTime,kExpTime, volumeChart, dischargeSimple;
 var simulationStatus = 0;
 var maxFloodDataPoints = 190;
 
@@ -29,9 +29,9 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
     if(error) { console.log(error); }
 
     dischargeLevels = [
-        {"name": "Flow Rate During Experiment",
+        {"name": "Experiment",
          "amount": 2000},
-        {"name": "Current Max Flow Rate",
+        {"name": "Current Max",
             "amount": 25000}
     ];
 
@@ -56,6 +56,12 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
                e.timestamp.getMinutes() == 0;
     });
 
+    dischargeSimpleData = dischargeData.filter(function(e){
+        return e.timestamp > dateFormatter.parse("8/28/2011") &&
+            e.timestamp < dateFormatter.parse("9/1/2011") &&
+            e.timestamp.getMinutes() == 0;
+    })
+
     //////////////////////
     // Jackie's Data Vis//
     //////////////////////
@@ -76,6 +82,8 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale", dischargeLevels, myEventHandler);
     volumeChart = new VolumeChart("volume-chart", dischargeData, dischargeLevels);
+
+    dischargeSimple = new DischargeChartSimple("discharge-simple", dischargeSimpleData);
 
     // (5) Bind event handler
     $(myEventHandler).bind("viewChanged", function(event, rangeStart, rangeEnd){
