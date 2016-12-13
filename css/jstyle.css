@@ -224,6 +224,11 @@ select {
     background-image: url(../img/bg.png),url(../img/IMG_6929.JPG);
 }
 
+#end-section{
+    background-image: url(../img/bg.png),url(../img/IMG_7321.JPG);
+}
+
+
 
 .section{
     background-size: cover;
@@ -444,9 +449,18 @@ select {
     font-size: 1.4em;
     text-align: left;
 }
-#story-wrapper{
+#story-wrapper,#story-wrapper-2{
     margin:auto;
     background-color: rgba(255,255,255,0.6);
+}
+#punchy-headline-2,#references-header,#members-header{
+    color:whitesmoke;
+}
+
+#member-names{
+    display:initial;
+    font-size:1.1em;
+    padding-bottom: 1%;
 }
 /* Creates a small triangle extender for the tooltip */
 /*.d3-tip:after {*/
