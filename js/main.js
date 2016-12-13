@@ -79,7 +79,6 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     crestChart = new CrestChart("flood-history-chart", crestData, stageData, 'see-years', 'stick');
 
-
     dischargeChart = new DischargeChart("discharge-chart", dischargeData, "change-scale", dischargeLevels, myEventHandler);
     volumeChart = new VolumeChart("volume-chart", dischargeData, dischargeLevels);
 
