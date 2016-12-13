@@ -235,6 +235,15 @@ h1 .sub-headline {
     fill: #444;
 }
 
+.hur-line{
+    stroke: #444;
+}
+
+.hur-line-label{
+    color: #444;
+}
+
+
 .tooltip-circle {
     fill: #96AB96;
 }
@@ -307,5 +316,10 @@ rect.pane {
 .padding{
     margin-left: 10%;
     margin-right: 10%;
+}
+
+.directions{
+    color: #444;
+    text-align: left;
 }
 

@@ -30,7 +30,7 @@ function createVis(error, crestData, stageData, dischargeData,elevationData,floo
 
     dischargeLevels = [
         {"name": "Experiment",
-         "amount": 2000},
+         "amount": 10000},
         {"name": "Current Max",
             "amount": 25000}
     ];

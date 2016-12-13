@@ -16,6 +16,7 @@ DischargeChart = function(_parentElement, _data, _toggle, _discharge, _eventHand
     this.toggle = _toggle;
     this.discharge = _discharge;
     this.eventHandler = _eventHandler;
+    this.dateFormatter = d3.time.format("%m/%d/%Y");
     this.initVis();
 };
 
@@ -80,6 +81,7 @@ DischargeChart.prototype.initVis = function() {
     vis.xAxisGroup = vis.svg.append("g")
         .attr("class", "x-axis axis")
         .attr("transform", "translate(0," + vis.height + ")");
+
 
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
@@ -183,22 +185,39 @@ DischargeChart.prototype.updateVis = function() {
         })
         .attr("stroke-dasharray", "5, 5");
 
-    var line_labels = vis.svg.selectAll(".flowrate-line-label")
-        .data(vis.discharge);
+    var hurricane_info = [{
+        'name' : "Hurricane Irene",
+        'date' : new Date(2011, 7, 29)
+    }];
 
-    line_labels.enter().append("text")
-        .attr("class", "flowrate-line-label");
+    var hur_line = vis.svg.selectAll("line.hur-line")
+        .data(hurricane_info);
 
-    line_labels.transition()
+    hur_line.enter().append("line")
+        .attr("class", "hur-line");
+
+    hur_line.transition()
         .duration(10)
-        .attr("text-anchor", "start")
-        .attr("x", vis.x.range()[1] + 5)
-        .attr("y",function(e){
-            return vis.y(e.amount);
-        })
-        .text(function(e){
-            return e.name;
-        });
+        .attr("x1", function(e){return vis.x(e.date);})
+        .attr("x2", function(e){return vis.x(e.date);})
+        .attr("y1", vis.height )
+        .attr("y2", 0)
+        .attr("clip-path", "url(#clip)");
+
+    var hur_labels = vis.svg.selectAll("text.hur-line-label")
+        .data(hurricane_info);
+
+    hur_labels.enter().append("text")
+        .attr("class", "hur-line-label");
+
+    hur_labels.transition()
+        .duration(10)
+        .attr('text-anchor', 'end')
+        .attr("x", function(e){return vis.x(e.date) - 5;})
+        .attr("y", 0)
+        .text(function(e){return e.name;});
+
+    hur_labels.exit().remove();
 
     vis.svg.select(".y-axis")
         .transition()
