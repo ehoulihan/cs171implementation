@@ -449,6 +449,13 @@ select {
     font-size: 1.4em;
     text-align: left;
 }
+
+.explain-big-text-ref{
+    color: #444;
+    font-size: 1em;
+    text-align: left;
+}
+
 #story-wrapper,#story-wrapper-2{
     margin:auto;
     background-color: rgba(255,255,255,0.6);
