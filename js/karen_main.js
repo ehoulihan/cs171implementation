@@ -129,7 +129,7 @@ SpeedChart.prototype.initVis = function() {
 
     // Initialize Line
     kSpeed.svg.append("path")
-        .attr("class", "elev-line");
+        .attr("class", "elev-line-1");
 
     // Initialize Water Level
     kSpeed.svg.append("path")
@@ -170,9 +170,11 @@ SpeedChart.prototype.updateVis = function() {
         .selectAll("text")
         .attr("y", 0)
         .attr("x", 9)
-        .attr("dy", ".35em")
+        .attr("dy", ".32em")
+        .style("fill", "#444")
         //.attr("transform", "rotate(60)")
         .style("text-anchor", "start")
+        .attr("class", "icon-label-text-k")
         .text(function(d,index){
             var res = "";
             // res = index;
@@ -189,6 +191,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("x", 200)
         .attr("dy", "1em")
         .style("text-anchor", "start")
+        .attr("class", "icon-label-text-k")
         .text("11 Mile Span of the Mohawk River from Lock 8 to Lock 7");
 
     kSpeed.yExtent = d3.extent(kSpeed.data, function(d){
@@ -209,6 +212,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("x",0 - (kSpeed.height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
+        .attr("class", "icon-label-text-k")
         .text("Elevation (feet above sea level)");
 
     // Add Line Function
@@ -260,7 +264,7 @@ SpeedChart.prototype.updateVis = function() {
         .datum(kSpeed.data)
         .attr("class", "water-area")
         .attr("d", kSpeed.water_area)
-        .style("opacity", "0.3")
+        .style("opacity", "0")
         .attr("id", "water_area");
 
 
@@ -282,6 +286,7 @@ SpeedChart.prototype.updateVis = function() {
                                 .attr("height", 260)
                                 .style("fill", "#5E2605")
                                 .attr("id", "lock8")
+                                .attr("class", "icon-label-text-k")
                                 .style("opacity", "0");
 
     kSpeed.lock7 = kSpeed.svg.append("rect")
@@ -291,6 +296,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("height", 155)
         .style("fill", "#5E2605")
         .attr("id", "lock7")
+        .attr("class", "icon-label-text-k")
         .style("opacity", "0");
 
     kSpeed.svg.append("text")
@@ -299,6 +305,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("x", 30)
         .attr("dy", "1em")
         .style("text-anchor", "start")
+        .attr("class", "icon-label-text-k")
         .text("River Bottom");
 
 
@@ -465,6 +472,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("id", "text8")
         .style("text-anchor", "start")
         .style("opacity", "0")
+        .attr("class", "icon-label-text-k")
         .text("Lock 8");
 
     kSpeed.text7 =kSpeed.svg.append("text")
@@ -475,6 +483,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("id", "text7")
         .style("text-anchor", "start")
         .style("opacity", "0")
+        .attr("class", "icon-label-text-k")
         .text("Lock 7");
 
     kSpeed.heightb =kSpeed.svg.append("text")
@@ -485,6 +494,8 @@ SpeedChart.prototype.updateVis = function() {
         .attr("id", "heightb")
         .style("text-anchor", "start")
         .style("opacity", "1")
+        .attr("class", "icon-label-text-k")
+        .style("font-weight", "bold")
         .text("Pre-dam river height and velocity");
 
     kSpeed.heighta =kSpeed.svg.append("text")
@@ -495,6 +506,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("id", "heighta")
         .style("text-anchor", "start")
         .style("opacity", "0")
+        .attr("class", "icon-label-text-k")
         .text("Post-dam river height and velocity");
 
     $( "#speed-play-button" ).click(
