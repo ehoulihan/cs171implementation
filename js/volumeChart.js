@@ -25,7 +25,7 @@ VolumeChart = function(_parentElement, _dischargeData, _flowrateData){
 VolumeChart.prototype.initVis = function(){
     var vis = this;
 
-    vis.margin = { top: 20, right: 0, bottom: 200, left: 140 };
+    vis.margin = { top: 60, right: 0, bottom: 100, left: 140 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
         vis.height = 500 - vis.margin.top - vis.margin.bottom;
