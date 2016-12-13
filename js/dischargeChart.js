@@ -27,10 +27,10 @@ DischargeChart = function(_parentElement, _data, _toggle, _discharge, _eventHand
 
 DischargeChart.prototype.initVis = function() {
     var vis = this;
-    vis.margin = { top: 60, right: 200, bottom: 60, left: 70 };
+    vis.margin = { top: 60, right: 200, bottom: 100, left: 100 };
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+        vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
     vis.tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -69,7 +69,8 @@ DischargeChart.prototype.initVis = function() {
 
     vis.xAxis = d3.svg.axis()
         .scale(vis.x)
-        .orient("bottom");
+        .orient("bottom")
+	.ticks(5);
 
     vis.yAxis = d3.svg.axis()
         .scale(vis.y)
@@ -86,6 +87,10 @@ DischargeChart.prototype.initVis = function() {
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
 
+    vis.yAxisGroup.append("text")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ -(vis.margin.left/1.5) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .text("Flow Rate (cfs)");
 
     vis.svg.append("g")
         .attr("class", "brush");
@@ -184,6 +189,23 @@ DischargeChart.prototype.updateVis = function() {
             return vis.y(e.amount);
         })
         .attr("stroke-dasharray", "5, 5");
+
+    var line_labels = vis.svg.selectAll("line.flowrate-line-label")
+        .data(vis.discharge);
+
+    line_labels.enter().append("text")
+        .attr("class", "flowrate-line-label");
+
+    line_labels.transition()
+        .duration(1000)
+        .attr("text-anchor", "start")
+        .attr("x", (vis.x.range()[1]) + 5)
+        .attr("y",function(e){
+            return vis.y(e.amount);
+        })
+        .text(function(e){
+            return e.name;
+        });
 
     var hurricane_info = [{
         'name' : "Hurricane Irene",
