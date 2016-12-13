@@ -518,7 +518,7 @@ SpeedChart.prototype.updateVis = function() {
             });
 
             $("#speed-text").fadeOut(function () {
-                $("#speed-text").text(($("#speed-text").text() == 'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.') ? 'However, the construction of the dam created a standing pool, in which water virtually stands still at a high height.  This enables heavy flooding because...' :
+                $("#speed-text").text(($("#speed-text").text() == 'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.') ? 'However, the construction of the dam created a standing pool, in which water virtually stands still at a high height. Due to the higher water height, when floods come, the floodplain is likely to extend further inland and cause more damage.' :
                     'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.').fadeIn();
             });
 
