@@ -79,6 +79,11 @@ DischargeChartSimple.prototype.initVis = function() {
     vis.yAxisGroup = vis.svg.append("g")
         .attr("class", "y-axis axis");
 
+    vis.yAxisGroup.append("text")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ -(vis.margin.left/2) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .text("Flow Rate (cfs)");
+
 
     vis.svg.append("g")
         .attr("class", "brush");

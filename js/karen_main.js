@@ -509,6 +509,7 @@ SpeedChart.prototype.updateVis = function() {
         .attr("class", "icon-label-text-k")
         .text("Post-dam river height and velocity");
 
+    kSpeed.speedPlayButton = 0;
     $( "#speed-play-button" ).click(
         function() {
 
@@ -518,8 +519,14 @@ SpeedChart.prototype.updateVis = function() {
             });
 
             $("#speed-text").fadeOut(function () {
-                $("#speed-text").text(($("#speed-text").text() == 'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.') ? 'However, the construction of the dam created a standing pool, in which water virtually stands still at a high height. Due to the higher water height, when floods come, the floodplain is likely to extend further inland and cause more damage.' :
-                    'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.').fadeIn();
+                var text0 = "Before the locks were built, water flowed at a natural velocity downstream.  Click the <strong>Build the Dams</strong> button below to see how the construction of the dams affected the water height and speed.";
+                var text1 = "However, the construction of the dam created a <strong>standing pool</strong>, in which water virtually stands still at a high height. Due to the <strong>higher water height</strong> and <strong>slower velocity</strong>, during periods of heavy rainfall, runoff for the surrounding areas is <strong>more likely to back up</strong> behind the dam and cause flooding further inland."
+
+                $("#speed-text").html( kSpeed.speedPlayButton==0 ? text1 : text0).fadeIn();
+
+                kSpeed.speedPlayButton = kSpeed.speedPlayButton==0 ? 1 : 0;
+                // $("#speed-text").text(($("#speed-text").text() == 'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.') ? 'However, the construction of the dam created a standing pool, in which water virtually stands still at a high height. Due to the higher water height and slower velocity, during periods of heavy rainfall, runoff for the surrounding areas is more likely to back up behind the dam and cause flooding further inland. ' :
+                //     'Before the locks were built, water flowed at a natural velocity downstream.  Click the Build the Dams button below to see how the construction of the dams affected the water height and speed.').fadeIn();
             });
 
             var active   = slow_boat.active ? false : true,
